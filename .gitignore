@@ -1,0 +1,24 @@
+# OS
+.DS_Store
+
+# Node / Vite
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+*.log
+
+# Vite / build caches
+.vite/
+
+# Python
+backend/.venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Editor
+.cursor/
+.idea/
+.vscode/
+
