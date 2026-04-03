@@ -14,7 +14,14 @@ def get_bedside_cases(now: datetime | None = None) -> dict[str, dict]:
     end = (now or datetime.now(timezone.utc)).replace(microsecond=0)
 
     # Common cadence: every 20 minutes for 2 hours, plus a few points near the end for persistence rules.
-    def v(ts_min_ago: int, *, hr: int | None, map: float | None, spo2: float | None, temp: float | None) -> VitalPoint:
+    def v(
+        ts_min_ago: int,
+        *,
+        hr: int | None,
+        map: float | None,
+        spo2: float | None,
+        temp: float | None,
+    ) -> VitalPoint:
         return VitalPoint(
             timestamp=end - timedelta(minutes=ts_min_ago),
             heart_rate=hr,
@@ -25,7 +32,9 @@ def get_bedside_cases(now: datetime | None = None) -> dict[str, dict]:
         )
 
     def urine(ts_min_ago: int, ml_per_h: float) -> UrineOutputPoint:
-        return UrineOutputPoint(timestamp=end - timedelta(minutes=ts_min_ago), urine_output_ml_per_hour=ml_per_h)
+        return UrineOutputPoint(
+            timestamp=end - timedelta(minutes=ts_min_ago), urine_output_ml_per_hour=ml_per_h
+        )
 
     return {
         "normal_stable": {

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import math
 import statistics
 from datetime import datetime, timedelta, timezone
 from typing import Any
