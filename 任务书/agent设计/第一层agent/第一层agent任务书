@@ -1,0 +1,257 @@
+给代码助手的任务说明
+
+我们现在开始实现 ICU 系统中最基础的两个床位级 agent：Bedside Monitor Agent 和 Intervention Tracker Agent。这一阶段的目标不是做完整多智能体协作，而是先把两个最小可运行模块做出来，并且能够被后续系统复用。
+
+一、实现原则
+
+这两个 agent 都先按单床位单患者分析模块来做，不依赖全局 orchestrator，不依赖其他 agent，不调用 LLM。
+实现方式先采用：
+
+Python
+FastAPI 接口
+Pydantic 数据模型
+规则驱动分析逻辑
+输出统一 JSON
+
+目标是让它们未来可以挂到 ICU backend 的 agent 层中，但现在先独立测试。
+
+二、Bedside Monitor Agent 要做什么
+
+Bedside Monitor Agent 的职责是：
+读取某一床位最近一段时间的生命体征和设备参数，识别是否存在异常，并把原始数据转成结构化状态摘要。
+
+输入
+
+至少支持以下字段：（请参考local/system/backend/数据规范/数据库使用规范.md 数据规范中vital_sign_events
+
+
+patient_id
+bed_id
+timestamped vital signs:
+HR
+SBP / DBP / MAP
+RR
+SpO2
+Temp
+urine_output
+optional device fields:
+ventilator_mode
+FiO2
+PEEP
+peak_pressure
+optional medication context:
+vasopressor_on
+sedation_on
+
+输入形式建议是“最近 1h / 4h / 6h 的时间序列窗口”。
+
+输出
+
+统一输出一个结构化 summary，例如：
+
+patient_id
+bed_id
+analysis_window
+current_status_summary
+abnormal_flags
+trend_labels
+evidence
+urgency_level
+generated_at
+
+其中：
+
+abnormal_flags 例如：
+persistent_hypotension
+tachycardia
+hypoxemia
+oliguria
+fever
+trend_labels 例如：
+MAP_downtrend
+SpO2_unstable
+urine_output_decreasing
+urgency_level 先做成：
+info
+warning
+critical
+第一阶段分析逻辑
+
+先不要做复杂机器学习，只做基础规则：
+
+MAP 持续低于 65 一段时间 → persistent_hypotension
+SpO2 持续低于 90 → hypoxemia
+HR 持续高于 110 → tachycardia
+尿量低于阈值并持续下降 → oliguria
+Temp 高于阈值 → fever
+
+同时加一个简单趋势模块：
+
+最近 30–60 分钟斜率变化
+当前值和窗口平均值比较
+判断是 stable / improving / worsening / fluctuating
+输出示例
+
+例如不是只返回：
+
+MAP = 61
+
+而是返回类似：
+
+“过去 90 分钟 MAP 持续低于目标阈值，近 30 分钟未见明显恢复，当前伴随心率升高，提示循环状态仍不稳定。”
+
+这个摘要同时要保留对应证据字段，方便后续审计。这个设计正是你们原先定义的 Bedside Monitor Agent 的核心职责：把原始监测值转换成结构化临床状态摘要，并完成最基础的本地异常触发。
+
+三、Intervention Tracker Agent 要做什么
+
+Intervention Tracker Agent 的职责是：
+记录“做了什么干预”，然后分析“干预后患者是否有预期反应”。
+
+输入
+
+至少支持以下字段：
+
+patient_id
+bed_id
+intervention event:
+intervention_type
+timestamp
+dose_or_setting_change
+expected_observation_window
+pre-intervention observation window
+post-intervention observation window
+
+先支持几类常见 ICU 干预：
+
+fluid_bolus
+vasopressor_adjustment
+ventilator_setting_change
+antipyretic_given
+sedation_adjustment
+输出
+
+统一输出：
+
+patient_id
+bed_id
+intervention_type
+intervention_time
+observation_window
+response_assessment
+target_metrics
+before_after_comparison
+evidence
+escalation_hint
+generated_at
+
+其中 response_assessment 建议固定成：
+
+responsive
+partially_responsive
+non_responsive
+deteriorating_despite_intervention
+第一阶段分析逻辑
+
+先做 rule-based outcome check：
+
+补液后 MAP 是否上升
+升压药调整后 MAP 是否改善
+呼吸机参数调整后 SpO2 / RR 是否改善
+退热后 Temp 是否下降
+镇静调整后目标评分或生命体征是否更平稳
+
+也就是说，它不是判断“临床决策对不对”，而是判断“从监测数据上看，这次动作之后有没有出现可观察变化”。这正是你们定义中的“干预—反应—再评估”闭环，核心是区分自然波动、部分响应、无响应、干预后仍恶化。
+
+输出示例
+
+例如：
+
+“在 14:00 完成 500ml 补液后，随后 60 分钟内 MAP 从 58–61 上升至 66–69，心率轻度下降，提示对本次补液存在部分血流动力学反应。”
+
+或者：
+
+“去甲肾上腺素上调后，观察窗口内 MAP 未见明显改善，乳酸仍上升，提示当前循环支持反应有限。”
+
+四、这两个 agent 先不要做什么
+
+为了避免一开始就做复杂，你要明确告诉助手先不做这些：
+
+不做 Risk Sentinel Agent
+不做 Ward Coordinator
+不做家属沟通内容生成
+不做跨床位比较
+不做自动决策建议
+不直接输出治疗方案
+不接入 LLM 自由生成
+不做完整事件总线调度
+
+原因很简单：你们现在是在搭 ICU 多智能体系统的“床位级感知层”和“干预追踪层”地基，这两者本来就应该先独立实现。整个系统里，Bedside Monitor 和 Intervention Tracker 都属于每床一个实例、直接围绕患者状态和治疗反应工作的最底层模块。
+
+五、建议的目录结构
+
+你现在 backend 下面已经有 api / 数据规范 / 测试数据库 这些目录了。这个阶段我建议直接新增 agent 相关目录，结构尽量清楚一点：
+
+backend/
+  agents/
+    bedside_monitor/
+      schemas.py
+      rules.py
+      service.py
+      router.py
+      examples.py
+    intervention_tracker/
+      schemas.py
+      rules.py
+      service.py
+      router.py
+      examples.py
+  api/
+  数据规范/
+  测试数据库/
+
+其中：
+
+schemas.py：Pydantic 输入输出模型
+rules.py：核心规则判断
+service.py：主逻辑封装
+router.py：FastAPI 路由
+examples.py：测试样例数据
+六、接口建议
+
+建议先做两个最简单接口：
+
+1. Bedside Monitor
+
+POST /agents/bedside-monitor/analyze
+
+输入：某床位最近一段时间生命体征序列
+输出：状态摘要 JSON
+
+2. Intervention Tracker
+
+POST /agents/intervention-tracker/evaluate
+
+输入：某次干预事件 + 干预前后观测窗口
+输出：干预反应 JSON
+
+这样你们前端或者测试脚本都可以直接调用。
+
+七、测试要求
+
+这一步一定要让助手一起做测试数据，不然 agent 很难验证。
+
+至少准备 4 类 bedside case：
+
+正常稳定
+持续低血压
+低氧恶化
+尿量下降 + 发热
+
+至少准备 4 类 intervention case：
+
+补液后改善
+补液后无明显改善
+升压药调整后改善
+呼吸机参数调整后氧合仍差
+
+每个 case 最好都带时间序列样例，方便之后接数据库 seed data。
