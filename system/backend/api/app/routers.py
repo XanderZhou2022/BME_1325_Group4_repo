@@ -32,8 +32,8 @@ from app.services.event_pipeline import (
 router = APIRouter(prefix="/api/v1")
 
 # === Agent-layer: bedside-level, rule-driven modules ===
-from app.agents.bedside_monitor.router import router as bedside_monitor_router
-from app.agents.intervention_tracker.router import router as intervention_tracker_router
+from agents.bedside_monitor.router import router as bedside_monitor_router
+from agents.intervention_tracker.router import router as intervention_tracker_router
 
 router.include_router(bedside_monitor_router)
 router.include_router(intervention_tracker_router)

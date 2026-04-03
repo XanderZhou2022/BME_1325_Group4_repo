@@ -5,8 +5,9 @@ import os
 import sys
 from datetime import datetime, timezone
 
-# Allow importing core agent modules from `local/system/agents` when executed from backend/api.
-SYSTEM_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../.."))
+
+# Ensure `local/system` is import root so `agents.*` works even when run from elsewhere.
+SYSTEM_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if SYSTEM_ROOT not in sys.path:
     sys.path.append(SYSTEM_ROOT)
 

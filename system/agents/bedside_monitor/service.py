@@ -7,7 +7,7 @@ from fastapi import HTTPException
 from psycopg import Connection
 from psycopg.rows import dict_row
 
-from app.agents.bedside_monitor.rules import run_bedside_monitor
+from .rules import run_bedside_monitor
 
 from .schemas import BedsideAnalyzeRequest, BedsideAnalyzeResponse, VitalPoint
 
