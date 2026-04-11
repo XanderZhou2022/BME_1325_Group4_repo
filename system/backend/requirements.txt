@@ -1,0 +1,16 @@
+"# ICU Backend Dependencies
+
+# Core Framework
+fastapi
+uvicorn
+pydantic
+psycopg[binary]
+python-dotenv
+
+# Data Processing & Math (轻量级)
+numpy
+pandas
+
+# AI / LLM Integration (Optional, used for future agents)
+openai
+"
