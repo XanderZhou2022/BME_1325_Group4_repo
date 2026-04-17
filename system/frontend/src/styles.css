@@ -66,3 +66,13 @@ pre {
   .grid2 { grid-template-columns: 1fr; }
   .formGrid { grid-template-columns: 1fr; }
 }
+
+.showcaseLink {
+  display: inline-block;
+  background: #0ea5e9;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
+}

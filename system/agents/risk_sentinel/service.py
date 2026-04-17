@@ -25,6 +25,17 @@ SEVERITY_TO_ESCALATION = {"low": "info", "warning": "warning", "critical": "crit
 SEVERITY_TO_CONFIDENCE = {"low": Decimal("0.65"), "warning": Decimal("0.82"), "critical": Decimal("0.93")}
 
 
+def _json_safe_risks(risks: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    out: list[dict[str, Any]] = []
+    for risk in risks:
+        item = dict(risk)
+        conf = item.get("confidence")
+        if isinstance(conf, Decimal):
+            item["confidence"] = float(conf)
+        out.append(item)
+    return out
+
+
 def _calculate_risk_from_payloads(
     *,
     bedside_payload: dict[str, Any],
@@ -224,7 +235,7 @@ def evaluate_risk_sentinel(conn: Connection, req: RiskSentinelEvaluateRequest) -
                 )
 
             payload = {
-                "risks": risks,
+                "risks": _json_safe_risks(risks),
                 "consumed_event_ids": consumed_event_ids,
             }
             output_id = new_id("out")

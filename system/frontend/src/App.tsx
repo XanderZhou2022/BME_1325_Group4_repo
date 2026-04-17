@@ -1,6 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "./api";
+import ShowcasePage from "./showcase/ShowcasePage";
 import type { Admission, JsonObj } from "./types";
+
+type PipelineStep = {
+  step_name: string;
+  admission_id: string;
+  status: string;
+  detail?: Record<string, unknown>;
+};
+
+type PipelineResult = {
+  run_id: string;
+  target_admissions: string[];
+  step_results: PipelineStep[];
+};
 
 type LoadState = "idle" | "loading" | "ok" | "error";
 
@@ -9,6 +23,9 @@ function safeStr(v: unknown): string {
 }
 
 export default function App() {
+  if (typeof window !== "undefined" && window.location.pathname.startsWith("/showcase")) {
+    return <ShowcasePage />;
+  }
   const [loadState, setLoadState] = useState<LoadState>("idle");
   const [error, setError] = useState<string>("");
 
@@ -26,6 +43,9 @@ export default function App() {
   const [selectedTable, setSelectedTable] = useState<string>("");
   const [tableRows, setTableRows] = useState<JsonObj[]>([]);
   const [tableTotal, setTableTotal] = useState<number>(0);
+
+  const [pipelineRunning, setPipelineRunning] = useState(false);
+  const [pipelineResult, setPipelineResult] = useState<PipelineResult | null>(null);
 
   const [newAdmission, setNewAdmission] = useState({
     admission_id: "",
@@ -224,14 +244,19 @@ export default function App() {
   }
 
   async function runPipelineAll() {
+    setPipelineRunning(true);
+    setError("");
     try {
-      await api.runPipeline({ run_all_active: true, memory_window_hours: 24, top_k: 5 });
+      const result = await api.runPipeline({ run_all_active: true, memory_window_hours: 24, top_k: 5 });
+      setPipelineResult(result as unknown as PipelineResult);
       if (selectedAdmissionId) {
         await loadAdmissionDetail(selectedAdmissionId);
       }
       await loadAdmissionsAndWard();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Run pipeline failed");
+    } finally {
+      setPipelineRunning(false);
     }
   }
 
@@ -242,11 +267,41 @@ export default function App() {
         <div className="meta">API: {api.base}</div>
         <div className="meta">Occupancy: {occupiedBeds}</div>
         <button onClick={() => void loadAdmissionsAndWard()}>Refresh</button>
-        <button onClick={() => void runPipelineAll()}>Run Full Pipeline</button>
+        <button onClick={() => void runPipelineAll()} disabled={pipelineRunning}>
+          {pipelineRunning ? "Pipeline Running..." : "Run Full Pipeline"}
+        </button>
+        <a href="/showcase" className="showcaseLink">Open Showcase</a>
       </header>
 
       {loadState === "loading" && <p>Loading...</p>}
       {error && <p className="error">{error}</p>}
+
+      <section className="card">
+        <h2>Pipeline Execution</h2>
+        {!pipelineResult && <p>No pipeline run result yet. Click "Run Full Pipeline".</p>}
+        {pipelineResult && (
+          <>
+            <p>
+              <strong>Run ID:</strong> {pipelineResult.run_id} | <strong>Admissions:</strong>{" "}
+              {pipelineResult.target_admissions.join(", ")}
+            </p>
+            <pre>
+              {JSON.stringify(
+                {
+                  ok_steps: pipelineResult.step_results.filter((s) => s.status === "ok").length,
+                  error_steps: pipelineResult.step_results.filter((s) => s.status === "error").length,
+                  skipped_steps: pipelineResult.step_results.filter((s) => s.status === "skipped").length,
+                  errors: pipelineResult.step_results
+                    .filter((s) => s.status === "error")
+                    .map((s) => ({ step: s.step_name, admission: s.admission_id, detail: s.detail })),
+                },
+                null,
+                2
+              )}
+            </pre>
+          </>
+        )}
+      </section>
 
       <section className="grid2">
         <div className="card">

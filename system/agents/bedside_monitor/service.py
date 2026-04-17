@@ -36,7 +36,12 @@ def _analysis_end_from_request(
             (admission_id,),
         )
         row = cur.fetchone()
-    max_ts = row[0] if row else None
+    if not row:
+        max_ts = None
+    elif isinstance(row, dict):
+        max_ts = row.get("max_ts")
+    else:
+        max_ts = row[0]
     if max_ts is None:
         raise HTTPException(status_code=404, detail="No vital_sign_events found for admission_id")
     return cast(datetime, max_ts)

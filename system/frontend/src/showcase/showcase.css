@@ -1,0 +1,209 @@
+.scPage {
+  min-height: 100vh;
+  padding: 24px;
+  background: radial-gradient(circle at top, #1e293b 0%, #0b1220 45%, #070b16 100%);
+  color: #e5e7eb;
+}
+
+.scTopBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 12px;
+}
+
+.scTopBar h1 {
+  margin: 0;
+  font-size: 30px;
+  letter-spacing: 0.2px;
+}
+
+.scTopBar p {
+  margin: 6px 0 0;
+  color: #94a3b8;
+}
+
+.scTopActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.scTopActions a {
+  color: #93c5fd;
+  text-decoration: none;
+}
+
+.scTopActions button {
+  background: linear-gradient(90deg, #2563eb, #1d4ed8);
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.scMetrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.scMetricCard {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid #334155;
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.scMetricTitle {
+  font-size: 13px;
+  color: #93c5fd;
+}
+
+.scMetricValue {
+  margin-top: 6px;
+  font-size: 27px;
+  font-weight: 700;
+}
+
+.scMetricSub {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.scGrid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.scPanel {
+  background: rgba(2, 8, 23, 0.8);
+  border: 1px solid #334155;
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.scPanel h2 {
+  margin: 0 0 10px;
+}
+
+.scTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.scTable th,
+.scTable td {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid #273449;
+}
+
+.scTable tbody tr {
+  cursor: pointer;
+}
+
+.scTable tbody tr:hover {
+  background: rgba(30, 64, 175, 0.2);
+}
+
+.scTable tbody tr.rowActive {
+  background: rgba(37, 99, 235, 0.3);
+}
+
+.scStatus {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.scStatus.active {
+  background: rgba(22, 163, 74, 0.25);
+  color: #86efac;
+}
+
+.scStatus.inactive {
+  background: rgba(220, 38, 38, 0.25);
+  color: #fecaca;
+}
+
+.scKeyValue {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px dashed #334155;
+}
+
+.scDivider {
+  height: 1px;
+  background: #334155;
+  margin: 10px 0;
+}
+
+.scChips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.scChip {
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  border: 1px solid #334155;
+}
+
+.scChip.critical {
+  color: #fecaca;
+  background: rgba(185, 28, 28, 0.32);
+}
+
+.scChip.warning {
+  color: #fde68a;
+  background: rgba(161, 98, 7, 0.32);
+}
+
+.scChip.normal {
+  color: #bfdbfe;
+  background: rgba(30, 64, 175, 0.35);
+}
+
+.scError {
+  margin-bottom: 12px;
+  color: #fecaca;
+  background: rgba(127, 29, 29, 0.3);
+  border: 1px solid #7f1d1d;
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+
+@media (max-width: 1100px) {
+  .scMetrics {
+    grid-template-columns: 1fr 1fr;
+  }
+  .scGrid2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.scScrollBox {
+  max-height: 280px;
+  overflow: auto;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  background: #020617;
+}
+
+.scScrollBox pre {
+  margin: 0;
+  padding: 10px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
