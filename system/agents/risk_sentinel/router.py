@@ -1,12 +1,19 @@
-from fastapi import APIRouter
-from .schemas import RiskAssessmentRequest, RiskAssessment
-from .service import calculate_risk
+from __future__ import annotations
 
-router = APIRouter(prefix="/agents/risk-sentinel", tags=["Risk Sentinel"])
+from fastapi import APIRouter, Depends
+from psycopg import Connection
 
-@router.post("/evaluate", response_model=RiskAssessment)
-def evaluate_risk_endpoint(request: RiskAssessmentRequest):
-    """
-    Endpoint to evaluate patient risk using APACHE II and intervention context.
-    """
-    return calculate_risk(request)
+from app.db import get_db
+
+from .schemas import RiskSentinelEvaluateRequest, RiskSentinelEvaluateResponse
+from .service import evaluate_risk_sentinel
+
+router = APIRouter(prefix="/agents/risk-sentinel", tags=["agents"])
+
+
+@router.post("/evaluate", response_model=RiskSentinelEvaluateResponse)
+def evaluate_risk_endpoint(
+    request: RiskSentinelEvaluateRequest,
+    conn: Connection = Depends(get_db),
+) -> RiskSentinelEvaluateResponse:
+    return evaluate_risk_sentinel(conn, request)

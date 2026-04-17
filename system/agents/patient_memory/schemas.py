@@ -1,8 +1,7 @@
-from pydantic import BaseModel, Field
-from typing import List, Dict, Optional, Any
+﻿from pydantic import BaseModel, Field
+from typing import List, Dict, Optional
 from datetime import datetime
 
-# 对齐 vital_sign_events 表结构
 class VitalSignEvent(BaseModel):
     id: Optional[str] = None
     admission_id: str
@@ -20,7 +19,6 @@ class VitalSignEvent(BaseModel):
     ph: Optional[float] = None
     gcs: Optional[float] = None
 
-# 对齐 lab_events 表结构
 class LabEvent(BaseModel):
     id: Optional[str] = None
     admission_id: str
@@ -30,7 +28,6 @@ class LabEvent(BaseModel):
     unit: str
     abnormal_flag: Optional[str] = None
 
-# 对齐 intervention_events 表结构
 class InterventionEvent(BaseModel):
     id: Optional[str] = None
     admission_id: str
@@ -39,7 +36,7 @@ class InterventionEvent(BaseModel):
     description: Optional[str] = None
     dosage: Optional[float] = None
     unit: Optional[str] = None
-    response_hint: Optional[str] = None  # 来自上层 tracker 评估
+    response_hint: Optional[str] = None
 
 class MemoryRequest(BaseModel):
     admission_id: str
@@ -57,3 +54,20 @@ class TemporalStateSummary(BaseModel):
     latest_interventions: List[InterventionEvent]
     data_completeness_ratio: float
     snapshot_generated_at: datetime
+
+class MemoryEvaluateRequest(BaseModel):
+    admission_id: str
+    window_hours: int = Field(default=24, ge=1, le=72)
+
+class MemoryEvaluateResponse(BaseModel):
+    patient_id: str
+    bed_id: str
+    admission_id: str
+    window_hours: int
+    current_vitals: Dict[str, Optional[float]]
+    trend_vectors: Dict[str, str]
+    volatility_index: Dict[str, float]
+    latest_interventions: List[InterventionEvent]
+    data_completeness_ratio: float
+    snapshot_generated_at: datetime
+    generated_at: datetime

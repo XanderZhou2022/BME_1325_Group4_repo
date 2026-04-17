@@ -215,3 +215,65 @@ class AuditLogOut(BaseModel):
     target_id: str
     input: dict[str, Any]
     output: dict[str, Any]
+
+
+class AgentOutputOut(BaseModel):
+    output_id: str
+    admission_id: str
+    patient_id: str
+    bed_id: str
+    agent_name: str
+    schema_version: str
+    output_type: str
+    generated_at: datetime
+    payload: dict[str, Any]
+
+
+class AgentEventOut(BaseModel):
+    event_id: str
+    admission_id: str
+    patient_id: str
+    bed_id: str
+    producer_agent: str
+    event_type: str
+    schema_version: str
+    produced_at: datetime
+    output_id: str | None = None
+    payload: dict[str, Any]
+
+
+class AgentCursorOut(BaseModel):
+    consumer_agent: str
+    admission_id: str
+    last_event_id: str | None = None
+    last_event_at: datetime | None = None
+    updated_at: datetime
+
+
+class DbHealthOut(BaseModel):
+    status: Literal["ok", "error"]
+    database: str
+    server_time_utc: datetime | None = None
+
+class AdmissionCreate(BaseModel):
+    admission_id: str
+    patient_id: str
+    bed_id: str
+    admission_code: str
+    admit_time: datetime
+    primary_diagnosis: str
+    admission_reason: str
+    severity_on_admission: Literal["stable", "unstable", "critical"]
+    attending_team: str
+    scenario_tag: str = "custom"
+
+
+class AdmissionStatusUpdate(BaseModel):
+    status: Literal["active", "discharged", "expired", "transferred"]
+    discharge_time: datetime | None = None
+
+
+class TableRowPreview(BaseModel):
+    table_name: str
+    total_rows: int
+    rows: list[dict[str, Any]]

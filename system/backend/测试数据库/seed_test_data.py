@@ -1,12 +1,13 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 import json
+import os
 
 import psycopg
 
 
-DB_DSN = "dbname=icu_agent user=zhou host=localhost port=5432"
+DB_DSN = os.getenv("ICU_PG_DSN", "dbname=icu_agent user=zhou host=localhost port=5432")
 
 
 def j(obj: object) -> str:
@@ -92,6 +93,80 @@ def main() -> None:
         ("log4", now - timedelta(minutes=9), "system", "alert_router", "update_state", "alert", "alert2", {"status": "open"}, {"queue": "high_priority"}),
     ]
 
+    agent_outputs = [
+        (
+            "out_bedside_adm1",
+            "adm1",
+            "p1",
+            "b1",
+            "bedside_monitor",
+            "v1",
+            "bedside_analysis",
+            now - timedelta(minutes=33),
+            {
+                "abnormal_flags": ["persistent_hypotension", "tachycardia"],
+                "trend_labels": ["MAP_downtrend"],
+                "urgency_level": "critical",
+            },
+        ),
+        (
+            "out_intervention_adm1",
+            "adm1",
+            "p1",
+            "b1",
+            "intervention_tracker",
+            "v1",
+            "intervention_evaluation",
+            now - timedelta(minutes=31),
+            {
+                "response_assessment": "non_responsive",
+                "intervention_type": "fluid",
+                "observation_window": "pre 60m / post 60m",
+            },
+        ),
+    ]
+
+    agent_events = [
+        (
+            "aevt_bedside_adm1",
+            "adm1",
+            "p1",
+            "b1",
+            "bedside_monitor",
+            "bedside_analysis_ready",
+            "v1",
+            now - timedelta(minutes=33),
+            "out_bedside_adm1",
+            {"agent_name": "bedside_monitor"},
+        ),
+        (
+            "aevt_intervention_adm1",
+            "adm1",
+            "p1",
+            "b1",
+            "intervention_tracker",
+            "intervention_evaluation_ready",
+            "v1",
+            now - timedelta(minutes=31),
+            "out_intervention_adm1",
+            {"agent_name": "intervention_tracker"},
+        ),
+    ]
+
+    agent_registry = [
+        ("bedside_monitor", ["vital_sign"], "bedside_analysis_ready", "v1", True),
+        ("intervention_tracker", ["intervention"], "intervention_evaluation_ready", "v1", True),
+        ("risk_sentinel", ["bedside_analysis_ready", "intervention_evaluation_ready"], "risk_assessment_ready", "v1", True),
+    ]
+
+    orchestrator_runs = [
+        ("run_seed_1", now - timedelta(minutes=20), now - timedelta(minutes=19), ["adm1"], [{"step_name": "risk_sentinel", "status": "ok"}]),
+    ]
+
+    agent_consumption_cursor = [
+        ("risk_sentinel", "adm1", "aevt_intervention_adm1", now - timedelta(minutes=31)),
+    ]
+
     event_rows = [
         ("evt1", "adm1", "p1", "b1", "vital_sign", "monitor", now - timedelta(hours=1, minutes=30), "critical", {"vital_id": "vital2"}),
         ("evt2", "adm1", "p1", "b1", "lab", "lab", now - timedelta(hours=1, minutes=20), "high", {"lab_id": "lab2"}),
@@ -116,6 +191,11 @@ def main() -> None:
                 DELETE FROM lab_events WHERE id LIKE 'lab%';
                 DELETE FROM vital_sign_events WHERE id LIKE 'vital%';
                 DELETE FROM events WHERE event_id LIKE 'evt%';
+                DELETE FROM agent_consumption_cursor WHERE admission_id IN ('adm1', 'adm2', 'adm3');
+                DELETE FROM agent_events WHERE event_id LIKE 'aevt_%';
+                DELETE FROM agent_outputs WHERE output_id LIKE 'out_%';
+                DELETE FROM agent_registry WHERE agent_name IN ('bedside_monitor', 'intervention_tracker', 'risk_sentinel');
+                DELETE FROM orchestrator_runs WHERE run_id LIKE 'run_seed_%';
                 DELETE FROM admissions WHERE admission_id IN ('adm1', 'adm2', 'adm3');
                 DELETE FROM beds WHERE bed_id IN ('b1', 'b2', 'b3', 'b4');
                 DELETE FROM patients WHERE patient_id IN ('p1', 'p2', 'p3');
@@ -226,11 +306,71 @@ def main() -> None:
                 """,
                 [(a, b, c, d, e, f, g, j(h), j(i)) for (a, b, c, d, e, f, g, h, i) in audit_logs],
             )
+            cur.executemany(
+                """
+                INSERT INTO agent_outputs (
+                    output_id, admission_id, patient_id, bed_id, agent_name, schema_version,
+                    output_type, generated_at, payload
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s::jsonb)
+                """,
+                [
+                    (a, b, c, d, e, f, g, h, j(i))
+                    for (a, b, c, d, e, f, g, h, i) in agent_outputs
+                ],
+            )
+            cur.executemany(
+                """
+                INSERT INTO agent_events (
+                    event_id, admission_id, patient_id, bed_id, producer_agent, event_type,
+                    schema_version, produced_at, output_id, payload
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s::jsonb)
+                """,
+                [
+                    (a, b, c, d, e, f, g, h, i, j(k))
+                    for (a, b, c, d, e, f, g, h, i, k) in agent_events
+                ],
+            )
+            cur.executemany(
+                """
+                INSERT INTO agent_registry (
+                    agent_name, input_event_types, output_event_type, schema_version, enabled
+                ) VALUES (%s, %s::jsonb, %s, %s, %s)
+                ON CONFLICT (agent_name) DO UPDATE SET
+                    input_event_types = EXCLUDED.input_event_types,
+                    output_event_type = EXCLUDED.output_event_type,
+                    schema_version = EXCLUDED.schema_version,
+                    enabled = EXCLUDED.enabled,
+                    updated_at = NOW()
+                """,
+                [(a, j(b), c, d, e) for (a, b, c, d, e) in agent_registry],
+            )
+            cur.executemany(
+                """
+                INSERT INTO orchestrator_runs (
+                    run_id, started_at, finished_at, target_admissions, step_results
+                ) VALUES (%s, %s, %s, %s::jsonb, %s::jsonb)
+                """,
+                [(a, b, c, j(d), j(e)) for (a, b, c, d, e) in orchestrator_runs],
+            )
+            cur.executemany(
+                """
+                INSERT INTO agent_consumption_cursor (
+                    consumer_agent, admission_id, last_event_id, last_event_at
+                ) VALUES (%s, %s, %s, %s)
+                ON CONFLICT (consumer_agent, admission_id) DO UPDATE SET
+                    last_event_id = EXCLUDED.last_event_id,
+                    last_event_at = EXCLUDED.last_event_at,
+                    updated_at = NOW()
+                """,
+                agent_consumption_cursor,
+            )
 
             tables = [
                 "patients", "beds", "admissions", "events", "vital_sign_events",
                 "lab_events", "intervention_events", "patient_state_current",
-                "patient_state_snapshots", "risk_assessments", "alerts", "audit_logs",
+                "patient_state_snapshots", "agent_outputs", "agent_events",
+                "agent_consumption_cursor", "agent_registry", "orchestrator_runs",
+                "risk_assessments", "alerts", "audit_logs",
             ]
             counts: dict[str, int] = {}
             for table in tables:
@@ -246,3 +386,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

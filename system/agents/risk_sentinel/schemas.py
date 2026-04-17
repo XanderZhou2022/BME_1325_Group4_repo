@@ -1,37 +1,35 @@
-from pydantic import BaseModel, Field
-from typing import List, Dict, Optional
+from __future__ import annotations
+
 from datetime import datetime
+from decimal import Decimal
+from typing import Any, Literal
 
-class ApacheIIBreakdown(BaseModel):
-    physiology: int
-    age: int
-    chronic_health: int
-    total: int
+from pydantic import BaseModel, Field
 
-class EvidenceItem(BaseModel):
-    param: str
-    worst_value: Optional[float] = None
-    score: int
-    reason: str
 
-class RiskAssessmentRequest(BaseModel):
-    admission_id: str
-    temporal_state: Dict # 来自 Patient Memory 的 TemporalStateSummary dict
-    age: int
-    chronic_health_status: Optional[str] = None # 如 "severe_organ_insufficiency"
-    is_elective_surgery: bool = False
-    window_hours: int = 24
+RiskSeverity = Literal["low", "warning", "critical"]
+EscalationLevel = Literal["info", "warning", "critical"]
 
-class RiskAssessment(BaseModel):
-    admission_id: str
-    timestamp: datetime
-    risk_type: str = "apache_ii_comprehensive"
-    confidence: float
-    severity: str = Field(default="low", pattern="^(low|warning|critical)$")
-    evidence: List[EvidenceItem]
+
+class RiskImage(BaseModel):
+    risk_type: str
+    confidence: Decimal = Field(ge=0, le=1)
+    severity: RiskSeverity
+    evidence: list[dict[str, Any]]
     time_window: str
-    recommended_action: Optional[str] = None
-    apache_ii_breakdown: ApacheIIBreakdown
-    intervention_context_impact: Optional[str] = None
-    urgency_adjusted: bool = False
-    trend_direction: str
+    recommended_action: str
+
+
+class RiskSentinelEvaluateRequest(BaseModel):
+    admission_id: str
+    max_events: int = Field(default=200, ge=1, le=2000)
+    force_recompute: bool = False
+
+
+class RiskSentinelEvaluateResponse(BaseModel):
+    admission_id: str
+    consumed_event_count: int
+    consumed_event_ids: list[str]
+    risks: list[RiskImage]
+    escalation_level: EscalationLevel
+    generated_at: datetime

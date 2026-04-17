@@ -24,7 +24,7 @@
 
 这一层每张床都要有自己的状态处理单元。
 
-### 2. Bedside Monitor Agent（20 个，每床 1 个）
+### 2. Bedside Monitor Agent（5 个，每床 1 个）
 
 这是最底层的实时状态感知 agent。
 
@@ -58,7 +58,7 @@
 
 ------
 
-### 3. Intervention Tracker Agent（20 个，每床 1 个）
+### 3. Intervention Tracker Agent（5 个，每床 1 个）
 
 这个 agent 专门看“做了什么治疗，以及做完以后有没有变化”。
 
@@ -80,7 +80,7 @@
 
 ------
 
-### 4. Risk Sentinel Agent（20 个，每床 1 个）
+### 4. Risk Sentinel Agent（5 个，每床 1 个）
 
 这是每张床的风险预警 agent，也是系统里最接近“临床推理”的一层。
 
@@ -114,7 +114,7 @@
 
 ------
 
-### 5. Patient Memory Agent（20 个，每床 1 个）
+### 5. Patient Memory Agent（5 个，每床 1 个）
 
 这是每张床的“病程记忆体”。
 
@@ -215,15 +215,14 @@
 如果按 20 床位 ICU 来算，推荐配置是：
 
 - ICU Orchestrator Agent：1
-- Bedside Monitor Agent：20
-- Intervention Tracker Agent：20
-- Risk Sentinel Agent：20
-- Patient Memory Agent：20
+- Bedside Monitor Agent：5
+- Intervention Tracker Agent：5
+- Risk Sentinel Agent：5
+- Patient Memory Agent：5
 - Clinical Summary Agent：1
 - Ward Coordinator Agent：1
 - Compassion & Family Communication Agent：1
 
-这样总共是 **84 个 agent 实例**。
 
 
 

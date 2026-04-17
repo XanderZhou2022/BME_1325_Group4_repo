@@ -1,11 +1,12 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import sys
+import os
 
 import psycopg
 
 
-DB_DSN = "dbname=icu_agent user=zhou host=localhost port=5432"
+DB_DSN = os.getenv("ICU_PG_DSN", "dbname=icu_agent user=zhou host=localhost port=5432")
 
 REQUIRED_TABLES = [
     "patients",
@@ -17,6 +18,11 @@ REQUIRED_TABLES = [
     "intervention_events",
     "patient_state_current",
     "patient_state_snapshots",
+    "agent_outputs",
+    "agent_events",
+    "agent_consumption_cursor",
+    "agent_registry",
+    "orchestrator_runs",
     "risk_assessments",
     "alerts",
     "audit_logs",
@@ -29,6 +35,9 @@ MIN_COUNTS = {
     "vital_sign_events": 3,
     "lab_events": 3,
     "intervention_events": 3,
+    "agent_outputs": 1,
+    "agent_events": 1,
+    "agent_registry": 3,
     "risk_assessments": 1,
     "alerts": 1,
     "audit_logs": 1,
@@ -104,6 +113,33 @@ def check_scenarios(cur: psycopg.Cursor) -> tuple[bool, list[str], list[tuple[st
     return (len(failed) == 0, failed, rows)
 
 
+def check_cursor_consistency(cur: psycopg.Cursor) -> tuple[bool, list[str], list[tuple[str, str, str | None]]]:
+    cur.execute(
+        """
+        SELECT c.consumer_agent, c.admission_id, c.last_event_id
+        FROM agent_consumption_cursor c
+        ORDER BY c.consumer_agent, c.admission_id
+        """
+    )
+    rows = cur.fetchall()
+    failed: list[str] = []
+    for consumer_agent, admission_id, last_event_id in rows:
+        if last_event_id is None:
+            continue
+        cur.execute(
+            """
+            SELECT 1 FROM agent_events
+            WHERE event_id = %s AND admission_id = %s
+            """,
+            (last_event_id, admission_id),
+        )
+        if cur.fetchone() is None:
+            failed.append(
+                f"cursor invalid: consumer={consumer_agent}, admission={admission_id}, last_event_id={last_event_id}"
+            )
+    return (len(failed) == 0, failed, rows)
+
+
 def main() -> int:
     try:
         with psycopg.connect(DB_DSN) as conn:
@@ -111,6 +147,7 @@ def main() -> int:
                 tables_ok, missing_tables = check_tables_exist(cur)
                 counts_ok, counts, count_failures = check_min_counts(cur)
                 scenarios_ok, scenario_failures, scenario_rows = check_scenarios(cur)
+                cursor_ok, cursor_failures, cursor_rows = check_cursor_consistency(cur)
     except Exception as exc:
         print(f"[ERROR] Database connection/query failed: {exc}")
         return 2
@@ -139,10 +176,18 @@ def main() -> int:
         for item in scenario_failures:
             print(f"  - issue: {item}")
 
-    all_ok = tables_ok and counts_ok and scenarios_ok
+    print(f"[{'PASS' if cursor_ok else 'FAIL'}] agent cursor consistency")
+    for consumer_agent, admission_id, last_event_id in cursor_rows:
+        print(f"  - consumer={consumer_agent}, admission={admission_id}, last_event_id={last_event_id or 'NULL'}")
+    if not cursor_ok:
+        for item in cursor_failures:
+            print(f"  - issue: {item}")
+
+    all_ok = tables_ok and counts_ok and scenarios_ok and cursor_ok
     print(f"\nFinal: {'PASS' if all_ok else 'FAIL'}")
     return 0 if all_ok else 1
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

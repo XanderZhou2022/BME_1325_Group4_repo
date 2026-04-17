@@ -1,13 +1,14 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import argparse
 import json
+import os
 
 import psycopg
 from psycopg.rows import dict_row
 
 
-DB_DSN = "dbname=icu_agent user=zhou host=localhost port=5432"
+DB_DSN = os.getenv("ICU_PG_DSN", "dbname=icu_agent user=zhou host=localhost port=5432")
 
 TABLES = [
     "patients",
@@ -19,6 +20,11 @@ TABLES = [
     "intervention_events",
     "patient_state_current",
     "patient_state_snapshots",
+    "agent_outputs",
+    "agent_events",
+    "agent_consumption_cursor",
+    "agent_registry",
+    "orchestrator_runs",
     "risk_assessments",
     "alerts",
     "audit_logs",
@@ -70,3 +76,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

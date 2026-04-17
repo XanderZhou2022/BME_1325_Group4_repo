@@ -1,135 +1,288 @@
-from .schemas import RiskAssessmentRequest, RiskAssessment, ApacheIIBreakdown, EvidenceItem
-from . import apache_ii_rules
-from datetime import datetime
-from typing import List, Optional
-import math
+﻿from __future__ import annotations
 
-def calculate_risk(request: RiskAssessmentRequest) -> RiskAssessment:
-    """
-    Calculate APACHE II risk score based on temporal state and patient info.
-    """
-    state = request.temporal_state
-    vitals = state.get("current_vitals", {})
-    
-    evidence: List[EvidenceItem] = []
-    physio_score = 0
-    
-    # Helper to accumulate scores and evidence
-    def add_evidence(param: str, score_func, value: Optional[float], reason: str = "Based on window worst value"):
-        if value is None:
-            return 0
-        score = score_func(value)
-        physio_score_local = score # Just for local calc
-        if score > 0:
-             evidence.append(EvidenceItem(param=param, worst_value=value, score=score, reason=reason))
-        return score
+from datetime import datetime, timezone
+from decimal import Decimal
+from typing import Any, cast
 
-    # 1. Physiology Scoring
-    # Temperature
-    physio_score += add_evidence("temperature", apache_ii_rules.get_temp_score, vitals.get("temperature"))
-    # MAP
-    physio_score += add_evidence("mean_arterial_pressure", apache_ii_rules.get_map_score, vitals.get("mean_arterial_pressure"))
-    # Heart Rate
-    physio_score += add_evidence("heart_rate", apache_ii_rules.get_hr_score, vitals.get("heart_rate"))
-    # Respiratory Rate
-    physio_score += add_evidence("respiratory_rate", apache_ii_rules.get_rr_score, vitals.get("respiratory_rate"))
-    # Oxygenation (Simplified: PaO2 check if FiO2 not high, else A-aDO2)
-    # Note: Actual APACHE II logic is complex here, we use the helper.
-    fio2 = vitals.get("fio2")
-    pao2 = vitals.get("pao2")
-    aado2 = vitals.get("aado2")
-    oxy_score = apache_ii_rules.get_oxygen_score(fio2, pao2, aado2)
-    if oxy_score > 0:
-        evidence.append(EvidenceItem(param="oxygenation", worst_value=pao2 or fio2, score=oxy_score, reason="Based on window worst value"))
-    physio_score += oxy_score
-    
-    # pH
-    physio_score += add_evidence("ph", apache_ii_rules.get_ph_score, vitals.get("ph"))
-    
-    # Sodium, Potassium, Creatinine (assuming labs might be merged or passed separately, 
-    # but here we check if they exist in vitals or we assume 0 if missing)
-    # In a real scenario, these would come from lab_events.
-    # We skip for now to keep strict alignment with provided vital_sign_events schema.
-    
-    # 2. Age Scoring
-    age_score = apache_ii_rules.get_age_score(request.age)
-    
-    # 3. Chronic Health Scoring
-    chronic_score = apache_ii_rules.get_chronic_health_score(request.chronic_health_status, request.is_elective_surgery)
-    
-    total_score = physio_score + age_score + chronic_score
-    
-    # 4. Severity Logic
-    # <10 low, 10-14 medium, 15-25 high, >25 critical
-    if total_score <= 9: 
-        severity = "low"
-    elif total_score <= 14: 
-        severity = "warning" 
-    elif total_score <= 25: 
-        severity = "warning" # Maps to high
-    else: 
-        severity = "critical"
-        
-    # 5. Intervention Impact Logic
-    # Check latest_interventions for response hints
-    urgency_adjusted = False
-    trend_direction = "stable"
-    latest_interventions = state.get("latest_interventions", [])
-    
-    for inv in latest_interventions:
-        # Handle both dict (from JSON) and Pydantic model (if passed as object)
-        hint = None
-        if isinstance(inv, dict):
-            hint = inv.get("response_hint")
-        else:
-            hint = getattr(inv, 'response_hint', None)
-            
-        if hint in ["non_responsive", "deteriorating_despite_intervention"]:
-            urgency_adjusted = True
-            # Bump severity if needed
-            if severity == "low": 
-                severity = "warning"
-            elif severity == "warning": 
-                severity = "critical"
-            
-            trend_direction = "worsening"
-            break
-            
-    if not urgency_adjusted:
-        trend_direction = "stable" # Simplified
-        if total_score > 15: # If high score but no worsening trend yet
-            trend_direction = "worsening"
-            
-    # 6. Confidence calculation
-    # Based on data completeness from memory agent
-    completeness = state.get("data_completeness_ratio", 1.0)
-    confidence = max(0.1, completeness) 
-    
-    breakdown = ApacheIIBreakdown(
-        physiology=physio_score,
-        age=age_score,
-        chronic_health=chronic_score,
-        total=total_score
-    )
-    
-    # Recommended Action
-    recommended_action = "Continue monitoring"
-    if severity == "warning" and not urgency_adjusted:
-        recommended_action = "Review patient state and trends"
-    elif severity == "critical" or urgency_adjusted:
-        recommended_action = "Urgent clinical review required"
-        
-    return RiskAssessment(
-        admission_id=request.admission_id,
-        timestamp=datetime.utcnow(),
-        risk_type="apache_ii_comprehensive",
-        confidence=confidence,
-        severity=severity,
-        evidence=evidence,
-        time_window=f"last_{request.window_hours}h",
-        recommended_action=recommended_action,
-        apache_ii_breakdown=breakdown,
-        intervention_context_impact="none" if not urgency_adjusted else "negative_response",
-        urgency_adjusted=urgency_adjusted,
-        trend_direction=trend_direction
+from fastapi import HTTPException
+from psycopg import Connection
+from psycopg.rows import dict_row
+from psycopg.types.json import Json
+
+from app.services.ids import new_id
+
+from .schemas import RiskImage, RiskSentinelEvaluateRequest, RiskSentinelEvaluateResponse, RiskSeverity
+
+
+RISK_TO_ALERT_TYPE: dict[str, str] = {
+    "shock": "shock_risk",
+    "respiratory_failure": "resp_failure_risk",
+    "persistent_hypoperfusion": "poor_fluid_response",
+}
+
+SEVERITY_ORDER = {"low": 0, "warning": 1, "critical": 2}
+SEVERITY_TO_ESCALATION = {"low": "info", "warning": "warning", "critical": "critical"}
+SEVERITY_TO_CONFIDENCE = {"low": Decimal("0.65"), "warning": Decimal("0.82"), "critical": Decimal("0.93")}
+
+
+def _calculate_risk_from_payloads(
+    *,
+    bedside_payload: dict[str, Any],
+    intervention_payload: dict[str, Any],
+) -> list[dict[str, Any]]:
+    abnormal_flags = list(bedside_payload.get("abnormal_flags") or [])
+    trend_labels = list(bedside_payload.get("trend_labels") or [])
+    urgency = str(bedside_payload.get("urgency_level") or "info")
+    response_assessment = str(intervention_payload.get("response_assessment") or "")
+    intervention_type = str(intervention_payload.get("intervention_type") or "")
+    poor_response = response_assessment in ("non_responsive", "deteriorating_despite_intervention")
+
+    risks: list[dict[str, Any]] = []
+    if "persistent_hypotension" in abnormal_flags or (intervention_type in ("fluid", "vasopressor") and poor_response):
+        severity = "critical" if poor_response or urgency == "critical" else "warning"
+        risks.append(
+            {
+                "risk_type": "shock",
+                "severity": severity,
+                "confidence": SEVERITY_TO_CONFIDENCE[severity],
+                "evidence": [{"source": "bedside", "abnormal_flags": abnormal_flags}, {"source": "intervention", "response_assessment": response_assessment}],
+                "time_window": str(bedside_payload.get("analysis_window") or "latest"),
+                "recommended_action": "review fluid response and source control",
+            }
+        )
+
+    if "hypoxemia" in abnormal_flags or (intervention_type == "ventilator_change" and poor_response):
+        severity = "critical" if poor_response else "warning"
+        risks.append(
+            {
+                "risk_type": "respiratory_failure",
+                "severity": severity,
+                "confidence": SEVERITY_TO_CONFIDENCE[severity],
+                "evidence": [{"source": "bedside", "trend_labels": trend_labels}, {"source": "intervention", "response_assessment": response_assessment}],
+                "time_window": str(bedside_payload.get("analysis_window") or "latest"),
+                "recommended_action": "reassess ventilator settings and gas exchange",
+            }
+        )
+
+    if "oliguria" in abnormal_flags or ("persistent_hypotension" in abnormal_flags and poor_response):
+        severity = "critical" if poor_response else "warning"
+        risks.append(
+            {
+                "risk_type": "persistent_hypoperfusion",
+                "severity": severity,
+                "confidence": SEVERITY_TO_CONFIDENCE[severity],
+                "evidence": [{"source": "bedside", "abnormal_flags": abnormal_flags}, {"source": "intervention", "response_assessment": response_assessment}],
+                "time_window": str(bedside_payload.get("analysis_window") or "latest"),
+                "recommended_action": "monitor post-fluid hemodynamic response",
+            }
+        )
+
+    uniq: dict[str, dict[str, Any]] = {}
+    for risk in risks:
+        risk_type = str(risk["risk_type"])
+        if risk_type not in uniq or SEVERITY_ORDER[str(risk["severity"])] > SEVERITY_ORDER[str(uniq[risk_type]["severity"])]:
+            uniq[risk_type] = risk
+    return list(uniq.values())
+
+
+def evaluate_risk_sentinel(conn: Connection, req: RiskSentinelEvaluateRequest) -> RiskSentinelEvaluateResponse:
+    with conn.transaction():
+        with conn.cursor(row_factory=dict_row) as cur:
+            cur.execute(
+                """
+                SELECT patient_id, bed_id
+                FROM admissions
+                WHERE admission_id = %s
+                """,
+                (req.admission_id,),
+            )
+            admission = cur.fetchone()
+            if not admission:
+                raise HTTPException(status_code=404, detail="Admission not found")
+            patient_id = cast(str, admission["patient_id"])
+            bed_id = cast(str, admission["bed_id"])
+
+            cur.execute(
+                """
+                INSERT INTO agent_registry (agent_name, input_event_types, output_event_type, schema_version, enabled)
+                VALUES ('risk_sentinel', '["bedside_analysis_ready","intervention_evaluation_ready","patient_memory_ready"]'::jsonb, 'risk_assessment_ready', 'v1', TRUE)
+                ON CONFLICT (agent_name) DO UPDATE SET enabled = TRUE, updated_at = NOW()
+                """
+            )
+
+            last_event_at = None
+            if not req.force_recompute:
+                cur.execute(
+                    """
+                    SELECT last_event_at
+                    FROM agent_consumption_cursor
+                    WHERE consumer_agent = 'risk_sentinel' AND admission_id = %s
+                    """,
+                    (req.admission_id,),
+                )
+                cursor_row = cur.fetchone()
+                if cursor_row:
+                    last_event_at = cursor_row["last_event_at"]
+
+            cur.execute(
+                """
+                SELECT event_id, producer_agent, produced_at, payload
+                FROM agent_events
+                WHERE admission_id = %s
+                  AND producer_agent = ANY(%s)
+                  AND (%s::timestamptz IS NULL OR produced_at > %s::timestamptz)
+                ORDER BY produced_at ASC, event_id ASC
+                LIMIT %s
+                """,
+                (req.admission_id, ["bedside_monitor", "intervention_tracker", "patient_memory"], last_event_at, last_event_at, req.max_events),
+            )
+            events = cur.fetchall()
+
+            consumed_event_ids = [cast(str, e["event_id"]) for e in events]
+
+            cur.execute(
+                """
+                SELECT payload
+                FROM agent_outputs
+                WHERE admission_id = %s AND agent_name = 'bedside_monitor'
+                ORDER BY generated_at DESC
+                LIMIT 1
+                """,
+                (req.admission_id,),
+            )
+            bedside_row = cur.fetchone()
+            bedside_payload = cast(dict[str, Any], (bedside_row["payload"] if bedside_row else {}))
+
+            cur.execute(
+                """
+                SELECT payload
+                FROM agent_outputs
+                WHERE admission_id = %s AND agent_name = 'intervention_tracker'
+                ORDER BY generated_at DESC
+                LIMIT 1
+                """,
+                (req.admission_id,),
+            )
+            intv_row = cur.fetchone()
+            intervention_payload = cast(dict[str, Any], (intv_row["payload"] if intv_row else {}))
+
+            risks = _calculate_risk_from_payloads(bedside_payload=bedside_payload, intervention_payload=intervention_payload)
+
+            for risk in risks:
+                risk_id = new_id("risk")
+                cur.execute(
+                    """
+                    INSERT INTO risk_assessments (
+                        id, admission_id, timestamp, risk_type, confidence, severity, evidence, time_window, recommended_action
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s::jsonb, %s, %s)
+                    """,
+                    (
+                        risk_id,
+                        req.admission_id,
+                        datetime.now(timezone.utc),
+                        risk["risk_type"],
+                        risk["confidence"],
+                        risk["severity"],
+                        Json(risk["evidence"]),
+                        risk["time_window"],
+                        risk["recommended_action"],
+                    ),
+                )
+
+                alert_id = new_id("alert")
+                cur.execute(
+                    """
+                    INSERT INTO alerts (
+                        alert_id, admission_id, patient_id, bed_id, alert_type, severity, status,
+                        source_agent, evidence, first_seen_at, last_seen_at
+                    ) VALUES (%s, %s, %s, %s, %s, %s, 'open', 'risk_sentinel', %s::jsonb, %s, %s)
+                    """,
+                    (
+                        alert_id,
+                        req.admission_id,
+                        patient_id,
+                        bed_id,
+                        RISK_TO_ALERT_TYPE.get(str(risk["risk_type"]), f"{risk['risk_type']}_risk"),
+                        "critical" if risk["severity"] == "critical" else "warning",
+                        Json(risk["evidence"]),
+                        datetime.now(timezone.utc),
+                        datetime.now(timezone.utc),
+                    ),
+                )
+
+            active_risks = [{"risk_type": r["risk_type"], "severity": r["severity"]} for r in risks]
+            if active_risks:
+                max_sev = max(active_risks, key=lambda x: SEVERITY_ORDER[str(x["severity"])])["severity"]
+                care_phase = "critical" if max_sev == "critical" else "unstable"
+                cur.execute(
+                    """
+                    UPDATE patient_state_current
+                    SET active_risks = %s::jsonb, care_phase = %s, updated_at = NOW()
+                    WHERE admission_id = %s
+                    """,
+                    (Json(active_risks), care_phase, req.admission_id),
+                )
+
+            payload = {
+                "risks": risks,
+                "consumed_event_ids": consumed_event_ids,
+            }
+            output_id = new_id("out")
+            event_id = new_id("aevt")
+            cur.execute(
+                """
+                INSERT INTO agent_outputs (
+                    output_id, admission_id, patient_id, bed_id, agent_name,
+                    schema_version, output_type, generated_at, payload
+                ) VALUES (%s, %s, %s, %s, 'risk_sentinel', 'v1', 'risk_assessment_ready', %s, %s::jsonb)
+                """,
+                (output_id, req.admission_id, patient_id, bed_id, datetime.now(timezone.utc), Json(payload)),
+            )
+            cur.execute(
+                """
+                INSERT INTO agent_events (
+                    event_id, admission_id, patient_id, bed_id, producer_agent,
+                    event_type, schema_version, produced_at, output_id, payload
+                ) VALUES (%s, %s, %s, %s, 'risk_sentinel', 'risk_assessment_ready', 'v1', %s, %s, %s::jsonb)
+                """,
+                (event_id, req.admission_id, patient_id, bed_id, datetime.now(timezone.utc), output_id, Json(payload)),
+            )
+
+            if events:
+                last = events[-1]
+                cur.execute(
+                    """
+                    INSERT INTO agent_consumption_cursor (
+                        consumer_agent, admission_id, last_event_id, last_event_at, updated_at
+                    ) VALUES ('risk_sentinel', %s, %s, %s, NOW())
+                    ON CONFLICT (consumer_agent, admission_id) DO UPDATE SET
+                        last_event_id = EXCLUDED.last_event_id,
+                        last_event_at = EXCLUDED.last_event_at,
+                        updated_at = NOW()
+                    """,
+                    (req.admission_id, last["event_id"], last["produced_at"]),
+                )
+
+    if risks:
+        highest = max(risks, key=lambda r: SEVERITY_ORDER[str(r["severity"])])
+        escalation = cast(str, SEVERITY_TO_ESCALATION[str(highest["severity"])])
+    else:
+        escalation = "info"
+    return RiskSentinelEvaluateResponse(
+        admission_id=req.admission_id,
+        consumed_event_count=len(consumed_event_ids),
+        consumed_event_ids=consumed_event_ids,
+        risks=[
+            RiskImage(
+                risk_type=str(r["risk_type"]),
+                confidence=cast(Decimal, r["confidence"]),
+                severity=cast(RiskSeverity, str(r["severity"])),
+                evidence=cast(list[dict[str, Any]], r["evidence"]),
+                time_window=str(r["time_window"]),
+                recommended_action=str(r["recommended_action"]),
+            )
+            for r in risks
+        ],
+        escalation_level=cast(Any, escalation),
+        generated_at=datetime.now(timezone.utc),
     )

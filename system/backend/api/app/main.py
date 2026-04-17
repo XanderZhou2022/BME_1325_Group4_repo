@@ -17,13 +17,16 @@ if SYSTEM_ROOT not in sys.path:
 from app.routers import router  # noqa: E402
 
 settings = get_settings()
+allowed_origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
+if not allowed_origins:
+    allowed_origins = ["*"]
 
 app = FastAPI(title=settings.api_title, version=settings.api_version)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
+    allow_origins=allowed_origins,
+    allow_credentials=False if allowed_origins == ["*"] else True,
     allow_methods=["*"],
     allow_headers=["*"],
 )

@@ -1,9 +1,10 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
+import os
 import psycopg
 
 
-DB_DSN = "dbname=icu_agent user=zhou host=localhost port=5432"
+DB_DSN = os.getenv("ICU_PG_DSN", "dbname=icu_agent user=zhou host=localhost port=5432")
 
 
 DDL_STATEMENTS = [
@@ -126,6 +127,63 @@ DDL_STATEMENTS = [
     );
     """,
     """
+    CREATE TABLE IF NOT EXISTS agent_outputs (
+        output_id TEXT PRIMARY KEY,
+        admission_id TEXT NOT NULL REFERENCES admissions(admission_id),
+        patient_id TEXT NOT NULL REFERENCES patients(patient_id),
+        bed_id TEXT NOT NULL REFERENCES beds(bed_id),
+        agent_name TEXT NOT NULL,
+        schema_version TEXT NOT NULL DEFAULT 'v1',
+        output_type TEXT NOT NULL,
+        generated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        payload JSONB NOT NULL DEFAULT '{}'::jsonb
+    );
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS agent_events (
+        event_id TEXT PRIMARY KEY,
+        admission_id TEXT NOT NULL REFERENCES admissions(admission_id),
+        patient_id TEXT NOT NULL REFERENCES patients(patient_id),
+        bed_id TEXT NOT NULL REFERENCES beds(bed_id),
+        producer_agent TEXT NOT NULL,
+        event_type TEXT NOT NULL,
+        schema_version TEXT NOT NULL DEFAULT 'v1',
+        produced_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        output_id TEXT REFERENCES agent_outputs(output_id),
+        payload JSONB NOT NULL DEFAULT '{}'::jsonb
+    );
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS agent_consumption_cursor (
+        consumer_agent TEXT NOT NULL,
+        admission_id TEXT NOT NULL REFERENCES admissions(admission_id),
+        last_event_id TEXT,
+        last_event_at TIMESTAMPTZ,
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        PRIMARY KEY (consumer_agent, admission_id)
+    );
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS agent_registry (
+        agent_name TEXT PRIMARY KEY,
+        input_event_types JSONB NOT NULL DEFAULT '[]'::jsonb,
+        output_event_type TEXT NOT NULL,
+        schema_version TEXT NOT NULL DEFAULT 'v1',
+        enabled BOOLEAN NOT NULL DEFAULT TRUE,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS orchestrator_runs (
+        run_id TEXT PRIMARY KEY,
+        started_at TIMESTAMPTZ NOT NULL,
+        finished_at TIMESTAMPTZ NOT NULL,
+        target_admissions JSONB NOT NULL DEFAULT '[]'::jsonb,
+        step_results JSONB NOT NULL DEFAULT '[]'::jsonb
+    );
+    """,
+    """
     CREATE TABLE IF NOT EXISTS risk_assessments (
         id TEXT PRIMARY KEY,
         admission_id TEXT NOT NULL REFERENCES admissions(admission_id),
@@ -183,7 +241,9 @@ def main() -> None:
                   AND table_name IN (
                       'patients', 'beds', 'admissions', 'events', 'vital_sign_events',
                       'lab_events', 'intervention_events', 'patient_state_current',
-                      'patient_state_snapshots', 'risk_assessments', 'alerts', 'audit_logs'
+                      'patient_state_snapshots', 'agent_outputs', 'agent_events',
+                      'agent_consumption_cursor', 'agent_registry',
+                      'orchestrator_runs', 'risk_assessments', 'alerts', 'audit_logs'
                   )
                 ORDER BY table_name;
                 """
@@ -197,3 +257,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

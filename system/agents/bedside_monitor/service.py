@@ -6,7 +6,9 @@ from typing import cast
 from fastapi import HTTPException
 from psycopg import Connection
 from psycopg.rows import dict_row
+from psycopg.types.json import Json
 
+from app.services.ids import new_id
 from .rules import run_bedside_monitor
 
 from .schemas import BedsideAnalyzeRequest, BedsideAnalyzeResponse, VitalPoint
@@ -98,6 +100,47 @@ def analyze_bedside(conn: Connection, req: BedsideAnalyzeRequest) -> BedsideAnal
         urine_output_points=req.urine_output_points,
         analysis_end=analysis_end,
     )
+    generated_at = datetime.now(timezone.utc)
+
+    payload = {
+        "analysis_window": req.analysis_window,
+        "current_status_summary": result["current_status_summary"],
+        "abnormal_flags": result["abnormal_flags"],
+        "trend_labels": result["trend_labels"],
+        "evidence": result["evidence"],
+        "urgency_level": result["urgency_level"],
+        "generated_at": generated_at.isoformat(),
+    }
+
+    with conn.transaction():
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO agent_registry (agent_name, input_event_types, output_event_type, schema_version, enabled)
+                VALUES ('bedside_monitor', '["vital_sign"]'::jsonb, 'bedside_analysis_ready', 'v1', TRUE)
+                ON CONFLICT (agent_name) DO UPDATE SET enabled = TRUE, updated_at = NOW()
+                """
+            )
+            output_id = new_id("out")
+            event_id = new_id("aevt")
+            cur.execute(
+                """
+                INSERT INTO agent_outputs (
+                    output_id, admission_id, patient_id, bed_id, agent_name,
+                    schema_version, output_type, generated_at, payload
+                ) VALUES (%s, %s, %s, %s, 'bedside_monitor', 'v1', 'bedside_analysis_ready', %s, %s::jsonb)
+                """,
+                (output_id, req.admission_id, patient_bed["patient_id"], patient_bed["bed_id"], generated_at, Json(payload)),
+            )
+            cur.execute(
+                """
+                INSERT INTO agent_events (
+                    event_id, admission_id, patient_id, bed_id, producer_agent,
+                    event_type, schema_version, produced_at, output_id, payload
+                ) VALUES (%s, %s, %s, %s, 'bedside_monitor', 'bedside_analysis_ready', 'v1', %s, %s, %s::jsonb)
+                """,
+                (event_id, req.admission_id, patient_bed["patient_id"], patient_bed["bed_id"], generated_at, output_id, Json(payload)),
+            )
 
     return BedsideAnalyzeResponse(
         patient_id=patient_bed["patient_id"],
@@ -108,6 +151,6 @@ def analyze_bedside(conn: Connection, req: BedsideAnalyzeRequest) -> BedsideAnal
         trend_labels=result["trend_labels"],
         evidence=result["evidence"],
         urgency_level=result["urgency_level"],
-        generated_at=datetime.now(timezone.utc),
+        generated_at=generated_at,
     )
 

@@ -6,7 +6,9 @@ from typing import cast
 from fastapi import HTTPException
 from psycopg import Connection
 from psycopg.rows import dict_row
+from psycopg.types.json import Json
 
+from app.services.ids import new_id
 from .rules import run_intervention_tracker
 from .schemas import InterventionEvaluateRequest, InterventionEvaluateResponse, InterventionType, VitalPoint
 
@@ -99,6 +101,48 @@ def evaluate_intervention_tracker(conn: Connection, req: InterventionEvaluateReq
         post_vitals=post_vitals,
         observation_window=observation_window,
     )
+    generated_at = datetime.now(timezone.utc)
+    payload = {
+        "intervention_type": intervention_type,
+        "intervention_time": intervention_time.isoformat(),
+        "observation_window": observation_window,
+        "response_assessment": result["response_assessment"],
+        "target_metrics": result["target_metrics"],
+        "before_after_comparison": result["before_after_comparison"],
+        "evidence": result["evidence"],
+        "escalation_hint": result["escalation_hint"],
+        "generated_at": generated_at.isoformat(),
+    }
+
+    with conn.transaction():
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO agent_registry (agent_name, input_event_types, output_event_type, schema_version, enabled)
+                VALUES ('intervention_tracker', '["intervention"]'::jsonb, 'intervention_evaluation_ready', 'v1', TRUE)
+                ON CONFLICT (agent_name) DO UPDATE SET enabled = TRUE, updated_at = NOW()
+                """
+            )
+            output_id = new_id("out")
+            event_id = new_id("aevt")
+            cur.execute(
+                """
+                INSERT INTO agent_outputs (
+                    output_id, admission_id, patient_id, bed_id, agent_name,
+                    schema_version, output_type, generated_at, payload
+                ) VALUES (%s, %s, %s, %s, 'intervention_tracker', 'v1', 'intervention_evaluation_ready', %s, %s::jsonb)
+                """,
+                (output_id, req.admission_id, patient_id, bed_id, generated_at, Json(payload)),
+            )
+            cur.execute(
+                """
+                INSERT INTO agent_events (
+                    event_id, admission_id, patient_id, bed_id, producer_agent,
+                    event_type, schema_version, produced_at, output_id, payload
+                ) VALUES (%s, %s, %s, %s, 'intervention_tracker', 'intervention_evaluation_ready', 'v1', %s, %s, %s::jsonb)
+                """,
+                (event_id, req.admission_id, patient_id, bed_id, generated_at, output_id, Json(payload)),
+            )
 
     return InterventionEvaluateResponse(
         patient_id=patient_id,
@@ -111,6 +155,6 @@ def evaluate_intervention_tracker(conn: Connection, req: InterventionEvaluateReq
         before_after_comparison=result["before_after_comparison"],
         evidence=result["evidence"],
         escalation_hint=result["escalation_hint"],
-        generated_at=datetime.now(timezone.utc),
+        generated_at=generated_at,
     )
 

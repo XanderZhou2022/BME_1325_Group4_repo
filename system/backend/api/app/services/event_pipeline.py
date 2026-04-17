@@ -107,6 +107,30 @@ def _get_or_init_state(cur: Any, admission: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _validate_vital_payload(body: VitalSignEventCreate) -> None:
+    provided = [
+        body.heart_rate,
+        body.mean_arterial_pressure,
+        body.systolic_bp,
+        body.diastolic_bp,
+        body.respiratory_rate,
+        body.temperature,
+        body.spo2,
+        body.fio2,
+        body.pao2,
+        body.aado2,
+        body.ph,
+        body.gcs,
+    ]
+    if all(v is None for v in provided):
+        raise HTTPException(status_code=422, detail="At least one vital-sign field is required")
+
+
+def _validate_intervention_payload(body: InterventionEventCreate) -> None:
+    if not body.description.strip():
+        raise HTTPException(status_code=422, detail="Intervention description cannot be empty")
+
+
 def _upsert_state(
     cur: Any,
     state: dict[str, Any],
@@ -147,6 +171,7 @@ def write_vital_sign(
 ) -> dict[str, str]:
     detail_id = new_id("vital")
     event_id = new_id("evt")
+    _validate_vital_payload(body)
     with conn.transaction():
         cur = conn.cursor()
         admission = _get_admission(cur, admission_id)
@@ -341,6 +366,7 @@ def write_intervention(
 ) -> dict[str, str]:
     detail_id = new_id("intv")
     event_id = new_id("evt")
+    _validate_intervention_payload(body)
     with conn.transaction():
         cur = conn.cursor()
         admission = _get_admission(cur, admission_id)
