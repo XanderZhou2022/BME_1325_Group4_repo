@@ -4,7 +4,8 @@ Aggregates inputs from downstream agents into clinical summaries.
 """
 from __future__ import annotations
 
-from typing import List
+from datetime import datetime, timezone
+from typing import Any, List
 
 from .schemas import (
     VitalsSummary,
@@ -76,12 +77,17 @@ def deduce_problems(
         if relevant_interventions:
             evidence_parts.append(f"Post-{relevant_interventions[-1].intervention_type}: {relevant_interventions[-1].response_assessment}")
 
+        sev = "critical" if urgency == "critical" else ("warning" if urgency == "warning" else "info")
         problems.append(
             ProblemListItem(
                 problem="Hemodynamic Instability",
-                urgency=urgency,
+                urgency=sev,  # type: ignore[arg-type]
                 evidence=", ".join(evidence_parts),
                 intervention_status=status,
+                status="active",
+                trajectory="worsening" if status in ("deteriorating", "non_responsive") else "stable",
+                supporting_evidence=evidence_parts,
+                last_updated=datetime.now(timezone.utc),
             )
         )
 
@@ -118,12 +124,17 @@ def deduce_problems(
         if relevant_interventions:
             evidence_parts.append(f"Post-ventilation change: {relevant_interventions[-1].response_assessment}")
 
+        sev = "critical" if urgency == "critical" else ("warning" if urgency == "warning" else "info")
         problems.append(
             ProblemListItem(
                 problem="Respiratory Instability",
-                urgency=urgency,
+                urgency=sev,  # type: ignore[arg-type]
                 evidence=", ".join(evidence_parts),
                 intervention_status=status,
+                status="active",
+                trajectory="worsening" if status in ("deteriorating", "non_responsive") else "stable",
+                supporting_evidence=evidence_parts,
+                last_updated=datetime.now(timezone.utc),
             )
         )
 
@@ -135,6 +146,10 @@ def deduce_problems(
                 urgency="warning",
                 evidence="Decreased urine output",
                 intervention_status="monitoring",
+                status="active",
+                trajectory="unclear",
+                supporting_evidence=["Decreased urine output"],
+                last_updated=datetime.now(timezone.utc),
             )
         )
 
@@ -223,3 +238,16 @@ def generate_focus_areas(
         focus.append("Continue routine monitoring and care.")
         
     return focus
+
+
+def build_problem_items(problems: List[ProblemListItem]) -> List[dict[str, Any]]:
+    return [
+        {
+            "problem": p.problem,
+            "status": p.status,
+            "trajectory": p.trajectory,
+            "supporting_evidence": p.supporting_evidence or [p.evidence],
+            "last_updated": p.last_updated.isoformat(),
+        }
+        for p in problems
+    ]

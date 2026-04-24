@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any, Literal, Optional, List, Dict
+from typing import Any, Literal, List, Dict
 
 from pydantic import BaseModel, Field
 
@@ -60,25 +60,35 @@ class ProblemListItem(BaseModel):
     urgency: Literal["info", "warning", "critical"]
     evidence: str
     intervention_status: str  # e.g., "responsive", "non_responsive", "monitoring"
+    status: Literal["active", "improving", "resolved", "unclear"] = "active"
+    trajectory: Literal["improving", "stable", "worsening", "unclear"] = "unclear"
+    supporting_evidence: List[str] = []
+    last_updated: datetime = Field(default_factory=datetime.utcnow)
 
 
 class ClinicalSummaryResponse(BaseModel):
     """Output for Clinical Summary Agent."""
+    schema_version: str = "clinical_summary.v1.1"
+    agent: str = "clinical_summary"
     patient_id: str
     bed_id: str
     admission_id: str
-    generated_at: datetime = Field(default_factory=datetime.now)
-    
-    # 24h Rounds Summary
+    generated_at: datetime = Field(default_factory=datetime.utcnow)
+    summary_type: Literal["current_status_summary", "24h_round_summary"] = "current_status_summary"
+    one_line_status: str = ""
+    icu_course_context: str = ""
+    last_24h_key_events: List[str] = []
+    active_problem_list: List[Dict[str, Any]] = []
+    key_interventions_and_responses: List[Dict[str, Any]] = []
+    recommended_attention_targets: List[str] = []
+    uncertainties_or_missing_data: List[str] = []
+    urgency_level: Literal["info", "warning", "critical"] = "info"
+    notify_agents: List[str] = []
+
+    # backward-compatible fields
     twenty_four_hour_summary: str = Field(alias="24h_rounds_summary")
-    
-    # Problem List
     problem_list: List[ProblemListItem] = []
-    
-    # Focus Areas
     focus_areas_for_today: List[str] = []
-    
-    # Clinical Narrative
     clinical_narrative: str
 
     class Config:

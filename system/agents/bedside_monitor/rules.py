@@ -1,454 +1,238 @@
 from __future__ import annotations
 
-import statistics
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from .schemas import UrineOutputPoint, VitalPoint
 
-
-# --- Rule thresholds (simulation defaults; adjust later if you add richer patient context) ---
-MAP_PERSISTENT_THRESHOLD = 65.0  # mmHg
-SPO2_PERSISTENT_THRESHOLD = 90.0  # %
-HR_TACHYCARDIA_THRESHOLD = 110.0  # bpm
-TEMP_FEVER_THRESHOLD = 38.0  # Celsius
-
-MAP_PERSISTENT_MINUTES = 30
-SPO2_PERSISTENT_MINUTES = 30
-HR_PERSISTENT_MINUTES = 20
-TEMP_PERSISTENT_MINUTES = 10
-
-# Oliguria (simulation convention): urine_output_ml_per_hour <= threshold_ml_per_hour
-# Typical clinical rule is < 0.5 ml/kg/hr; we approximate without weight.
-DEFAULT_OLIGURIA_THRESHOLD_ML_PER_HOUR = 30.0
-OLIGURIA_LOOKBACK_MINUTES = 60
-
-# Trend analysis window (per tasks book first-layer requirement)
-TREND_MINUTES = 45
-
-MIN_POINTS_FOR_PERSISTENT_RULE = 2
+THRESHOLDS: dict[str, dict[str, Any]] = {
+    "mean_arterial_pressure": {"warning_lt": 65.0, "critical_lt": 60.0, "critical_duration_minutes": 15},
+    "spo2": {"warning_lt": 92.0, "critical_lt": 88.0},
+    "heart_rate": {"warning_gt": 120.0, "critical_gt": 140.0, "warning_lt": 50.0, "critical_lt": 40.0},
+    "respiratory_rate": {"warning_gt": 24.0, "critical_gt": 30.0, "critical_lt": 8.0},
+    "temperature": {"warning_gte": 38.5, "critical_gte": 39.5, "warning_lt": 35.0},
+    "gcs": {"warning_lt": 13.0, "critical_lte": 8.0},
+}
 
 
 def _to_float(x: Any) -> float | None:
-    if x is None:
-        return None
-    if isinstance(x, float):
-        return x
-    if isinstance(x, int):
-        return float(x)
-    # psycopg often returns Decimal for NUMERIC columns.
     try:
-        return float(x)
+        return float(x) if x is not None else None
     except Exception:
         return None
 
 
-def _window_points(
-    points: list[VitalPoint],
-    metric: str,
-    *,
-    end: datetime,
-    minutes: int,
-) -> list[float]:
+def _window(vitals: list[VitalPoint], end: datetime, minutes: int) -> list[VitalPoint]:
     start = end - timedelta(minutes=minutes)
-    out: list[float] = []
-    for p in points:
-        if p.timestamp < start or p.timestamp > end:
-            continue
-        v = getattr(p, metric)
-        fv = _to_float(v)
-        if fv is None:
-            continue
-        out.append(fv)
+    return [v for v in vitals if start <= v.timestamp <= end]
+
+
+def _metric_points(vitals: list[VitalPoint], metric: str) -> list[tuple[datetime, float]]:
+    out: list[tuple[datetime, float]] = []
+    for v in vitals:
+        value = _to_float(getattr(v, metric))
+        if value is not None:
+            out.append((v.timestamp, value))
     return out
 
 
-def _window_last_value(
-    points: list[VitalPoint],
-    metric: str,
-    *,
-    end: datetime,
-    minutes: int,
-) -> float | None:
-    start = end - timedelta(minutes=minutes)
-    last_ts: datetime | None = None
-    last_val: float | None = None
-    for p in points:
-        if p.timestamp < start or p.timestamp > end:
-            continue
-        v = getattr(p, metric)
-        fv = _to_float(v)
-        if fv is None:
-            continue
-        if last_ts is None or p.timestamp > last_ts:
-            last_ts = p.timestamp
-            last_val = fv
-    return last_val
+def _duration_below(points: list[tuple[datetime, float]], threshold: float) -> int:
+    if len(points) < 2:
+        return 0
+    duration = 0
+    for idx in range(1, len(points)):
+        prev_ts, prev_val = points[idx - 1]
+        curr_ts, _curr_val = points[idx]
+        if prev_val < threshold:
+            duration += int((curr_ts - prev_ts).total_seconds() / 60)
+    return max(0, duration)
 
 
-def _mean(values: list[float]) -> float | None:
-    if not values:
+def _build_abnormal_flags(vitals_90m: list[VitalPoint]) -> list[dict[str, Any]]:
+    flags: list[dict[str, Any]] = []
+    for metric, cfg in THRESHOLDS.items():
+        points = _metric_points(vitals_90m, metric)
+        if not points:
+            continue
+        latest_val = points[-1][1]
+        severity = None
+        threshold_text = ""
+        duration_minutes = 0
+
+        if metric == "mean_arterial_pressure":
+            duration_minutes = _duration_below(points, cfg["critical_lt"])
+            if latest_val < cfg["critical_lt"] and duration_minutes >= cfg["critical_duration_minutes"]:
+                severity = "critical"
+                threshold_text = "<60 for >=15m"
+            elif latest_val < cfg["warning_lt"]:
+                severity = "warning"
+                threshold_text = "<65"
+        elif metric == "spo2":
+            if latest_val < cfg["critical_lt"]:
+                severity = "critical"
+                threshold_text = "<88"
+            elif latest_val < cfg["warning_lt"]:
+                severity = "warning"
+                threshold_text = "<92"
+        elif metric == "heart_rate":
+            if latest_val > cfg["critical_gt"] or latest_val < cfg["critical_lt"]:
+                severity = "critical"
+                threshold_text = ">140 or <40"
+            elif latest_val > cfg["warning_gt"] or latest_val < cfg["warning_lt"]:
+                severity = "warning"
+                threshold_text = ">120 or <50"
+        elif metric == "respiratory_rate":
+            if latest_val > cfg["critical_gt"] or latest_val < cfg["critical_lt"]:
+                severity = "critical"
+                threshold_text = ">30 or <8"
+            elif latest_val > cfg["warning_gt"]:
+                severity = "warning"
+                threshold_text = ">24"
+        elif metric == "temperature":
+            if latest_val >= cfg["critical_gte"]:
+                severity = "critical"
+                threshold_text = ">=39.5"
+            elif latest_val >= cfg["warning_gte"] or latest_val < cfg["warning_lt"]:
+                severity = "warning"
+                threshold_text = ">=38.5 or <35"
+        elif metric == "gcs":
+            if latest_val <= cfg["critical_lte"]:
+                severity = "critical"
+                threshold_text = "<=8"
+            elif latest_val < cfg["warning_lt"]:
+                severity = "warning"
+                threshold_text = "<13"
+
+        if severity:
+            flags.append(
+                {
+                    "type": f"{metric}_{severity}",
+                    "severity": severity,
+                    "metric": metric,
+                    "value": latest_val,
+                    "threshold": threshold_text,
+                    "duration_minutes": duration_minutes,
+                }
+            )
+    return flags
+
+
+def _trend_for_metric(vitals_6h: list[VitalPoint], metric: str, delta: float) -> dict[str, Any] | None:
+    points = _metric_points(vitals_6h, metric)
+    if len(points) < 2:
         return None
-    return float(sum(values)) / len(values)
+    first = points[0][1]
+    last = points[-1][1]
+    diff = last - first
+    trend = "stable"
+    if diff >= delta:
+        trend = "increasing"
+    elif diff <= -delta:
+        trend = "decreasing"
+    return {
+        "metric": metric,
+        "trend": trend,
+        "evidence": f"{metric} changed from {first:.2f} to {last:.2f} in last 6h.",
+    }
 
 
-def _std(values: list[float]) -> float | None:
-    if len(values) < 2:
-        return 0.0
-    return float(statistics.pstdev(values))
+def _build_trend_labels(vitals_6h: list[VitalPoint]) -> list[dict[str, Any]]:
+    labels: list[dict[str, Any]] = []
+    configs = [
+        ("mean_arterial_pressure", 10.0),
+        ("heart_rate", 20.0),
+        ("spo2", 4.0),
+        ("temperature", 1.0),
+    ]
+    for metric, delta in configs:
+        label = _trend_for_metric(vitals_6h, metric, delta)
+        if label:
+            labels.append(label)
+    return labels
 
 
-def _classify_direction(first: float, last: float, *, stable_ratio: float) -> str:
-    denom = max(abs(first), 1e-9)
-    ratio = (last - first) / denom
-    if abs(ratio) <= stable_ratio:
-        return "stable"
-    if ratio < 0:
-        return "downtrend"
-    return "uptrend"
+def _latest_vitals(vitals_90m: list[VitalPoint]) -> dict[str, Any]:
+    if not vitals_90m:
+        return {}
+    last = vitals_90m[-1]
+    return {
+        "timestamp": last.timestamp.isoformat(),
+        "heart_rate": _to_float(last.heart_rate),
+        "mean_arterial_pressure": _to_float(last.mean_arterial_pressure),
+        "respiratory_rate": _to_float(last.respiratory_rate),
+        "temperature": _to_float(last.temperature),
+        "spo2": _to_float(last.spo2),
+        "gcs": _to_float(last.gcs),
+    }
 
 
-def _trend_labels(vitals: list[VitalPoint], *, analysis_end: datetime) -> tuple[list[str], list[dict[str, Any]]]:
-    labels: list[str] = []
-    evidence: list[dict[str, Any]] = []
-
-    # MAP
-    map_vals = _window_points(vitals, "mean_arterial_pressure", end=analysis_end, minutes=TREND_MINUTES)
-    map_last = _window_last_value(vitals, "mean_arterial_pressure", end=analysis_end, minutes=TREND_MINUTES)
-    if map_vals and map_last is not None:
-        first = map_vals[0]
-        direction = _classify_direction(first, map_last, stable_ratio=0.05)
-        if direction == "downtrend":
-            labels.append("MAP_downtrend")
-        elif direction == "uptrend":
-            labels.append("MAP_uptrend")
-        evidence.append(
-            {"kind": "trend", "metric": "MAP", "window_minutes": TREND_MINUTES, "first": first, "last": map_last}
-        )
-
-    # SpO2: unstable detection + direction
-    spo2_vals = _window_points(vitals, "spo2", end=analysis_end, minutes=TREND_MINUTES)
-    spo2_last = _window_last_value(vitals, "spo2", end=analysis_end, minutes=TREND_MINUTES)
-    if spo2_vals and spo2_last is not None:
-        first = spo2_vals[0]
-        std = _std(spo2_vals) or 0.0
-        rng = max(spo2_vals) - min(spo2_vals) if len(spo2_vals) >= 2 else 0.0
-        if rng >= 10.0 or std >= 5.0:
-            labels.append("SpO2_unstable")
-        else:
-            direction = _classify_direction(first, spo2_last, stable_ratio=0.05)
-            if direction == "downtrend":
-                labels.append("SpO2_downtrend")
-        evidence.append(
-            {
-                "kind": "trend",
-                "metric": "SpO2",
-                "window_minutes": TREND_MINUTES,
-                "first": first,
-                "last": spo2_last,
-                "std": std,
-                "range": rng,
-            }
-        )
-
-    # HR
-    hr_vals = _window_points(vitals, "heart_rate", end=analysis_end, minutes=TREND_MINUTES)
-    hr_last = _window_last_value(vitals, "heart_rate", end=analysis_end, minutes=TREND_MINUTES)
-    if hr_vals and hr_last is not None:
-        first = hr_vals[0]
-        direction = _classify_direction(first, hr_last, stable_ratio=0.05)
-        if direction == "uptrend":
-            labels.append("HR_uptrend")
-        elif direction == "downtrend":
-            labels.append("HR_downtrend")
-        evidence.append(
-            {"kind": "trend", "metric": "HR", "window_minutes": TREND_MINUTES, "first": first, "last": hr_last}
-        )
-
-    # Temp
-    temp_vals = _window_points(vitals, "temperature", end=analysis_end, minutes=TREND_MINUTES)
-    temp_last = _window_last_value(vitals, "temperature", end=analysis_end, minutes=TREND_MINUTES)
-    if temp_vals and temp_last is not None:
-        first = temp_vals[0]
-        direction = _classify_direction(first, temp_last, stable_ratio=0.03)
-        if direction == "uptrend":
-            labels.append("Temp_rising")
-        elif direction == "downtrend":
-            labels.append("Temp_falling")
-        evidence.append(
-            {"kind": "trend", "metric": "Temp", "window_minutes": TREND_MINUTES, "first": first, "last": temp_last}
-        )
-
-    return labels, evidence
+def _summary_stats(vitals_90m: list[VitalPoint]) -> dict[str, Any]:
+    metrics = ("heart_rate", "mean_arterial_pressure", "respiratory_rate", "temperature", "spo2", "gcs")
+    out: dict[str, Any] = {}
+    for metric in metrics:
+        values = [v for _, v in _metric_points(vitals_90m, metric)]
+        if values:
+            out[metric] = {"min": min(values), "max": max(values), "latest": values[-1]}
+    return out
 
 
-def _detect_persistent_flags(vitals: list[VitalPoint], *, analysis_end: datetime) -> tuple[list[str], list[dict[str, Any]]]:
-    flags: list[str] = []
-    evidence: list[dict[str, Any]] = []
-
-    # persistent_hypotension: MAP < 65 in last 30 minutes
-    map_recent = _window_points(vitals, "mean_arterial_pressure", end=analysis_end, minutes=MAP_PERSISTENT_MINUTES)
-    map_last = _window_last_value(vitals, "mean_arterial_pressure", end=analysis_end, minutes=MAP_PERSISTENT_MINUTES)
-    if len(map_recent) >= MIN_POINTS_FOR_PERSISTENT_RULE and map_last is not None:
-        map_mean = _mean(map_recent) or float("nan")
-        if map_mean < MAP_PERSISTENT_THRESHOLD and map_last < MAP_PERSISTENT_THRESHOLD:
-            flags.append("persistent_hypotension")
-            evidence.append(
-                {
-                    "kind": "abnormal_flag",
-                    "flag": "persistent_hypotension",
-                    "metric": "MAP",
-                    "threshold": MAP_PERSISTENT_THRESHOLD,
-                    "window_minutes": MAP_PERSISTENT_MINUTES,
-                    "recent_mean": map_mean,
-                    "recent_values": map_recent,
-                    "last_value": map_last,
-                }
-            )
-
-    # hypoxemia: SpO2 < 90 in last 30 minutes
-    spo2_recent = _window_points(vitals, "spo2", end=analysis_end, minutes=SPO2_PERSISTENT_MINUTES)
-    spo2_last = _window_last_value(vitals, "spo2", end=analysis_end, minutes=SPO2_PERSISTENT_MINUTES)
-    if len(spo2_recent) >= MIN_POINTS_FOR_PERSISTENT_RULE and spo2_last is not None:
-        spo2_mean = _mean(spo2_recent) or float("nan")
-        if spo2_mean < SPO2_PERSISTENT_THRESHOLD and spo2_last < SPO2_PERSISTENT_THRESHOLD:
-            flags.append("hypoxemia")
-            evidence.append(
-                {
-                    "kind": "abnormal_flag",
-                    "flag": "hypoxemia",
-                    "metric": "SpO2",
-                    "threshold": SPO2_PERSISTENT_THRESHOLD,
-                    "window_minutes": SPO2_PERSISTENT_MINUTES,
-                    "recent_mean": spo2_mean,
-                    "recent_values": spo2_recent,
-                    "last_value": spo2_last,
-                }
-            )
-
-    # tachycardia: HR > 110 in last 20 minutes
-    hr_recent = _window_points(vitals, "heart_rate", end=analysis_end, minutes=HR_PERSISTENT_MINUTES)
-    hr_last = _window_last_value(vitals, "heart_rate", end=analysis_end, minutes=HR_PERSISTENT_MINUTES)
-    if len(hr_recent) >= MIN_POINTS_FOR_PERSISTENT_RULE and hr_last is not None:
-        hr_mean = _mean(hr_recent) or float("nan")
-        if hr_mean > HR_TACHYCARDIA_THRESHOLD and hr_last > HR_TACHYCARDIA_THRESHOLD:
-            flags.append("tachycardia")
-            evidence.append(
-                {
-                    "kind": "abnormal_flag",
-                    "flag": "tachycardia",
-                    "metric": "HR",
-                    "threshold": HR_TACHYCARDIA_THRESHOLD,
-                    "window_minutes": HR_PERSISTENT_MINUTES,
-                    "recent_mean": hr_mean,
-                    "recent_values": hr_recent,
-                    "last_value": hr_last,
-                }
-            )
-
-    # fever: Temp >= 38 in last 10 minutes
-    temp_recent = _window_points(vitals, "temperature", end=analysis_end, minutes=TEMP_PERSISTENT_MINUTES)
-    temp_last = _window_last_value(vitals, "temperature", end=analysis_end, minutes=TEMP_PERSISTENT_MINUTES)
-    if len(temp_recent) >= MIN_POINTS_FOR_PERSISTENT_RULE and temp_last is not None:
-        temp_mean = _mean(temp_recent) or float("nan")
-        if temp_mean >= TEMP_FEVER_THRESHOLD and temp_last >= TEMP_FEVER_THRESHOLD:
-            flags.append("fever")
-            evidence.append(
-                {
-                    "kind": "abnormal_flag",
-                    "flag": "fever",
-                    "metric": "Temp",
-                    "threshold": TEMP_FEVER_THRESHOLD,
-                    "window_minutes": TEMP_PERSISTENT_MINUTES,
-                    "recent_mean": temp_mean,
-                    "recent_values": temp_recent,
-                    "last_value": temp_last,
-                }
-            )
-
-    return flags, evidence
-
-
-def _detect_oliguria(
-    urine_points: list[UrineOutputPoint],
-    *,
-    analysis_end: datetime,
-) -> tuple[list[str], list[dict[str, Any]]]:
-    if not urine_points:
-        return [], []
-
-    start = analysis_end - timedelta(minutes=OLIGURIA_LOOKBACK_MINUTES)
-    recent = [p for p in urine_points if start <= p.timestamp <= analysis_end]
-    if len(recent) < 2:
-        return [], []
-
-    values = [float(p.urine_output_ml_per_hour) for p in recent]
-    first = values[0]
-    last = values[-1]
-    recent_mean = float(sum(values)) / len(values)
-
-    flags: list[str] = []
-    evidence: list[dict[str, Any]] = []
-
-    # Oliguria: mean is below a threshold AND trend is decreasing.
-    if recent_mean <= DEFAULT_OLIGURIA_THRESHOLD_ML_PER_HOUR and last < first:
-        flags.append("oliguria")
-        evidence.append(
-            {
-                "kind": "abnormal_flag",
-                "flag": "oliguria",
-                "metric": "urine_output_ml_per_hour",
-                "threshold_ml_per_hour": DEFAULT_OLIGURIA_THRESHOLD_ML_PER_HOUR,
-                "window_minutes": OLIGURIA_LOOKBACK_MINUTES,
-                "recent_mean": recent_mean,
-                "first": first,
-                "last": last,
-                "recent_values": values,
-            }
-        )
-
-    # Add trend evidence only when it's meaningfully decreasing.
-    if last < first and abs(first - last) / max(abs(first), 1e-9) >= 0.1:
-        evidence.append(
-            {
-                "kind": "trend",
-                "flag": "urine_output_decreasing",
-                "first": first,
-                "last": last,
-            }
-        )
-
-    return flags, evidence
-
-
-def _urgency_from_flags(flags: list[str], *, vitals: list[VitalPoint]) -> str:
-    score = 0
-
-    if "persistent_hypotension" in flags:
-        score = max(score, 3)
-    if "hypoxemia" in flags:
-        score = max(score, 3)
-    if "tachycardia" in flags:
-        score = max(score, 2)
-    if "oliguria" in flags:
-        score = max(score, 2)
-    if "fever" in flags:
-        # Make higher fever more urgent if available.
-        last_temp = _window_last_value(vitals, "temperature", end=max(p.timestamp for p in vitals), minutes=TEMP_PERSISTENT_MINUTES)
-        if last_temp is not None and last_temp >= 39.5:
-            score = max(score, 3)
-        else:
-            score = max(score, 1)
-
-    if score >= 3:
+def _urgency(abnormal_flags: list[dict[str, Any]]) -> str:
+    if any(f["severity"] == "critical" for f in abnormal_flags):
         return "critical"
-    if score >= 2:
+    if any(f["severity"] == "warning" for f in abnormal_flags):
         return "warning"
     return "info"
 
 
-def _build_summary(
-    flags: list[str],
+def run_bedside_rules(
     *,
     vitals: list[VitalPoint],
     urine_output_points: list[UrineOutputPoint] | None,
     analysis_end: datetime,
-) -> str:
-    sentences: list[str] = []
-
-    if "persistent_hypotension" in flags:
-        map_recent = _window_points(vitals, "mean_arterial_pressure", end=analysis_end, minutes=MAP_PERSISTENT_MINUTES)
-        map_mean = _mean(map_recent) or float("nan")
-        map_last = _window_last_value(vitals, "mean_arterial_pressure", end=analysis_end, minutes=MAP_PERSISTENT_MINUTES)
-        sentences.append(
-            f"过去 {MAP_PERSISTENT_MINUTES} 分钟 MAP 持续低于 {MAP_PERSISTENT_THRESHOLD:.0f}（最近平均 {map_mean:.1f}，当前 {map_last:.1f}），循环状态仍不稳定。"
-        )
-
-    if "hypoxemia" in flags:
-        spo2_recent = _window_points(vitals, "spo2", end=analysis_end, minutes=SPO2_PERSISTENT_MINUTES)
-        spo2_mean = _mean(spo2_recent) or float("nan")
-        spo2_last = _window_last_value(vitals, "spo2", end=analysis_end, minutes=SPO2_PERSISTENT_MINUTES)
-        sentences.append(
-            f"过去 {SPO2_PERSISTENT_MINUTES} 分钟 SpO2 持续低于 {SPO2_PERSISTENT_THRESHOLD:.0f}%（最近平均 {spo2_mean:.1f}，当前 {spo2_last:.1f}），提示氧合仍受损。"
-        )
-
-    if "tachycardia" in flags:
-        hr_recent = _window_points(vitals, "heart_rate", end=analysis_end, minutes=HR_PERSISTENT_MINUTES)
-        hr_mean = _mean(hr_recent) or float("nan")
-        hr_last = _window_last_value(vitals, "heart_rate", end=analysis_end, minutes=HR_PERSISTENT_MINUTES)
-        sentences.append(
-            f"过去 {HR_PERSISTENT_MINUTES} 分钟心率保持高于 {HR_TACHYCARDIA_THRESHOLD:.0f}（最近平均 {hr_mean:.0f}，当前 {hr_last:.0f}），提示持续心动过速。"
-        )
-
-    if "fever" in flags:
-        temp_recent = _window_points(vitals, "temperature", end=analysis_end, minutes=TEMP_PERSISTENT_MINUTES)
-        temp_mean = _mean(temp_recent) or float("nan")
-        temp_last = _window_last_value(vitals, "temperature", end=analysis_end, minutes=TEMP_PERSISTENT_MINUTES)
-        sentences.append(
-            f"过去 {TEMP_PERSISTENT_MINUTES} 分钟体温维持在 {TEMP_FEVER_THRESHOLD:.1f}°C 以上（最近平均 {temp_mean:.1f}，当前 {temp_last:.1f}），提示发热趋势。"
-        )
-
-    if "oliguria" in flags:
-        if urine_output_points:
-            start = analysis_end - timedelta(minutes=OLIGURIA_LOOKBACK_MINUTES)
-            recent = [p for p in urine_output_points if start <= p.timestamp <= analysis_end]
-            values = [float(p.urine_output_ml_per_hour) for p in recent]
-            first = values[0]
-            last = values[-1]
-            recent_mean = float(sum(values)) / len(values)
-            sentences.append(
-                f"过去 {OLIGURIA_LOOKBACK_MINUTES} 分钟尿量呈下降趋势（最近平均 {recent_mean:.1f} ml/h，当前 {last:.1f} ml/h）。"
-            )
-
-    if not sentences:
-        return "过去一段时间未见主要生命体征持续异常；监测值整体稳定或处于可解释的波动范围。"
-
-    # Keep it short: this is a bedside-level summary, not a long narrative.
-    return " ".join(sentences)
-
-
-def run_bedside_monitor(
-    *,
-    vitals: list[VitalPoint],
-    urine_output_points: list[UrineOutputPoint] | None,
-    analysis_end: datetime,
+    window_minutes: int = 90,
+    trend_hours: int = 6,
 ) -> dict[str, Any]:
     if analysis_end.tzinfo is None:
         analysis_end = analysis_end.replace(tzinfo=timezone.utc)
+    vitals_90m = _window(vitals, analysis_end, window_minutes)
+    vitals_6h = _window(vitals, analysis_end, trend_hours * 60)
+    abnormal_flags = _build_abnormal_flags(vitals_90m)
+    trend_labels = _build_trend_labels(vitals_6h)
+    urgency_level = _urgency(abnormal_flags)
+    status = "ok" if vitals_90m else "degraded"
 
-    abnormal_flags, abnormal_evidence = _detect_persistent_flags(vitals, analysis_end=analysis_end)
+    missing_fields = []
+    for metric in ("heart_rate", "mean_arterial_pressure", "respiratory_rate", "temperature", "spo2", "gcs"):
+        if not _metric_points(vitals_6h, metric):
+            missing_fields.append(metric)
+    if urine_output_points is None:
+        missing_fields.append("urine_output_points")
 
-    urine_flags: list[str] = []
-    urine_evidence: list[dict[str, Any]] = []
-    urine_trend_labels: list[str] = []
-    if urine_output_points:
-        urine_flags, urine_evidence = _detect_oliguria(urine_output_points, analysis_end=analysis_end)
-        if "urine_output_decreasing" in [e.get("flag") for e in urine_evidence if e.get("kind") == "trend"]:
-            urine_trend_labels.append("urine_output_decreasing")
+    if status == "degraded":
+        summary = "No vitals found in the requested window; bedside monitor degraded."
+    elif abnormal_flags:
+        summary = "Bedside monitor detected active abnormal vital signs that require close follow-up."
+    else:
+        summary = "No threshold breach detected in current bedside window."
 
-    abnormal_flags = abnormal_flags + urine_flags
-
-    trend_labels, trend_evidence = _trend_labels(vitals, analysis_end=analysis_end)
-
-    # Ensure urine trend label if present (rule output already includes evidence).
-    if urine_trend_labels:
-        trend_labels = list(dict.fromkeys(trend_labels + urine_trend_labels))
-
-    all_evidence = abnormal_evidence + urine_evidence + trend_evidence
-
-    urgency_level = _urgency_from_flags(abnormal_flags, vitals=vitals)
-    current_status_summary = _build_summary(
-        abnormal_flags,
-        vitals=vitals,
-        urine_output_points=urine_output_points,
-        analysis_end=analysis_end,
-    )
+    next_action_hint = "Continue routine monitoring."
+    if urgency_level == "warning":
+        next_action_hint = "Recommend risk_sentinel review if abnormalities persist."
+    elif urgency_level == "critical":
+        next_action_hint = "Immediate risk_sentinel and ward escalation recommended."
 
     return {
-        "current_status_summary": current_status_summary,
+        "status": status,
+        "current_status_summary": summary,
         "abnormal_flags": abnormal_flags,
         "trend_labels": trend_labels,
-        "evidence": all_evidence,
+        "evidence": {
+            "latest_vitals": _latest_vitals(vitals_90m),
+            "summary_stats": _summary_stats(vitals_90m),
+            "data_points_count": len(vitals_90m),
+            "data_quality": {"missing_fields": missing_fields},
+        },
         "urgency_level": urgency_level,
+        "next_action_hint": next_action_hint,
     }
 

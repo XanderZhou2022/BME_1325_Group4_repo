@@ -73,8 +73,16 @@ export default function App() {
     priority: "normal",
     heart_rate: "",
     mean_arterial_pressure: "",
-    spo2: "",
+    systolic_bp: "",
+    diastolic_bp: "",
     respiratory_rate: "",
+    temperature: "",
+    spo2: "",
+    fio2: "",
+    pao2: "",
+    aado2: "",
+    ph: "",
+    gcs: "",
   });
 
   const [interventionForm, setInterventionForm] = useState({
@@ -216,8 +224,16 @@ export default function App() {
         priority: vitalForm.priority,
         heart_rate: vitalForm.heart_rate ? Number(vitalForm.heart_rate) : null,
         mean_arterial_pressure: vitalForm.mean_arterial_pressure ? Number(vitalForm.mean_arterial_pressure) : null,
-        spo2: vitalForm.spo2 ? Number(vitalForm.spo2) : null,
+        systolic_bp: vitalForm.systolic_bp ? Number(vitalForm.systolic_bp) : null,
+        diastolic_bp: vitalForm.diastolic_bp ? Number(vitalForm.diastolic_bp) : null,
         respiratory_rate: vitalForm.respiratory_rate ? Number(vitalForm.respiratory_rate) : null,
+        temperature: vitalForm.temperature ? Number(vitalForm.temperature) : null,
+        spo2: vitalForm.spo2 ? Number(vitalForm.spo2) : null,
+        fio2: vitalForm.fio2 ? Number(vitalForm.fio2) : null,
+        pao2: vitalForm.pao2 ? Number(vitalForm.pao2) : null,
+        aado2: vitalForm.aado2 ? Number(vitalForm.aado2) : null,
+        ph: vitalForm.ph ? Number(vitalForm.ph) : null,
+        gcs: vitalForm.gcs ? Number(vitalForm.gcs) : null,
       });
       await loadAdmissionDetail(vitalForm.admission_id);
     } catch (e) {
@@ -377,8 +393,17 @@ export default function App() {
           <div className="formGrid">
             <input placeholder="admission_id" value={vitalForm.admission_id} onChange={(e) => setVitalForm({ ...vitalForm, admission_id: e.target.value })} />
             <input placeholder="heart_rate" value={vitalForm.heart_rate} onChange={(e) => setVitalForm({ ...vitalForm, heart_rate: e.target.value })} />
-            <input placeholder="map" value={vitalForm.mean_arterial_pressure} onChange={(e) => setVitalForm({ ...vitalForm, mean_arterial_pressure: e.target.value })} />
+            <input placeholder="mean_arterial_pressure" value={vitalForm.mean_arterial_pressure} onChange={(e) => setVitalForm({ ...vitalForm, mean_arterial_pressure: e.target.value })} />
+            <input placeholder="systolic_bp" value={vitalForm.systolic_bp} onChange={(e) => setVitalForm({ ...vitalForm, systolic_bp: e.target.value })} />
+            <input placeholder="diastolic_bp" value={vitalForm.diastolic_bp} onChange={(e) => setVitalForm({ ...vitalForm, diastolic_bp: e.target.value })} />
+            <input placeholder="respiratory_rate" value={vitalForm.respiratory_rate} onChange={(e) => setVitalForm({ ...vitalForm, respiratory_rate: e.target.value })} />
+            <input placeholder="temperature" value={vitalForm.temperature} onChange={(e) => setVitalForm({ ...vitalForm, temperature: e.target.value })} />
             <input placeholder="spo2" value={vitalForm.spo2} onChange={(e) => setVitalForm({ ...vitalForm, spo2: e.target.value })} />
+            <input placeholder="fio2 (0-1)" value={vitalForm.fio2} onChange={(e) => setVitalForm({ ...vitalForm, fio2: e.target.value })} />
+            <input placeholder="pao2" value={vitalForm.pao2} onChange={(e) => setVitalForm({ ...vitalForm, pao2: e.target.value })} />
+            <input placeholder="aado2" value={vitalForm.aado2} onChange={(e) => setVitalForm({ ...vitalForm, aado2: e.target.value })} />
+            <input placeholder="ph" value={vitalForm.ph} onChange={(e) => setVitalForm({ ...vitalForm, ph: e.target.value })} />
+            <input placeholder="gcs" value={vitalForm.gcs} onChange={(e) => setVitalForm({ ...vitalForm, gcs: e.target.value })} />
             <button onClick={() => void submitVital()}>Submit Vital</button>
           </div>
 

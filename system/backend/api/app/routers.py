@@ -36,6 +36,7 @@ from app.services.event_pipeline import (
     write_lab,
     write_vital_sign,
 )
+from app.orchestrator.event_dispatcher import dispatch_event_chain
 
 router = APIRouter(prefix="/api/v1")
 
@@ -69,7 +70,9 @@ def post_vital_sign(
     body: VitalSignEventCreate,
     conn: Connection = Depends(get_db),
 ) -> EventWriteResult:
-    return EventWriteResult(**write_vital_sign(conn, admission_id, body))
+    out = write_vital_sign(conn, admission_id, body)
+    dispatch_event_chain(conn, admission_id=admission_id, event_type="vital_sign", detail_id=out["detail_id"])
+    return EventWriteResult(**out)
 
 
 @router.post("/admissions/{admission_id}/events/lab", response_model=EventWriteResult)
@@ -78,7 +81,9 @@ def post_lab(
     body: LabEventCreate,
     conn: Connection = Depends(get_db),
 ) -> EventWriteResult:
-    return EventWriteResult(**write_lab(conn, admission_id, body))
+    out = write_lab(conn, admission_id, body)
+    dispatch_event_chain(conn, admission_id=admission_id, event_type="lab", detail_id=out["detail_id"])
+    return EventWriteResult(**out)
 
 
 @router.post(
@@ -90,7 +95,9 @@ def post_intervention(
     body: InterventionEventCreate,
     conn: Connection = Depends(get_db),
 ) -> EventWriteResult:
-    return EventWriteResult(**write_intervention(conn, admission_id, body))
+    out = write_intervention(conn, admission_id, body)
+    dispatch_event_chain(conn, admission_id=admission_id, event_type="intervention", detail_id=out["detail_id"])
+    return EventWriteResult(**out)
 
 
 # === Read-side: current state, alerts, risks ===

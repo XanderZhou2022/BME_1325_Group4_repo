@@ -7,6 +7,7 @@ from psycopg.rows import dict_row
 from app.db import get_db
 
 from .schemas import DemoRunRequest, DemoRunResponse
+from .scheduler import run_scheduler_tick
 from .service import run_demo_pipeline
 
 router = APIRouter(prefix="/orchestrator", tags=["orchestrator"])
@@ -47,4 +48,9 @@ def get_run(run_id: str, conn: Connection = Depends(get_db)):
             (run_id,),
         )
         return cur.fetchone()
+
+
+@router.post("/scheduler/tick")
+def scheduler_tick() -> dict[str, int]:
+    return run_scheduler_tick()
 

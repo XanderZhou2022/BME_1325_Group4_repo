@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field
 
 AnalysisWindow = Literal["last_1h", "last_4h", "last_6h"]
 UrgencyLevel = Literal["info", "warning", "critical"]
+RunStatus = Literal["ok", "degraded"]
 
 
 class UrineOutputPoint(BaseModel):
@@ -24,6 +25,7 @@ class VitalPoint(BaseModel):
     respiratory_rate: float | None = None
     temperature: float | None = None
     spo2: float | None = None
+    gcs: int | None = None
 
 
 class BedsideAnalyzeRequest(BaseModel):
@@ -34,14 +36,41 @@ class BedsideAnalyzeRequest(BaseModel):
     urine_output_points: list[UrineOutputPoint] | None = None
 
 
+class TimeWindow(BaseModel):
+    start: datetime
+    end: datetime
+    window_minutes: int
+    trend_hours: int
+
+
+class AbnormalFlag(BaseModel):
+    type: str
+    severity: Literal["warning", "critical"]
+    metric: str
+    value: float
+    threshold: str
+    duration_minutes: int
+
+
+class TrendLabel(BaseModel):
+    metric: str
+    trend: Literal["increasing", "decreasing", "stable"]
+    evidence: str
+
+
 class BedsideAnalyzeResponse(BaseModel):
+    schema_version: str = "bedside_monitor.v1"
+    agent_name: str = "bedside_monitor"
+    status: RunStatus = "ok"
+    admission_id: str
     patient_id: str
     bed_id: str
-    analysis_window: str
+    time_window: TimeWindow
     current_status_summary: str
-    abnormal_flags: list[str]
-    trend_labels: list[str]
-    evidence: list[dict[str, Any]]
+    abnormal_flags: list[AbnormalFlag]
+    trend_labels: list[TrendLabel]
+    evidence: dict[str, Any]
     urgency_level: UrgencyLevel
+    next_action_hint: str
     generated_at: datetime
 

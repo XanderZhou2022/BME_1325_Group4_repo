@@ -14,6 +14,14 @@ class Settings(BaseSettings):
     cors_origins: str = "*"
     host: str = "0.0.0.0"
     port: int = 8000
+    llm_enabled: bool = False
+    llm_base_url: str = "https://api.openai.com/v1"
+    llm_api_key: str = ""
+    llm_model: str = "gpt-4o-mini"
+    llm_timeout_seconds: float = 12.0
+    llm_max_retries: int = 2
+    scheduler_enabled: bool = True
+    scheduler_interval_seconds: int = 60
 
 
 @lru_cache

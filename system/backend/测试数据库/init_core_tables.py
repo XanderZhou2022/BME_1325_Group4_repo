@@ -106,6 +106,18 @@ DDL_STATEMENTS = [
     );
     """,
     """
+    CREATE TABLE IF NOT EXISTS intervention_pending (
+        id TEXT PRIMARY KEY,
+        admission_id TEXT NOT NULL REFERENCES admissions(admission_id),
+        intervention_id TEXT NOT NULL UNIQUE REFERENCES intervention_events(id),
+        status TEXT NOT NULL CHECK (status IN ('pending', 'ready_for_evaluation', 'completed', 'insufficient_data', 'expired')),
+        observation_end_at TIMESTAMPTZ NOT NULL,
+        last_evaluated_at TIMESTAMPTZ,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+    """,
+    """
     CREATE TABLE IF NOT EXISTS patient_state_current (
         admission_id TEXT PRIMARY KEY REFERENCES admissions(admission_id),
         patient_id TEXT NOT NULL REFERENCES patients(patient_id),
@@ -124,6 +136,41 @@ DDL_STATEMENTS = [
         admission_id TEXT NOT NULL REFERENCES admissions(admission_id),
         timestamp TIMESTAMPTZ NOT NULL,
         state_snapshot JSONB NOT NULL DEFAULT '{}'::jsonb
+    );
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS patient_memory (
+        memory_id TEXT PRIMARY KEY,
+        admission_id TEXT NOT NULL REFERENCES admissions(admission_id),
+        patient_id TEXT NOT NULL REFERENCES patients(patient_id),
+        bed_id TEXT NOT NULL REFERENCES beds(bed_id),
+        updated_at TIMESTAMPTZ NOT NULL,
+        short_term_summary TEXT,
+        mid_term_summary TEXT,
+        long_term_summary TEXT,
+        active_problems JSONB NOT NULL DEFAULT '[]'::jsonb,
+        unresolved_issues JSONB NOT NULL DEFAULT '[]'::jsonb,
+        key_events JSONB NOT NULL DEFAULT '[]'::jsonb,
+        response_patterns JSONB NOT NULL DEFAULT '[]'::jsonb,
+        source_event_ids JSONB NOT NULL DEFAULT '[]'::jsonb,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+    );
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS patient_memory_events (
+        memory_event_id TEXT PRIMARY KEY,
+        admission_id TEXT NOT NULL REFERENCES admissions(admission_id),
+        patient_id TEXT NOT NULL REFERENCES patients(patient_id),
+        bed_id TEXT NOT NULL REFERENCES beds(bed_id),
+        timestamp TIMESTAMPTZ NOT NULL,
+        source_agent TEXT,
+        event_type TEXT,
+        event_summary TEXT,
+        importance_level TEXT,
+        related_intervention_id TEXT,
+        related_vital_event_id TEXT,
+        evidence JSONB NOT NULL DEFAULT '{}'::jsonb,
+        created_at TIMESTAMPTZ DEFAULT NOW()
     );
     """,
     """
@@ -212,6 +259,53 @@ DDL_STATEMENTS = [
     );
     """,
     """
+    CREATE TABLE IF NOT EXISTS clinical_summaries (
+        summary_id TEXT PRIMARY KEY,
+        admission_id TEXT NOT NULL REFERENCES admissions(admission_id),
+        patient_id TEXT NOT NULL REFERENCES patients(patient_id),
+        bed_id TEXT NOT NULL REFERENCES beds(bed_id),
+        generated_at TIMESTAMPTZ NOT NULL,
+        summary_type TEXT NOT NULL,
+        one_line_status TEXT,
+        clinical_summary TEXT,
+        active_problem_list JSONB NOT NULL DEFAULT '[]'::jsonb,
+        key_events JSONB NOT NULL DEFAULT '[]'::jsonb,
+        key_interventions_and_responses JSONB NOT NULL DEFAULT '[]'::jsonb,
+        recommended_attention_targets JSONB NOT NULL DEFAULT '[]'::jsonb,
+        uncertainties_or_missing_data JSONB NOT NULL DEFAULT '[]'::jsonb,
+        urgency_level TEXT,
+        source_event_ids JSONB NOT NULL DEFAULT '[]'::jsonb,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+    );
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS ward_priority_snapshots (
+        snapshot_id TEXT PRIMARY KEY,
+        generated_at TIMESTAMPTZ NOT NULL,
+        occupied_beds INT,
+        critical_patients INT,
+        high_risk_patients INT,
+        new_deteriorations INT,
+        priority_queue JSONB NOT NULL DEFAULT '[]'::jsonb,
+        merged_alerts JSONB NOT NULL DEFAULT '[]'::jsonb,
+        ward_summary TEXT,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+    );
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS ward_priority_events (
+        event_id TEXT PRIMARY KEY,
+        generated_at TIMESTAMPTZ NOT NULL,
+        bed_id TEXT,
+        patient_id TEXT,
+        priority_level TEXT,
+        priority_score INT,
+        reasons JSONB NOT NULL DEFAULT '[]'::jsonb,
+        source_risk_ids JSONB NOT NULL DEFAULT '[]'::jsonb,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+    );
+    """,
+    """
     CREATE TABLE IF NOT EXISTS audit_logs (
         id TEXT PRIMARY KEY,
         timestamp TIMESTAMPTZ NOT NULL,
@@ -241,7 +335,10 @@ def main() -> None:
                   AND table_name IN (
                       'patients', 'beds', 'admissions', 'events', 'vital_sign_events',
                       'lab_events', 'intervention_events', 'patient_state_current',
-                      'patient_state_snapshots', 'agent_outputs', 'agent_events',
+                      'intervention_pending',
+                      'patient_memory', 'patient_memory_events',
+                      'patient_state_snapshots', 'agent_outputs', 'agent_events', 'clinical_summaries',
+                      'ward_priority_snapshots', 'ward_priority_events',
                       'agent_consumption_cursor', 'agent_registry',
                       'orchestrator_runs', 'risk_assessments', 'alerts', 'audit_logs'
                   )

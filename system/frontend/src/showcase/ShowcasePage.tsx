@@ -375,7 +375,16 @@ export default function ShowcasePage() {
                 <th>Time</th>
                 <th>HR</th>
                 <th>MAP</th>
+                <th>SBP</th>
+                <th>DBP</th>
+                <th>RR</th>
+                <th>Temp</th>
                 <th>SpO2</th>
+                <th>FiO2</th>
+                <th>PaO2</th>
+                <th>A-aDO2</th>
+                <th>pH</th>
+                <th>GCS</th>
               </tr>
             </thead>
             <tbody>
@@ -384,7 +393,16 @@ export default function ShowcasePage() {
                   <td>{String(v.timestamp ?? "")}</td>
                   <td>{String(v.heart_rate ?? "-")}</td>
                   <td>{String(v.mean_arterial_pressure ?? "-")}</td>
+                  <td>{String(v.systolic_bp ?? "-")}</td>
+                  <td>{String(v.diastolic_bp ?? "-")}</td>
+                  <td>{String(v.respiratory_rate ?? "-")}</td>
+                  <td>{String(v.temperature ?? "-")}</td>
                   <td>{String(v.spo2 ?? "-")}</td>
+                  <td>{String(v.fio2 ?? "-")}</td>
+                  <td>{String(v.pao2 ?? "-")}</td>
+                  <td>{String(v.aado2 ?? "-")}</td>
+                  <td>{String(v.ph ?? "-")}</td>
+                  <td>{String(v.gcs ?? "-")}</td>
                 </tr>
               ))}
             </tbody>

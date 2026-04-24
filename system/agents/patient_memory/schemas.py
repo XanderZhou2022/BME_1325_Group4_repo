@@ -1,5 +1,5 @@
 ﻿from pydantic import BaseModel, Field
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Literal, Any
 from datetime import datetime
 
 class VitalSignEvent(BaseModel):
@@ -58,16 +58,52 @@ class TemporalStateSummary(BaseModel):
 class MemoryEvaluateRequest(BaseModel):
     admission_id: str
     window_hours: int = Field(default=24, ge=1, le=72)
+    short_window_hours: int = Field(default=6, ge=1, le=24)
+    mid_window_hours: int = Field(default=24, ge=6, le=72)
+
+
+class ShortTermMemory(BaseModel):
+    time_window: str
+    key_events: List[str] = []
+    current_unstable_features: List[str] = []
+
+
+class MidTermMemory(BaseModel):
+    time_window: str
+    major_changes: List[str] = []
+    unresolved_problems: List[str] = []
+
+
+class LongTermMemory(BaseModel):
+    icu_course_summary: str
+    baseline_context: List[str] = []
+    known_response_patterns: List[str] = []
 
 class MemoryEvaluateResponse(BaseModel):
+    schema_version: str = "patient_memory.v1.1"
+    agent: str = "patient_memory"
+    status: Literal["ok", "degraded"] = "ok"
     patient_id: str
     bed_id: str
     admission_id: str
     window_hours: int
+    short_term_summary: str
+    mid_term_summary: str
+    long_term_summary: str
+    active_problems: List[str] = []
+    unresolved_issues: List[str] = []
+    short_term_memory: ShortTermMemory
+    mid_term_memory: MidTermMemory
+    long_term_memory: LongTermMemory
     current_vitals: Dict[str, Optional[float]]
     trend_vectors: Dict[str, str]
     volatility_index: Dict[str, float]
     latest_interventions: List[InterventionEvent]
     data_completeness_ratio: float
+    source_event_ids: List[str] = []
+    key_events: List[str] = []
+    response_patterns: List[str] = []
+    memory_context_for_risk: Dict[str, Any] = {}
+    round_memory_for_summary: Dict[str, Any] = {}
     snapshot_generated_at: datetime
     generated_at: datetime

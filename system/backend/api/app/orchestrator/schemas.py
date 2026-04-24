@@ -20,6 +20,11 @@ class StepResult(BaseModel):
     started_at: datetime
     finished_at: datetime
     detail: dict
+    input_sources: list[str] = []
+    input_window: str | None = None
+    output_id: str | None = None
+    error_class: str | None = None
+    retry_count: int = 0
 
 
 class DemoRunResponse(BaseModel):

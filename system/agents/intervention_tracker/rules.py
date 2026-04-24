@@ -9,7 +9,7 @@ from .schemas import InterventionType, ResponseAssessment, VitalPoint
 
 MAP_TARGET = 65.0
 MAP_RESPONSIVE_DELTA = 5.0
-MAP_PARTIALLY_RESPONSIVE_DELTA = 2.0
+MAP_PARTIALLY_RESPONSIVE_DELTA = 3.0
 MAP_DETERIORATE_DELTA = -2.0
 
 SPO2_TARGET = 90.0
@@ -50,6 +50,16 @@ def _values_metric(vitals: list[VitalPoint], metric: str) -> list[float]:
     return out
 
 
+def _canonical_intervention_type(intervention_type: InterventionType) -> InterventionType:
+    if intervention_type == "fluid":
+        return "fluid_bolus"
+    if intervention_type == "vasopressor":
+        return "vasopressor_adjustment"
+    if intervention_type == "ventilator_change":
+        return "ventilator_adjustment"
+    return intervention_type
+
+
 def _assess_map_response(*, pre: list[VitalPoint], post: list[VitalPoint]) -> tuple[ResponseAssessment, dict[str, Any], list[dict[str, Any]]]:
     pre_vals = _values_metric(pre, "mean_arterial_pressure")
     post_vals = _values_metric(post, "mean_arterial_pressure")
@@ -64,7 +74,7 @@ def _assess_map_response(*, pre: list[VitalPoint], post: list[VitalPoint]) -> tu
 
     if pre_mean is None or post_mean is None or delta is None:
         return (
-            "non_responsive",
+            "not_enough_data",
             {"metric": "MAP", "pre_mean": pre_mean, "post_mean": post_mean, "delta": delta, "reason": "insufficient_data"},
             evidence,
         )
@@ -73,7 +83,7 @@ def _assess_map_response(*, pre: list[VitalPoint], post: list[VitalPoint]) -> tu
     if post_mean >= MAP_TARGET and delta >= MAP_RESPONSIVE_DELTA:
         assessment: ResponseAssessment = "responsive"
     elif (post_mean >= MAP_TARGET and delta >= MAP_PARTIALLY_RESPONSIVE_DELTA) or (
-        delta >= MAP_RESPONSIVE_DELTA and post_mean < MAP_TARGET
+        delta >= MAP_PARTIALLY_RESPONSIVE_DELTA and post_mean < MAP_TARGET
     ):
         assessment = "partially_responsive"
     elif MAP_DETERIORATE_DELTA < delta < MAP_PARTIALLY_RESPONSIVE_DELTA and abs(delta) < 2.0:
@@ -121,7 +131,7 @@ def _assess_ventilator_response(
 
     if pre_spo2_mean is None or post_spo2_mean is None or delta_spo2 is None:
         return (
-            "non_responsive",
+            "not_enough_data",
             {
                 "metric": "SpO2/RR",
                 "pre_spo2_mean": pre_spo2_mean,
@@ -165,6 +175,40 @@ def _assess_ventilator_response(
     return assessment, {**target_metrics, **before_after}, evidence
 
 
+def _assess_antibiotic_response(*, pre: list[VitalPoint], post: list[VitalPoint]) -> tuple[ResponseAssessment, dict[str, Any], list[dict[str, Any]]]:
+    pre_temp = _mean_metric(pre, "temperature")
+    post_temp = _mean_metric(post, "temperature")
+    pre_lac = _mean_metric(pre, "lactate")
+    post_lac = _mean_metric(post, "lactate")
+    pre_map = _mean_metric(pre, "mean_arterial_pressure")
+    post_map = _mean_metric(post, "mean_arterial_pressure")
+    evidence = [
+        {"metric": "Temp", "pre_mean": pre_temp, "post_mean": post_temp},
+        {"metric": "lactate", "pre_mean": pre_lac, "post_mean": post_lac},
+        {"metric": "MAP", "pre_mean": pre_map, "post_mean": post_map},
+    ]
+    if post_temp is None and post_lac is None and post_map is None:
+        return "not_enough_data", {"reason": "insufficient_antibiotic_followup"}, evidence
+    improved_temp = pre_temp is not None and post_temp is not None and post_temp <= pre_temp - 0.5
+    improved_lac = pre_lac is not None and post_lac is not None and post_lac <= pre_lac - 0.3
+    improved_map = pre_map is not None and post_map is not None and post_map >= pre_map + 3.0
+    worsened = (
+        (pre_temp is not None and post_temp is not None and post_temp > pre_temp + 0.3)
+        or (pre_lac is not None and post_lac is not None and post_lac > pre_lac + 0.2)
+        or (pre_map is not None and post_map is not None and post_map < pre_map - 3.0)
+    )
+    score = int(improved_temp) + int(improved_lac) + int(improved_map)
+    if worsened:
+        assessment: ResponseAssessment = "deteriorating_despite_intervention"
+    elif score >= 2:
+        assessment = "responsive"
+    elif score == 1:
+        assessment = "partially_responsive"
+    else:
+        assessment = "non_responsive"
+    return assessment, {"metric": "sepsis_bundle_response", "improvement_score": score}, evidence
+
+
 def run_intervention_tracker(
     *,
     intervention_type: InterventionType,
@@ -174,8 +218,8 @@ def run_intervention_tracker(
     observation_window: str,
 ) -> dict[str, Any]:
     evidence: list[dict[str, Any]] = []
-
-    if intervention_type in ("fluid", "vasopressor"):
+    canonical_type = _canonical_intervention_type(intervention_type)
+    if canonical_type in ("fluid_bolus", "vasopressor_adjustment"):
         assessment, metrics_and_comp, ev = _assess_map_response(pre=pre_vitals, post=post_vitals)
         evidence = ev
         target_metrics = {k: metrics_and_comp[k] for k in metrics_and_comp.keys() if k not in ("pre_mean", "post_mean", "delta")}
@@ -184,7 +228,7 @@ def run_intervention_tracker(
             "post_mean": metrics_and_comp.get("post_mean"),
             "delta": metrics_and_comp.get("delta"),
         }
-    else:
+    elif canonical_type == "ventilator_adjustment":
         assessment, metrics_and_comp, ev = _assess_ventilator_response(pre=pre_vitals, post=post_vitals)
         evidence = ev
         target_metrics = {
@@ -197,8 +241,15 @@ def run_intervention_tracker(
             "post_rr_mean": metrics_and_comp.get("post_rr_mean"),
         }
         before_after = {"delta_spo2": metrics_and_comp.get("delta_spo2"), "delta_rr": metrics_and_comp.get("delta_rr")}
+    else:
+        assessment, metrics_and_comp, ev = _assess_antibiotic_response(pre=pre_vitals, post=post_vitals)
+        evidence = ev
+        target_metrics = metrics_and_comp
+        before_after = metrics_and_comp
 
-    if assessment == "responsive":
+    if assessment == "not_enough_data":
+        hint = "Post-intervention data are not enough; keep pending and re-evaluate at next checkpoint."
+    elif assessment == "responsive":
         hint = "干预后，监测指标在预期方向出现改善；继续密切监测。"
     elif assessment == "partially_responsive":
         hint = "干预后观察窗口内仅见部分生理改善；建议结合临床评估重新解读趋势。"
@@ -209,11 +260,13 @@ def run_intervention_tracker(
 
     return {
         "response_assessment": assessment,
+        "response_label": assessment,
         "target_metrics": target_metrics,
         "before_after_comparison": before_after,
         "evidence": evidence,
         "escalation_hint": hint,
         "observation_window": observation_window,
         "intervention_time": intervention_time,
+        "canonical_intervention_type": canonical_type,
     }
 

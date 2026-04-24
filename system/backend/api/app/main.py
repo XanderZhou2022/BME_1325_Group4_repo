@@ -5,6 +5,7 @@ import sys
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import asyncio
 
 from app.config import get_settings
 
@@ -15,6 +16,7 @@ if SYSTEM_ROOT not in sys.path:
     sys.path.append(SYSTEM_ROOT)
 
 from app.routers import router  # noqa: E402
+from app.orchestrator.scheduler import scheduler_loop  # noqa: E402
 
 settings = get_settings()
 allowed_origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
@@ -22,6 +24,7 @@ if not allowed_origins:
     allowed_origins = ["*"]
 
 app = FastAPI(title=settings.api_title, version=settings.api_version)
+scheduler_task: asyncio.Task | None = None
 
 app.add_middleware(
     CORSMiddleware,
@@ -32,6 +35,21 @@ app.add_middleware(
 )
 
 app.include_router(router)
+
+
+@app.on_event("startup")
+async def _startup_scheduler() -> None:
+    global scheduler_task
+    if settings.scheduler_enabled:
+        scheduler_task = asyncio.create_task(scheduler_loop())
+
+
+@app.on_event("shutdown")
+async def _shutdown_scheduler() -> None:
+    global scheduler_task
+    if scheduler_task:
+        scheduler_task.cancel()
+        scheduler_task = None
 
 
 @app.get("/health")

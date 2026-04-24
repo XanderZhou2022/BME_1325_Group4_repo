@@ -15,14 +15,16 @@ from .schemas import RiskImage, RiskSentinelEvaluateRequest, RiskSentinelEvaluat
 
 
 RISK_TO_ALERT_TYPE: dict[str, str] = {
-    "shock": "shock_risk",
-    "respiratory_failure": "resp_failure_risk",
-    "persistent_hypoperfusion": "poor_fluid_response",
+    "persistent_shock_risk": "shock_risk",
+    "respiratory_failure_risk": "resp_failure_risk",
+    "aki_risk": "aki_risk",
 }
 
-SEVERITY_ORDER = {"low": 0, "warning": 1, "critical": 2}
-SEVERITY_TO_ESCALATION = {"low": "info", "warning": "warning", "critical": "critical"}
-SEVERITY_TO_CONFIDENCE = {"low": Decimal("0.65"), "warning": Decimal("0.82"), "critical": Decimal("0.93")}
+RISK_ORDER = {"low": 0, "moderate": 1, "high": 2, "critical": 3}
+LEVEL_TO_ESCALATION = {"low": "info", "moderate": "watch", "high": "urgent_review", "critical": "immediate_review"}
+LEVEL_TO_CONFIDENCE = {"low": Decimal("0.62"), "moderate": Decimal("0.75"), "high": Decimal("0.86"), "critical": Decimal("0.94")}
+NOTIFY_AGENTS = ["ward_coordinator", "clinical_summary", "patient_memory"]
+DB_LEVEL_MAP = {"low": "low", "moderate": "warning", "high": "warning", "critical": "critical"}
 
 
 def _json_safe_risks(risks: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -36,64 +38,170 @@ def _json_safe_risks(risks: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return out
 
 
+def _level_from_score(score: int) -> str:
+    if score >= 7:
+        return "critical"
+    if score >= 4:
+        return "high"
+    if score >= 2:
+        return "moderate"
+    return "low"
+
+
+def _trajectory_from_signals(signals: list[str]) -> str:
+    if any("worsening" in s or "deteriorating" in s or "rising" in s for s in signals):
+        return "worsening"
+    if any("improving" in s for s in signals):
+        return "improving"
+    if signals:
+        return "stable"
+    return "unclear"
+
+
 def _calculate_risk_from_payloads(
     *,
     bedside_payload: dict[str, Any],
     intervention_payload: dict[str, Any],
-) -> list[dict[str, Any]]:
+) -> tuple[list[dict[str, Any]], list[str]]:
     abnormal_flags = list(bedside_payload.get("abnormal_flags") or [])
     trend_labels = list(bedside_payload.get("trend_labels") or [])
-    urgency = str(bedside_payload.get("urgency_level") or "info")
-    response_assessment = str(intervention_payload.get("response_assessment") or "")
+    urgency = str(bedside_payload.get("urgency_level") or "info").lower()
+    response_label = str(intervention_payload.get("response_label") or intervention_payload.get("response_assessment") or "")
     intervention_type = str(intervention_payload.get("intervention_type") or "")
-    poor_response = response_assessment in ("non_responsive", "deteriorating_despite_intervention")
+    concern_flags = list(intervention_payload.get("concern_flags") or [])
+    memory_ctx = dict(intervention_payload.get("memory_context_for_risk") or {})
+    unresolved = list(memory_ctx.get("unresolved_issues") or [])
+
+    abnormal_set = {str((f or {}).get("type") if isinstance(f, dict) else f) for f in abnormal_flags}
+    trend_set = {str((t or {}).get("metric") + "_" + str((t or {}).get("trend")) if isinstance(t, dict) else t) for t in trend_labels}
+    signals: list[str] = []
+    new_or_worsening: list[str] = []
 
     risks: list[dict[str, Any]] = []
-    if "persistent_hypotension" in abnormal_flags or (intervention_type in ("fluid", "vasopressor") and poor_response):
-        severity = "critical" if poor_response or urgency == "critical" else "warning"
+    # 1) persistent_shock_risk
+    shock_score = 0
+    if urgency == "warning":
+        shock_score += 1
+    if urgency == "critical":
+        shock_score += 2
+    if any("mean_arterial_pressure" in s and "decreasing" in s for s in trend_set):
+        shock_score += 1
+        signals.append("map_worsening")
+    if any("mean_arterial_pressure" in s or "hypotension" in s for s in abnormal_set):
+        shock_score += 1
+    if response_label == "partially_responsive":
+        shock_score += 1
+    if response_label == "non_responsive":
+        shock_score += 2
+    if response_label == "deteriorating_despite_intervention":
+        shock_score += 3
+        signals.append("post_intervention_deteriorating")
+    if "worsening" in str(memory_ctx.get("recent_trajectory") or ""):
+        shock_score += 2
+        signals.append("memory_worsening")
+    if any("persistent_hypotension" in str(x) for x in unresolved):
+        shock_score += 1
+    if any("lactate" in str(x) for x in unresolved):
+        shock_score += 2
+        signals.append("rising_lactate")
+    shock_level = _level_from_score(shock_score)
+    if shock_score > 0:
+        trajectory = _trajectory_from_signals(signals)
+        if trajectory == "worsening" and shock_level in ("high", "critical"):
+            new_or_worsening.append("shock_risk_worsening")
         risks.append(
             {
-                "risk_type": "shock",
-                "severity": severity,
-                "confidence": SEVERITY_TO_CONFIDENCE[severity],
-                "evidence": [{"source": "bedside", "abnormal_flags": abnormal_flags}, {"source": "intervention", "response_assessment": response_assessment}],
-                "time_window": str(bedside_payload.get("analysis_window") or "latest"),
-                "recommended_action": "review fluid response and source control",
+                "risk_type": "persistent_shock_risk",
+                "risk_level": shock_level,
+                "severity": shock_level,
+                "confidence": LEVEL_TO_CONFIDENCE[shock_level],
+                "evidence": [
+                    {"source": "bedside", "abnormal_flags": list(abnormal_set), "trend_labels": list(trend_set)},
+                    {"source": "intervention", "response_label": response_label, "intervention_type": intervention_type, "concern_flags": concern_flags},
+                    {"source": "patient_memory", "unresolved_issues": unresolved, "recent_trajectory": memory_ctx.get("recent_trajectory")},
+                ],
+                "time_window": "last_6h",
+                "trajectory": trajectory,
+                "escalation_level": LEVEL_TO_ESCALATION[shock_level],
+                "recommended_action": "Review hemodynamic status and unresolved shock-related signals.",
             }
         )
 
-    if "hypoxemia" in abnormal_flags or (intervention_type == "ventilator_change" and poor_response):
-        severity = "critical" if poor_response else "warning"
+    # 2) respiratory_failure_risk
+    resp_score = 0
+    resp_signals: list[str] = []
+    if any("spo2" in s and "decreasing" in s for s in trend_set):
+        resp_score += 1
+        resp_signals.append("spo2_worsening")
+    if any("respiratory_rate" in s and "increasing" in s for s in trend_set):
+        resp_score += 1
+    if any("spo2" in s or "hypoxemia" in s for s in abnormal_set):
+        resp_score += 2
+    if intervention_type in ("ventilator_adjustment", "ventilator_change") and response_label in ("non_responsive", "deteriorating_despite_intervention"):
+        resp_score += 2 if response_label == "non_responsive" else 3
+        resp_signals.append("ventilator_non_response")
+    resp_level = _level_from_score(resp_score)
+    if resp_score > 0:
+        resp_traj = _trajectory_from_signals(resp_signals)
+        if resp_traj == "worsening" and resp_level in ("high", "critical"):
+            new_or_worsening.append("respiratory_risk_worsening")
         risks.append(
             {
-                "risk_type": "respiratory_failure",
-                "severity": severity,
-                "confidence": SEVERITY_TO_CONFIDENCE[severity],
-                "evidence": [{"source": "bedside", "trend_labels": trend_labels}, {"source": "intervention", "response_assessment": response_assessment}],
-                "time_window": str(bedside_payload.get("analysis_window") or "latest"),
-                "recommended_action": "reassess ventilator settings and gas exchange",
+                "risk_type": "respiratory_failure_risk",
+                "risk_level": resp_level,
+                "severity": resp_level,
+                "confidence": LEVEL_TO_CONFIDENCE[resp_level],
+                "evidence": [
+                    {"source": "bedside", "abnormal_flags": list(abnormal_set), "trend_labels": list(trend_set)},
+                    {"source": "intervention", "response_label": response_label, "intervention_type": intervention_type},
+                ],
+                "time_window": "last_6h",
+                "trajectory": resp_traj,
+                "escalation_level": LEVEL_TO_ESCALATION[resp_level],
+                "recommended_action": "Review oxygenation trend and respiratory support burden.",
             }
         )
 
-    if "oliguria" in abnormal_flags or ("persistent_hypotension" in abnormal_flags and poor_response):
-        severity = "critical" if poor_response else "warning"
+    # 3) aki_risk
+    aki_score = 0
+    aki_signals: list[str] = []
+    if any("oliguria" in s for s in abnormal_set):
+        aki_score += 2
+    if any("creatinine" in str(x) for x in unresolved):
+        aki_score += 2
+        aki_signals.append("creatinine_rising")
+    if any("hypotension" in s for s in abnormal_set):
+        aki_score += 1
+    if response_label in ("non_responsive", "deteriorating_despite_intervention"):
+        aki_score += 1
+    aki_level = _level_from_score(aki_score)
+    if aki_score > 0:
+        aki_traj = _trajectory_from_signals(aki_signals)
+        if aki_traj == "worsening" and aki_level in ("high", "critical"):
+            new_or_worsening.append("aki_risk_worsening")
         risks.append(
             {
-                "risk_type": "persistent_hypoperfusion",
-                "severity": severity,
-                "confidence": SEVERITY_TO_CONFIDENCE[severity],
-                "evidence": [{"source": "bedside", "abnormal_flags": abnormal_flags}, {"source": "intervention", "response_assessment": response_assessment}],
-                "time_window": str(bedside_payload.get("analysis_window") or "latest"),
-                "recommended_action": "monitor post-fluid hemodynamic response",
+                "risk_type": "aki_risk",
+                "risk_level": aki_level,
+                "severity": aki_level,
+                "confidence": LEVEL_TO_CONFIDENCE[aki_level],
+                "evidence": [
+                    {"source": "bedside", "abnormal_flags": list(abnormal_set)},
+                    {"source": "patient_memory", "unresolved_issues": unresolved},
+                ],
+                "time_window": "last_24h",
+                "trajectory": aki_traj,
+                "escalation_level": LEVEL_TO_ESCALATION[aki_level],
+                "recommended_action": "Review renal perfusion signals and urine-output trajectory.",
             }
         )
 
     uniq: dict[str, dict[str, Any]] = {}
     for risk in risks:
         risk_type = str(risk["risk_type"])
-        if risk_type not in uniq or SEVERITY_ORDER[str(risk["severity"])] > SEVERITY_ORDER[str(uniq[risk_type]["severity"])]:
+        if risk_type not in uniq or RISK_ORDER[str(risk["risk_level"])] > RISK_ORDER[str(uniq[risk_type]["risk_level"])]:
             uniq[risk_type] = risk
-    return list(uniq.values())
+    return list(uniq.values()), list(dict.fromkeys(new_or_worsening))
 
 
 def evaluate_risk_sentinel(conn: Connection, req: RiskSentinelEvaluateRequest) -> RiskSentinelEvaluateResponse:
@@ -177,7 +285,24 @@ def evaluate_risk_sentinel(conn: Connection, req: RiskSentinelEvaluateRequest) -
             intv_row = cur.fetchone()
             intervention_payload = cast(dict[str, Any], (intv_row["payload"] if intv_row else {}))
 
-            risks = _calculate_risk_from_payloads(bedside_payload=bedside_payload, intervention_payload=intervention_payload)
+            cur.execute(
+                """
+                SELECT payload
+                FROM agent_outputs
+                WHERE admission_id = %s AND agent_name = 'patient_memory'
+                ORDER BY generated_at DESC
+                LIMIT 1
+                """,
+                (req.admission_id,),
+            )
+            mem_row = cur.fetchone()
+            memory_payload = cast(dict[str, Any], (mem_row["payload"] if mem_row else {}))
+            intervention_payload = {**intervention_payload, "memory_context_for_risk": memory_payload.get("memory_context_for_risk") or {}}
+
+            risks, new_or_worsening_flags = _calculate_risk_from_payloads(bedside_payload=bedside_payload, intervention_payload=intervention_payload)
+            overall_risk_level = "low"
+            if risks:
+                overall_risk_level = max([str(r["risk_level"]) for r in risks], key=lambda x: RISK_ORDER.get(x, 0))
 
             for risk in risks:
                 risk_id = new_id("risk")
@@ -193,7 +318,7 @@ def evaluate_risk_sentinel(conn: Connection, req: RiskSentinelEvaluateRequest) -
                         datetime.now(timezone.utc),
                         risk["risk_type"],
                         risk["confidence"],
-                        risk["severity"],
+                        DB_LEVEL_MAP[str(risk["risk_level"])],
                         Json(risk["evidence"]),
                         risk["time_window"],
                         risk["recommended_action"],
@@ -214,16 +339,16 @@ def evaluate_risk_sentinel(conn: Connection, req: RiskSentinelEvaluateRequest) -
                         patient_id,
                         bed_id,
                         RISK_TO_ALERT_TYPE.get(str(risk["risk_type"]), f"{risk['risk_type']}_risk"),
-                        "critical" if risk["severity"] == "critical" else "warning",
+                        "critical" if risk["risk_level"] == "critical" else ("warning" if risk["risk_level"] in ("moderate", "high") else "info"),
                         Json(risk["evidence"]),
                         datetime.now(timezone.utc),
                         datetime.now(timezone.utc),
                     ),
                 )
 
-            active_risks = [{"risk_type": r["risk_type"], "severity": r["severity"]} for r in risks]
+            active_risks = [{"risk_type": r["risk_type"], "severity": DB_LEVEL_MAP[str(r["risk_level"])]} for r in risks]
             if active_risks:
-                max_sev = max(active_risks, key=lambda x: SEVERITY_ORDER[str(x["severity"])])["severity"]
+                max_sev = max(active_risks, key=lambda x: {"low": 0, "warning": 1, "critical": 2}[str(x["severity"])])["severity"]
                 care_phase = "critical" if max_sev == "critical" else "unstable"
                 cur.execute(
                     """
@@ -235,6 +360,16 @@ def evaluate_risk_sentinel(conn: Connection, req: RiskSentinelEvaluateRequest) -
                 )
 
             payload = {
+                "schema_version": "risk_sentinel.v1.1",
+                "agent": "risk_sentinel",
+                "admission_id": req.admission_id,
+                "patient_id": patient_id,
+                "bed_id": bed_id,
+                "overall_risk_level": overall_risk_level,
+                "active_risks": _json_safe_risks(risks),
+                "new_or_worsening_flags": new_or_worsening_flags,
+                "recommended_next_attention": [str(r["recommended_action"]) for r in risks][:5],
+                "notify_agents": NOTIFY_AGENTS,
                 "risks": _json_safe_risks(risks),
                 "consumed_event_ids": consumed_event_ids,
             }
@@ -258,6 +393,36 @@ def evaluate_risk_sentinel(conn: Connection, req: RiskSentinelEvaluateRequest) -
                 """,
                 (event_id, req.admission_id, patient_id, bed_id, datetime.now(timezone.utc), output_id, Json(payload)),
             )
+            cur.execute(
+                """
+                INSERT INTO agent_events (
+                    event_id, admission_id, patient_id, bed_id, producer_agent,
+                    event_type, schema_version, produced_at, output_id, payload
+                ) VALUES (%s, %s, %s, %s, 'risk_sentinel', 'risk_sentinel.completed', 'v1', %s, %s, %s::jsonb)
+                """,
+                (
+                    new_id("aevt"),
+                    req.admission_id,
+                    patient_id,
+                    bed_id,
+                    datetime.now(timezone.utc),
+                    output_id,
+                    Json({"overall_risk_level": overall_risk_level, "new_or_worsening_flags": new_or_worsening_flags}),
+                ),
+            )
+            cur.execute(
+                """
+                INSERT INTO audit_logs (id, timestamp, actor, actor_id, action_type, target_type, target_id, input, output)
+                VALUES (%s, %s, 'agent', 'risk_sentinel', 'run_agent', 'admission', %s, %s::jsonb, %s::jsonb)
+                """,
+                (
+                    new_id("log"),
+                    datetime.now(timezone.utc),
+                    req.admission_id,
+                    Json({"admission_id": req.admission_id, "max_events": req.max_events, "force_recompute": req.force_recompute}),
+                    Json({"overall_risk_level": overall_risk_level, "risk_count": len(risks), "new_or_worsening_flags": new_or_worsening_flags}),
+                ),
+            )
 
             if events:
                 last = events[-1]
@@ -275,21 +440,46 @@ def evaluate_risk_sentinel(conn: Connection, req: RiskSentinelEvaluateRequest) -
                 )
 
     if risks:
-        highest = max(risks, key=lambda r: SEVERITY_ORDER[str(r["severity"])])
-        escalation = cast(str, SEVERITY_TO_ESCALATION[str(highest["severity"])])
+        highest = max(risks, key=lambda r: RISK_ORDER[str(r["risk_level"])])
+        escalation = cast(str, LEVEL_TO_ESCALATION[str(highest["risk_level"])])
+        overall = cast(RiskSeverity, str(highest["risk_level"]))
     else:
         escalation = "info"
+        overall = cast(RiskSeverity, "low")
     return RiskSentinelEvaluateResponse(
+        patient_id=patient_id,
+        bed_id=bed_id,
         admission_id=req.admission_id,
+        overall_risk_level=overall,
+        active_risks=[
+            RiskImage(
+                risk_type=str(r["risk_type"]),
+                confidence=cast(Decimal, r["confidence"]),
+                severity=cast(RiskSeverity, str(r["risk_level"])),
+                risk_level=cast(RiskSeverity, str(r["risk_level"])),
+                evidence=cast(list[dict[str, Any]], r["evidence"]),
+                time_window=str(r["time_window"]),
+                trajectory=cast(Any, str(r["trajectory"])),
+                escalation_level=cast(Any, str(r["escalation_level"])),
+                recommended_action=str(r["recommended_action"]),
+            )
+            for r in risks
+        ],
+        new_or_worsening_flags=new_or_worsening_flags if risks else [],
+        recommended_next_attention=[str(r["recommended_action"]) for r in risks][:5],
+        notify_agents=NOTIFY_AGENTS if risks else [],
         consumed_event_count=len(consumed_event_ids),
         consumed_event_ids=consumed_event_ids,
         risks=[
             RiskImage(
                 risk_type=str(r["risk_type"]),
                 confidence=cast(Decimal, r["confidence"]),
-                severity=cast(RiskSeverity, str(r["severity"])),
+                severity=cast(RiskSeverity, str(r["risk_level"])),
+                risk_level=cast(RiskSeverity, str(r["risk_level"])),
                 evidence=cast(list[dict[str, Any]], r["evidence"]),
                 time_window=str(r["time_window"]),
+                trajectory=cast(Any, str(r["trajectory"])),
+                escalation_level=cast(Any, str(r["escalation_level"])),
                 recommended_action=str(r["recommended_action"]),
             )
             for r in risks
