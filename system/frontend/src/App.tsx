@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "./api";
 import ShowcasePage from "./showcase/ShowcasePage";
+import ShowcaseDetailPage from "./showcase/ShowcaseDetailPage";
 import type { Admission, JsonObj } from "./types";
 
 type PipelineStep = {
@@ -23,6 +24,9 @@ function safeStr(v: unknown): string {
 }
 
 export default function App() {
+  if (typeof window !== "undefined" && window.location.pathname.startsWith("/showcase_detail")) {
+    return <ShowcaseDetailPage />;
+  }
   if (typeof window !== "undefined" && window.location.pathname.startsWith("/showcase")) {
     return <ShowcasePage />;
   }
@@ -287,6 +291,7 @@ export default function App() {
           {pipelineRunning ? "Pipeline Running..." : "Run Full Pipeline"}
         </button>
         <a href="/showcase" className="showcaseLink">Open Showcase</a>
+        <a href="/showcase_detail" className="showcaseLink">Open Showcase Detail</a>
       </header>
 
       {loadState === "loading" && <p>Loading...</p>}

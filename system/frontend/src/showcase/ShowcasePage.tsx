@@ -160,6 +160,7 @@ export default function ShowcasePage() {
         </div>
         <div className="scTopActions">
           <a href="/">Back to Full Console</a>
+          <a href="/showcase_detail">Open Detail Trace</a>
           <button onClick={() => void loadOverview()}>{loading ? "Refreshing..." : "Refresh"}</button>
         </div>
       </header>

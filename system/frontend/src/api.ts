@@ -64,4 +64,17 @@ export const api = {
       : `?limit=${limit}`;
     return request<JsonObj[]>(`/admissions/${encodeURIComponent(admissionId)}/agent_outputs${q}`);
   },
+
+  getAgentEvents: (admissionId: string, producerAgent?: string, limit = 60) => {
+    const q = producerAgent
+      ? `?producer_agent=${encodeURIComponent(producerAgent)}&limit=${limit}`
+      : `?limit=${limit}`;
+    return request<JsonObj[]>(`/admissions/${encodeURIComponent(admissionId)}/agent_events${q}`);
+  },
+
+  getOrchestratorRuns: (limit = 20) =>
+    request<JsonObj[]>(`/orchestrator/runs?limit=${limit}`),
+
+  getOrchestratorRun: (runId: string) =>
+    request<JsonObj>(`/orchestrator/runs/${encodeURIComponent(runId)}`),
 };
