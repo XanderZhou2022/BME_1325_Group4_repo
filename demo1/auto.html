@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auto ICU Demo</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 20px; background: #0f172a; color: #e2e8f0; }
+      button { margin-right: 8px; padding: 8px 12px; }
+      .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+      pre { background: #111827; padding: 12px; overflow: auto; border-radius: 8px; min-height: 220px; }
+      .card { background: #1f2937; padding: 12px; border-radius: 8px; }
+    </style>
+  </head>
+  <body>
+    <h1>Demo1 Auto ICU</h1>
+    <p>Click next step to generate one random hospital event (+5 minutes).</p>
+    <button id="resetBtn">Reset Hospital</button>
+    <button id="nextBtn">Next Step (+5min)</button>
+    <div class="row">
+      <div class="card"><h3>Current State</h3><pre id="stateOut"></pre></div>
+      <div class="card"><h3>Current Event</h3><pre id="stepOut"></pre></div>
+    </div>
+    <div class="row">
+      <div class="card"><h3>Agent Delta</h3><pre id="deltaOut"></pre></div>
+      <div class="card"><h3>Timeline</h3><pre id="timelineOut"></pre></div>
+    </div>
+    <script>
+      const base = (location.hostname ? `http://${location.hostname}:8000` : "http://127.0.0.1:8000") + "/api/v1/demo/auto";
+      const stateOut = document.getElementById("stateOut");
+      const stepOut = document.getElementById("stepOut");
+      const deltaOut = document.getElementById("deltaOut");
+      const timelineOut = document.getElementById("timelineOut");
+
+      async function req(path, init) {
+        const r = await fetch(base + path, { headers: { "Content-Type": "application/json" }, ...(init || {}) });
+        if (!r.ok) throw new Error(`${r.status} ${await r.text()}`);
+        return r.json();
+      }
+
+      async function refresh() {
+        const [st, tl] = await Promise.all([req("/state"), req("/timeline?limit=20")]);
+        stateOut.textContent = JSON.stringify(st, null, 2);
+        timelineOut.textContent = JSON.stringify(tl, null, 2);
+      }
+
+      document.getElementById("resetBtn").onclick = async () => {
+        const st = await req("/reset", { method: "POST" });
+        stepOut.textContent = "{}";
+        deltaOut.textContent = "{}";
+        stateOut.textContent = JSON.stringify(st, null, 2);
+        await refresh();
+      };
+      document.getElementById("nextBtn").onclick = async () => {
+        const out = await req("/next", { method: "POST" });
+        stepOut.textContent = JSON.stringify(out, null, 2);
+        deltaOut.textContent = JSON.stringify({
+          db_effects: out.db_effects,
+          triggered_agents: (out.agent_delta_summary || {}).triggered_agent_names || [],
+          triggered_event_types: (out.agent_delta_summary || {}).triggered_event_types || []
+        }, null, 2);
+        await refresh();
+      };
+      refresh();
+    </script>
+  </body>
+  </html>

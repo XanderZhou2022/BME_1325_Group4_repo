@@ -77,4 +77,9 @@ export const api = {
 
   getOrchestratorRun: (runId: string) =>
     request<JsonObj>(`/orchestrator/runs/${encodeURIComponent(runId)}`),
+
+  demoAutoReset: () => request<JsonObj>("/demo/auto/reset", { method: "POST" }),
+  demoAutoNext: () => request<JsonObj>("/demo/auto/next", { method: "POST" }),
+  demoAutoState: () => request<JsonObj>("/demo/auto/state"),
+  demoAutoTimeline: (limit = 100) => request<JsonObj>(`/demo/auto/timeline?limit=${limit}`),
 };

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { api } from "./api";
 import ShowcasePage from "./showcase/ShowcasePage";
 import ShowcaseDetailPage from "./showcase/ShowcaseDetailPage";
+import AutoDemoPage from "./showcase/AutoDemoPage";
 import type { Admission, JsonObj } from "./types";
 
 type PipelineStep = {
@@ -24,6 +25,9 @@ function safeStr(v: unknown): string {
 }
 
 export default function App() {
+  if (typeof window !== "undefined" && window.location.pathname.startsWith("/auto")) {
+    return <AutoDemoPage />;
+  }
   if (typeof window !== "undefined" && window.location.pathname.startsWith("/showcase_detail")) {
     return <ShowcaseDetailPage />;
   }
@@ -292,6 +296,7 @@ export default function App() {
         </button>
         <a href="/showcase" className="showcaseLink">Open Showcase</a>
         <a href="/showcase_detail" className="showcaseLink">Open Showcase Detail</a>
+        <a href="/auto" className="showcaseLink">Open Auto Demo</a>
       </header>
 
       {loadState === "loading" && <p>Loading...</p>}

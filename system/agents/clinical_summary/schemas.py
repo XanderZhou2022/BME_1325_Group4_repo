@@ -23,6 +23,7 @@ class InterventionResponse(BaseModel):
         "partially_responsive",
         "non_responsive",
         "deteriorating_despite_intervention",
+        "not_enough_data",
     ]
     target_metrics: Dict[str, Any] = {}
     before_after_comparison: Dict[str, Any] = {}

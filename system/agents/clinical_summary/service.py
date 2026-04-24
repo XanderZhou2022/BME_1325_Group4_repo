@@ -28,6 +28,29 @@ from .templates import (
 )
 
 
+def _normalize_abnormal_flags(raw: Any) -> list[str]:
+    if not raw:
+        return []
+    out: list[str] = []
+    if isinstance(raw, list):
+        for item in raw:
+            if isinstance(item, str):
+                out.append(item)
+            elif isinstance(item, dict):
+                out.append(str(item.get("type") or item.get("flag") or "abnormal_flag"))
+    return out
+
+
+def _normalize_evidence(raw: Any) -> list[dict[str, Any]]:
+    if not raw:
+        return []
+    if isinstance(raw, dict):
+        return [{"key": str(k), "value": v} for k, v in raw.items()]
+    if isinstance(raw, list):
+        return [x for x in raw if isinstance(x, dict)]
+    return []
+
+
 def _ensure_clinical_summary_table(conn: Connection) -> None:
     with conn.cursor() as cur:
         cur.execute(
@@ -199,9 +222,9 @@ def evaluate_clinical_summary(conn: Connection, admission_id: str, summary_type:
         bed_id=adm["bed_id"],
         admission_id=admission_id,
         vitals_summary=VitalsSummary(
-            abnormal_flags=list(bedside_payload.get("abnormal_flags") or []),
+            abnormal_flags=_normalize_abnormal_flags(bedside_payload.get("abnormal_flags")),
             trend_labels=[str(x) for x in list(bedside_payload.get("trend_labels") or [])],
-            evidence=list(bedside_payload.get("evidence") or []),
+            evidence=_normalize_evidence(bedside_payload.get("evidence")),
         ),
         intervention_responses=[
             InterventionResponse(

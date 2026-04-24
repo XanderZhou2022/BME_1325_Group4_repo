@@ -48,6 +48,7 @@ from agents.clinical_summary.router import router as clinical_summary_router
 from agents.ward_coordinator.router import router as ward_coordinator_router
 from agents.risk_sentinel.router import router as risk_sentinel_router
 from app.orchestrator.router import router as orchestrator_router
+from app.demo.router import router as demo_auto_router
 
 router.include_router(bedside_monitor_router)
 router.include_router(intervention_tracker_router)
@@ -56,6 +57,7 @@ router.include_router(clinical_summary_router)
 router.include_router(ward_coordinator_router)
 router.include_router(risk_sentinel_router)
 router.include_router(orchestrator_router)
+router.include_router(demo_auto_router)
 
 
 # === Write-side: events driving state ===
@@ -469,7 +471,12 @@ def list_agent_outputs(
                 (admission_id, limit),
             )
         rows = cur.fetchall()
-    return [AgentOutputOut(**r, payload=r["payload"] or {}) for r in rows]
+    out: list[AgentOutputOut] = []
+    for r in rows:
+        row = dict(r)
+        row["payload"] = row.get("payload") or {}
+        out.append(AgentOutputOut(**row))
+    return out
 
 
 @router.get("/admissions/{admission_id}/agent_events", response_model=list[AgentEventOut])
@@ -507,7 +514,12 @@ def list_agent_events(
                 (admission_id, limit),
             )
         rows = cur.fetchall()
-    return [AgentEventOut(**r, payload=r["payload"] or {}) for r in rows]
+    out: list[AgentEventOut] = []
+    for r in rows:
+        row = dict(r)
+        row["payload"] = row.get("payload") or {}
+        out.append(AgentEventOut(**row))
+    return out
 
 
 @router.get("/admissions/{admission_id}/agent_cursors", response_model=list[AgentCursorOut])
