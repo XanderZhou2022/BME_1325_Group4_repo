@@ -1,20 +1,20 @@
 {
-  "card_id": "clinical_deterioration_timely_vitals_001",
+  "card_id": "clinical_deterioration_family_concerns_010",
   "source_id": "clinical_deterioration_rapid_response_2024_001",
   "source_title": "SCCM Guidelines on Recognizing and Responding to Clinical Deterioration Outside the ICU",
   "domain": "clinical_deterioration",
   "subdomain": "recognition_response",
   "population": "mixed",
   "card_type": "risk_background",
-  "topic": "Timely vital sign acquisition",
+  "topic": "Patient and family concerns in escalation",
   "clinical_context": "Use for human-reviewed recognition, explanation, and escalation of possible clinical deterioration.",
   "key_points": [
-    "The source explicitly discusses timely vital sign acquisition in the context of recognizing or responding to deterioration.",
+    "The source explicitly discusses patient and family concerns in escalation in the context of recognizing or responding to deterioration.",
     "Use this as escalation or summary context only; it does not diagnose shock, respiratory failure, or AKI."
   ],
   "trigger_signals": [
-    "abnormal vital signs",
-    "late measurement"
+    "family concern",
+    "care partner concern"
   ],
   "related_risk_types": [
     "persistent_shock_risk",
@@ -39,18 +39,18 @@
     "automatic treatment decision"
   ],
   "retrieval_keywords": [
-    "vital sign",
-    "timely",
-    "abnormal vital signs",
-    "late measurement",
+    "patient/family",
+    "concerns",
+    "family concern",
+    "care partner concern",
     "clinical deterioration",
     "rapid response"
   ],
   "evidence_location": {
-    "page_start": 1,
-    "page_end": 1,
+    "page_start": 6,
+    "page_end": 6,
     "section_title": "Recognizing and responding to clinical deterioration",
-    "quote": "ensure that all vital sign acquisition is timely and accurate (GPS). We make no"
+    "quote": "patient/family/care partner concerns and opportuni-"
   },
   "confidence": "high",
   "human_review_required": true,

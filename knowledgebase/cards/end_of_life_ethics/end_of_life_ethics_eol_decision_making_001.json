@@ -1,0 +1,64 @@
+{
+  "card_id": "end_of_life_ethics_eol_decision_making_001",
+  "source_id": "adult_eol_icu_2025_001",
+  "source_title": "SCCM Clinical Practice Guidelines on Adult End-of-Life Care in the ICU",
+  "domain": "end_of_life_ethics",
+  "subdomain": "family_ethics_communication",
+  "population": "adult",
+  "card_type": "ethical_policy",
+  "topic": "End-of-life decision-making support",
+  "clinical_context": "Use only for clinician-reviewed ethical context or family communication draft language.",
+  "key_points": [
+    "The source explicitly discusses end-of-life decision-making support in ICU communication, end-of-life, or ethical conflict context.",
+    "This card is not for direct family delivery and cannot announce prognosis, futility, or treatment withdrawal recommendations."
+  ],
+  "trigger_signals": [
+    "goals of care"
+  ],
+  "related_risk_types": [],
+  "used_by_agents": [
+    "CompassionAgent",
+    "PatientMemoryAgent",
+    "ClinicalSummaryAgent",
+    "WardCoordinatorAgent"
+  ],
+  "allowed_use": [
+    "family communication draft",
+    "ethical context",
+    "clinician-reviewed summary"
+  ],
+  "forbidden_use": [
+    "direct family delivery without clinician approval",
+    "definitive prognosis",
+    "treatment withdrawal recommendation",
+    "futility judgment"
+  ],
+  "retrieval_keywords": [
+    "decision-making",
+    "goals of care",
+    "family communication",
+    "ICU ethics"
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 1,
+    "section_title": "Family communication and ICU ethics",
+    "quote": "KEYWORDS: end-of-life care; end-of-life decision-making; evidence-based HEC-C1"
+  },
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "requires_clinician_approval": true,
+  "not_for_direct_family_delivery": true,
+  "family_friendly_language": [
+    "A clinician can review and adapt this into language that reflects the patient's current situation."
+  ],
+  "professional_preview_language": [
+    "Use as draft context only; verify current goals, surrogate, and attending clinician plan."
+  ],
+  "phrases_to_avoid": [
+    "Care is futile.",
+    "There is no hope.",
+    "The agent recommends stopping treatment."
+  ]
+}

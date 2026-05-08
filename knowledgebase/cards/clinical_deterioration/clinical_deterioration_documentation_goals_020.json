@@ -1,20 +1,20 @@
 {
-  "card_id": "clinical_deterioration_timely_vitals_001",
+  "card_id": "clinical_deterioration_documentation_goals_020",
   "source_id": "clinical_deterioration_rapid_response_2024_001",
   "source_title": "SCCM Guidelines on Recognizing and Responding to Clinical Deterioration Outside the ICU",
   "domain": "clinical_deterioration",
   "subdomain": "recognition_response",
   "population": "mixed",
   "card_type": "risk_background",
-  "topic": "Timely vital sign acquisition",
+  "topic": "Documentation of goals during response",
   "clinical_context": "Use for human-reviewed recognition, explanation, and escalation of possible clinical deterioration.",
   "key_points": [
-    "The source explicitly discusses timely vital sign acquisition in the context of recognizing or responding to deterioration.",
+    "The source explicitly discusses documentation of goals during response in the context of recognizing or responding to deterioration.",
     "Use this as escalation or summary context only; it does not diagnose shock, respiratory failure, or AKI."
   ],
   "trigger_signals": [
-    "abnormal vital signs",
-    "late measurement"
+    "goals documented",
+    "communication gap"
   ],
   "related_risk_types": [
     "persistent_shock_risk",
@@ -39,18 +39,18 @@
     "automatic treatment decision"
   ],
   "retrieval_keywords": [
-    "vital sign",
-    "timely",
-    "abnormal vital signs",
-    "late measurement",
+    "documentation",
+    "goals of care",
+    "goals documented",
+    "communication gap",
     "clinical deterioration",
     "rapid response"
   ],
   "evidence_location": {
-    "page_start": 1,
-    "page_end": 1,
+    "page_start": 9,
+    "page_end": 9,
     "section_title": "Recognizing and responding to clinical deterioration",
-    "quote": "ensure that all vital sign acquisition is timely and accurate (GPS). We make no"
+    "quote": "nication and documentation around goals of care and and approach. For example, case-based reviews (e.g.,"
   },
   "confidence": "high",
   "human_review_required": true,

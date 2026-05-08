@@ -1,20 +1,20 @@
 {
-  "card_id": "clinical_deterioration_timely_vitals_001",
+  "card_id": "clinical_deterioration_accurate_vitals_002",
   "source_id": "clinical_deterioration_rapid_response_2024_001",
   "source_title": "SCCM Guidelines on Recognizing and Responding to Clinical Deterioration Outside the ICU",
   "domain": "clinical_deterioration",
   "subdomain": "recognition_response",
   "population": "mixed",
   "card_type": "risk_background",
-  "topic": "Timely vital sign acquisition",
+  "topic": "Accurate vital sign acquisition",
   "clinical_context": "Use for human-reviewed recognition, explanation, and escalation of possible clinical deterioration.",
   "key_points": [
-    "The source explicitly discusses timely vital sign acquisition in the context of recognizing or responding to deterioration.",
+    "The source explicitly discusses accurate vital sign acquisition in the context of recognizing or responding to deterioration.",
     "Use this as escalation or summary context only; it does not diagnose shock, respiratory failure, or AKI."
   ],
   "trigger_signals": [
-    "abnormal vital signs",
-    "late measurement"
+    "measurement concern",
+    "inconsistent vital signs"
   ],
   "related_risk_types": [
     "persistent_shock_risk",
@@ -40,9 +40,9 @@
   ],
   "retrieval_keywords": [
     "vital sign",
-    "timely",
-    "abnormal vital signs",
-    "late measurement",
+    "accurate",
+    "measurement concern",
+    "inconsistent vital signs",
     "clinical deterioration",
     "rapid response"
   ],

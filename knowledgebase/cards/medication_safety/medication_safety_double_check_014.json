@@ -1,0 +1,65 @@
+{
+  "card_id": "medication_safety_double_check_014",
+  "source_id": "medication_safety_icu_001",
+  "source_title": "Clinical Practice Guideline: Safe Medication Use in the ICU",
+  "domain": "medication_safety",
+  "subdomain": "medication_use_safety",
+  "population": "mixed",
+  "card_type": "medication_safety_context",
+  "topic": "Independent double checks for high-alert processes",
+  "clinical_context": "Use for clinician or pharmacist review prompts around medication-related ICU events.",
+  "key_points": [
+    "The source explicitly discusses independent double checks for high-alert processes as part of ICU medication safety.",
+    "This card supports review, monitoring, and summary language only and must not produce doses or medication orders."
+  ],
+  "trigger_signals": [
+    "double check"
+  ],
+  "related_risk_types": [],
+  "used_by_agents": [
+    "InterventionTrackerAgent",
+    "RiskSentinelAgent",
+    "ClinicalSummaryAgent"
+  ],
+  "allowed_use": [
+    "risk explanation",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "automatic diagnosis",
+    "treatment order",
+    "drug dose recommendation",
+    "automatic treatment decision"
+  ],
+  "retrieval_keywords": [
+    "double checking",
+    "double check",
+    "medication safety",
+    "ADE",
+    "medication error"
+  ],
+  "evidence_location": {
+    "page_start": 15,
+    "page_end": 15,
+    "section_title": "Safe medication use in the ICU",
+    "quote": "175). In contrast, one study found that a theoretical reformula- facturers), and the use of double checking in the dispensing"
+  },
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "direct_risk_source": false,
+  "intervention_types": [
+    "medication administration",
+    "infusion",
+    "medication review"
+  ],
+  "observation_targets": [
+    "medication errors",
+    "adverse drug events",
+    "unexpected clinical change"
+  ],
+  "response_language": [
+    "Flag medication safety context for clinician or pharmacist review without dose advice."
+  ]
+}

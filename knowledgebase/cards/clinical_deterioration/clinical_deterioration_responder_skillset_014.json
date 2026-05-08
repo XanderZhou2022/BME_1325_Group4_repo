@@ -1,20 +1,20 @@
 {
-  "card_id": "clinical_deterioration_timely_vitals_001",
+  "card_id": "clinical_deterioration_responder_skillset_014",
   "source_id": "clinical_deterioration_rapid_response_2024_001",
   "source_title": "SCCM Guidelines on Recognizing and Responding to Clinical Deterioration Outside the ICU",
   "domain": "clinical_deterioration",
   "subdomain": "recognition_response",
   "population": "mixed",
   "card_type": "risk_background",
-  "topic": "Timely vital sign acquisition",
+  "topic": "Rapid response responder skill set",
   "clinical_context": "Use for human-reviewed recognition, explanation, and escalation of possible clinical deterioration.",
   "key_points": [
-    "The source explicitly discusses timely vital sign acquisition in the context of recognizing or responding to deterioration.",
+    "The source explicitly discusses rapid response responder skill set in the context of recognizing or responding to deterioration.",
     "Use this as escalation or summary context only; it does not diagnose shock, respiratory failure, or AKI."
   ],
   "trigger_signals": [
-    "abnormal vital signs",
-    "late measurement"
+    "complex deterioration",
+    "RRT response"
   ],
   "related_risk_types": [
     "persistent_shock_risk",
@@ -39,10 +39,10 @@
     "automatic treatment decision"
   ],
   "retrieval_keywords": [
-    "vital sign",
-    "timely",
-    "abnormal vital signs",
-    "late measurement",
+    "skill set",
+    "responders",
+    "complex deterioration",
+    "RRT response",
     "clinical deterioration",
     "rapid response"
   ],
@@ -50,7 +50,7 @@
     "page_start": 1,
     "page_end": 1,
     "section_title": "Recognizing and responding to clinical deterioration",
-    "quote": "ensure that all vital sign acquisition is timely and accurate (GPS). We make no"
+    "quote": "the responding team but suggest that the skill set of responders should include"
   },
   "confidence": "high",
   "human_review_required": true,

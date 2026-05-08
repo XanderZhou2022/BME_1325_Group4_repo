@@ -1,0 +1,76 @@
+{
+  "card_id": "padis_anxiety_domain_001",
+  "source_id": "padis_update_2025_001",
+  "source_title": "Focused Update to ICU PADIS Guidelines: Pain, Anxiety, Sedation, Delirium, Immobility, and Sleep",
+  "domain": "padis_sedation_delirium",
+  "subdomain": "padis_symptom_management",
+  "population": "adult",
+  "card_type": "guideline_context",
+  "topic": "Anxiety as an adult ICU symptom domain",
+  "clinical_context": "Use for adult ICU symptom-management summaries and human-reviewed intervention tracking.",
+  "key_points": [
+    "The source explicitly discusses anxiety as an adult icu symptom domain in adult ICU PADIS symptom-management context.",
+    "This card must not be used to select, order, or dose a sedative, antipsychotic, or sleep medication."
+  ],
+  "trigger_signals": [
+    "anxiety"
+  ],
+  "related_risk_types": [],
+  "used_by_agents": [
+    "BedsideMonitorAgent",
+    "InterventionTrackerAgent",
+    "PatientMemoryAgent",
+    "ClinicalSummaryAgent",
+    "CompassionAgent"
+  ],
+  "allowed_use": [
+    "risk explanation",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "automatic diagnosis",
+    "treatment order",
+    "drug dose recommendation",
+    "automatic treatment decision"
+  ],
+  "retrieval_keywords": [
+    "anxiety",
+    "anxiety",
+    "PADIS",
+    "ICU",
+    "delirium",
+    "sedation"
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 1,
+    "section_title": "PADIS focused update",
+    "quote": "of Pain, Anxiety, Agitation/Sedation, Delirium,"
+  },
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "professional_summary_template": "Anxiety as an adult ICU symptom domain: summarize as ICU symptom-management context requiring clinician interpretation.",
+  "allowed_terms": [
+    "anxiety",
+    "ICU context"
+  ],
+  "avoid_terms": [
+    "dose",
+    "automatic medication order",
+    "definitive treatment"
+  ],
+  "requires_clinician_approval": true,
+  "not_for_direct_family_delivery": true,
+  "family_friendly_language": [
+    "The ICU team can explain how symptoms, sedation, sleep, or confusion affect communication and comfort."
+  ],
+  "professional_preview_language": [
+    "Review against current clinical status before family-facing use."
+  ],
+  "phrases_to_avoid": [
+    "This guarantees recovery.",
+    "The agent recommends this medicine."
+  ]
+}

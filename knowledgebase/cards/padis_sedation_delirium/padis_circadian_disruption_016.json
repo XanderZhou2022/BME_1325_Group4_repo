@@ -1,0 +1,63 @@
+{
+  "card_id": "padis_circadian_disruption_016",
+  "source_id": "padis_update_2025_001",
+  "source_title": "Focused Update to ICU PADIS Guidelines: Pain, Anxiety, Sedation, Delirium, Immobility, and Sleep",
+  "domain": "padis_sedation_delirium",
+  "subdomain": "padis_symptom_management",
+  "population": "adult",
+  "card_type": "guideline_context",
+  "topic": "Circadian disruption context",
+  "clinical_context": "Use for adult ICU symptom-management summaries and human-reviewed intervention tracking.",
+  "key_points": [
+    "The source explicitly discusses circadian disruption context in adult ICU PADIS symptom-management context.",
+    "This card must not be used to select, order, or dose a sedative, antipsychotic, or sleep medication."
+  ],
+  "trigger_signals": [
+    "sleep disruption"
+  ],
+  "related_risk_types": [],
+  "used_by_agents": [
+    "BedsideMonitorAgent",
+    "InterventionTrackerAgent",
+    "PatientMemoryAgent",
+    "ClinicalSummaryAgent"
+  ],
+  "allowed_use": [
+    "risk explanation",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "automatic diagnosis",
+    "treatment order",
+    "drug dose recommendation",
+    "automatic treatment decision"
+  ],
+  "retrieval_keywords": [
+    "circadian",
+    "sleep disruption",
+    "PADIS",
+    "ICU",
+    "delirium",
+    "sedation"
+  ],
+  "evidence_location": {
+    "page_start": 10,
+    "page_end": 10,
+    "section_title": "PADIS focused update",
+    "quote": "the adverse effects of sleep and circadian disruption • The role of dexmedetomidine in patients who require treat-"
+  },
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "professional_summary_template": "Circadian disruption context: summarize as ICU symptom-management context requiring clinician interpretation.",
+  "allowed_terms": [
+    "circadian",
+    "ICU context"
+  ],
+  "avoid_terms": [
+    "dose",
+    "automatic medication order",
+    "definitive treatment"
+  ]
+}

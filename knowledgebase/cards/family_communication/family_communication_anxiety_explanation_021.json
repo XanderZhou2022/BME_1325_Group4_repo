@@ -1,0 +1,63 @@
+{
+  "card_id": "family_communication_anxiety_explanation_021",
+  "source_id": "padis_update_2025_001",
+  "source_title": "Focused Update to ICU PADIS Guidelines: Pain, Anxiety, Sedation, Delirium, Immobility, and Sleep",
+  "domain": "family_communication",
+  "subdomain": "family_ethics_communication",
+  "population": "adult",
+  "card_type": "communication_principle",
+  "topic": "Anxiety family explanation",
+  "clinical_context": "Use only for clinician-reviewed ethical context or family communication draft language.",
+  "key_points": [
+    "The source explicitly discusses anxiety family explanation in ICU communication, end-of-life, or ethical conflict context.",
+    "This card is not for direct family delivery and cannot announce prognosis, futility, or treatment withdrawal recommendations."
+  ],
+  "trigger_signals": [
+    "anxiety explanation"
+  ],
+  "related_risk_types": [],
+  "used_by_agents": [
+    "CompassionAgent",
+    "PatientMemoryAgent",
+    "ClinicalSummaryAgent"
+  ],
+  "allowed_use": [
+    "family communication draft",
+    "ethical context",
+    "clinician-reviewed summary"
+  ],
+  "forbidden_use": [
+    "direct family delivery without clinician approval",
+    "definitive prognosis",
+    "treatment withdrawal recommendation",
+    "futility judgment"
+  ],
+  "retrieval_keywords": [
+    "anxiety",
+    "anxiety explanation",
+    "family communication",
+    "ICU ethics"
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 1,
+    "section_title": "Family communication and ICU ethics",
+    "quote": "of Pain, Anxiety, Agitation/Sedation, Delirium,"
+  },
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "requires_clinician_approval": true,
+  "not_for_direct_family_delivery": true,
+  "family_friendly_language": [
+    "A clinician can review and adapt this into language that reflects the patient's current situation."
+  ],
+  "professional_preview_language": [
+    "Use as draft context only; verify current goals, surrogate, and attending clinician plan."
+  ],
+  "phrases_to_avoid": [
+    "Care is futile.",
+    "There is no hope.",
+    "The agent recommends stopping treatment."
+  ]
+}

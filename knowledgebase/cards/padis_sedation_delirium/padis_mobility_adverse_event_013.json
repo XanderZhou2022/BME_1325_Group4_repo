@@ -1,0 +1,65 @@
+{
+  "card_id": "padis_mobility_adverse_event_013",
+  "source_id": "padis_update_2025_001",
+  "source_title": "Focused Update to ICU PADIS Guidelines: Pain, Anxiety, Sedation, Delirium, Immobility, and Sleep",
+  "domain": "padis_sedation_delirium",
+  "subdomain": "padis_symptom_management",
+  "population": "adult",
+  "card_type": "guideline_context",
+  "topic": "Mobility adverse event context",
+  "clinical_context": "Use for adult ICU symptom-management summaries and human-reviewed intervention tracking.",
+  "key_points": [
+    "The source explicitly discusses mobility adverse event context in adult ICU PADIS symptom-management context.",
+    "This card must not be used to select, order, or dose a sedative, antipsychotic, or sleep medication."
+  ],
+  "trigger_signals": [
+    "arrhythmia",
+    "mobility safety"
+  ],
+  "related_risk_types": [],
+  "used_by_agents": [
+    "BedsideMonitorAgent",
+    "InterventionTrackerAgent",
+    "PatientMemoryAgent",
+    "ClinicalSummaryAgent"
+  ],
+  "allowed_use": [
+    "risk explanation",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "automatic diagnosis",
+    "treatment order",
+    "drug dose recommendation",
+    "automatic treatment decision"
+  ],
+  "retrieval_keywords": [
+    "adverse event",
+    "arrhythmia",
+    "mobility safety",
+    "PADIS",
+    "ICU",
+    "delirium",
+    "sedation"
+  ],
+  "evidence_location": {
+    "page_start": 4,
+    "page_end": 4,
+    "section_title": "PADIS focused update",
+    "quote": "outcomes? 5) Adverse events"
+  },
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "professional_summary_template": "Mobility adverse event context: summarize as ICU symptom-management context requiring clinician interpretation.",
+  "allowed_terms": [
+    "adverse event",
+    "ICU context"
+  ],
+  "avoid_terms": [
+    "dose",
+    "automatic medication order",
+    "definitive treatment"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "card_id": "icu_design_context_windows_002",
+  "source_id": "adult_icu_design_2024_001",
+  "source_title": "Society of Critical Care Medicine 2024 Guidelines on Adult ICU Design",
+  "domain": "icu_design_context",
+  "subdomain": "adult_icu_design",
+  "population": "adult",
+  "card_type": "design_context",
+  "topic": "Windows in patient rooms",
+  "clinical_context": "Use only for ICU environment/design background, not clinical risk scoring.",
+  "key_points": [
+    "The source explicitly discusses windows in patient rooms as an adult ICU design issue.",
+    "This card is excluded from RiskSentinelAgent default retrieval."
+  ],
+  "trigger_signals": [
+    "patient room"
+  ],
+  "related_risk_types": [],
+  "used_by_agents": [
+    "ClinicalSummaryAgent"
+  ],
+  "allowed_use": [
+    "ICU design background",
+    "environment context"
+  ],
+  "forbidden_use": [
+    "risk scoring",
+    "automatic clinical decision",
+    "treatment order",
+    "resource triage decision"
+  ],
+  "retrieval_keywords": [
+    "windows",
+    "patient room",
+    "ICU design",
+    "architecture"
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 1,
+    "section_title": "Adult ICU design",
+    "quote": "recommends high-visibility ICU layouts, windows and natural lighting in all pa- Lewis J. Kaplan, MD, FACS, FCCP,"
+  },
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08"
+}

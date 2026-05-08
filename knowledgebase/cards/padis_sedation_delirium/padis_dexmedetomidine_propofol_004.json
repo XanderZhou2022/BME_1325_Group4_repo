@@ -1,0 +1,69 @@
+{
+  "card_id": "padis_dexmedetomidine_propofol_004",
+  "source_id": "padis_update_2025_001",
+  "source_title": "Focused Update to ICU PADIS Guidelines: Pain, Anxiety, Sedation, Delirium, Immobility, and Sleep",
+  "domain": "padis_sedation_delirium",
+  "subdomain": "padis_symptom_management",
+  "population": "adult",
+  "card_type": "guideline_context",
+  "topic": "Dexmedetomidine versus propofol context",
+  "clinical_context": "Use for adult ICU symptom-management summaries and human-reviewed intervention tracking.",
+  "key_points": [
+    "The source explicitly discusses dexmedetomidine versus propofol context in adult ICU PADIS symptom-management context.",
+    "This card must not be used to select, order, or dose a sedative, antipsychotic, or sleep medication."
+  ],
+  "trigger_signals": [
+    "mechanical ventilation",
+    "sedation"
+  ],
+  "related_risk_types": [
+    "respiratory_failure_risk"
+  ],
+  "used_by_agents": [
+    "BedsideMonitorAgent",
+    "InterventionTrackerAgent",
+    "PatientMemoryAgent",
+    "ClinicalSummaryAgent"
+  ],
+  "allowed_use": [
+    "risk explanation",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "automatic diagnosis",
+    "treatment order",
+    "drug dose recommendation",
+    "automatic treatment decision"
+  ],
+  "retrieval_keywords": [
+    "dexmedetomidine",
+    "propofol",
+    "mechanical ventilation",
+    "sedation",
+    "PADIS",
+    "ICU",
+    "delirium",
+    "sedation"
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 1,
+    "section_title": "PADIS focused update",
+    "quote": "conditional recommendations to use dexmedetomidine over propofol for sedation, Judith A. Tate, RN, PhD, ATS-F, FAAN7"
+  },
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "professional_summary_template": "Dexmedetomidine versus propofol context: summarize as ICU symptom-management context requiring clinician interpretation.",
+  "allowed_terms": [
+    "dexmedetomidine",
+    "propofol",
+    "ICU context"
+  ],
+  "avoid_terms": [
+    "dose",
+    "automatic medication order",
+    "definitive treatment"
+  ]
+}

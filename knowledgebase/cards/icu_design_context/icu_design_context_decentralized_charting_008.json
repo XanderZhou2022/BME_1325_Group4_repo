@@ -1,0 +1,47 @@
+{
+  "card_id": "icu_design_context_decentralized_charting_008",
+  "source_id": "adult_icu_design_2024_001",
+  "source_title": "Society of Critical Care Medicine 2024 Guidelines on Adult ICU Design",
+  "domain": "icu_design_context",
+  "subdomain": "adult_icu_design",
+  "population": "adult",
+  "card_type": "design_context",
+  "topic": "Decentralized charting uncertainty",
+  "clinical_context": "Use only for ICU environment/design background, not clinical risk scoring.",
+  "key_points": [
+    "The source explicitly discusses decentralized charting uncertainty as an adult ICU design issue.",
+    "This card is excluded from RiskSentinelAgent default retrieval."
+  ],
+  "trigger_signals": [
+    "charting"
+  ],
+  "related_risk_types": [],
+  "used_by_agents": [
+    "ClinicalSummaryAgent"
+  ],
+  "allowed_use": [
+    "ICU design background",
+    "environment context"
+  ],
+  "forbidden_use": [
+    "risk scoring",
+    "automatic clinical decision",
+    "treatment order",
+    "resource triage decision"
+  ],
+  "retrieval_keywords": [
+    "decentralized charting",
+    "charting",
+    "ICU design",
+    "architecture"
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 1,
+    "section_title": "Adult ICU design",
+    "quote": "dation around in-room supplies, decentralized charting, and advanced heating, Julie Lindeman Read, DNP, MS, RN,"
+  },
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08"
+}

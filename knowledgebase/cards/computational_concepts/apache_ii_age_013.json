@@ -1,0 +1,61 @@
+{
+  "concept_id": "apache_ii_age_013",
+  "card_id": "apache_ii_age_013",
+  "source_id": "msd_critical_illness_scoring_001",
+  "concept_name": "APACHE II age input",
+  "domain": "computational_concepts",
+  "card_type": "scoring_context",
+  "topic": "APACHE II age input",
+  "concept_type": "severity_score_input",
+  "purpose": "Explain one APACHE II input for dashboard, benchmark, or summary context.",
+  "inputs": [
+    "APACHE II age input"
+  ],
+  "outputs": [
+    "severity score context"
+  ],
+  "key_points": [
+    "The MSD manual APACHE II table includes apache ii age input as scoring context.",
+    "Use for explanation only; do not compute prognosis or make clinical decisions automatically."
+  ],
+  "trigger_signals": [
+    "年龄",
+    "APACHE II"
+  ],
+  "related_risk_types": [
+    "persistent_shock_risk",
+    "respiratory_failure_risk",
+    "aki_risk"
+  ],
+  "used_by_agents": [
+    "RiskSentinelAgent",
+    "ClinicalSummaryAgent",
+    "WardCoordinatorAgent"
+  ],
+  "allowed_use": [
+    "score explanation",
+    "dashboard context",
+    "benchmark support"
+  ],
+  "forbidden_use": [
+    "direct clinical decision",
+    "automatic prognosis announcement",
+    "treatment order",
+    "drug dose recommendation"
+  ],
+  "retrieval_keywords": [
+    "年龄",
+    "APACHE II",
+    "severity score",
+    "APACHE II age input"
+  ],
+  "evidence_location": {
+    "page_start": 3,
+    "page_end": 3,
+    "section_title": "APACHE II",
+    "quote": "年龄<44岁加0分，45~54岁加2分，55~64岁加3分，65~74岁加5分，≥75岁加6分。"
+  },
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08"
+}

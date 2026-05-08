@@ -1,0 +1,62 @@
+{
+  "card_id": "general_icu_operations_unresolved_problem_003",
+  "source_id": "adult_icu_admission_triage_001",
+  "source_title": "ICU Admission, Discharge, and Triage Guidelines",
+  "domain": "general_icu_operations",
+  "subdomain": "memory_summary_support",
+  "population": "adult",
+  "card_type": "icu_operations_context",
+  "topic": "Unresolved problem summary context",
+  "clinical_context": "Use to help PatientMemoryAgent and ClinicalSummaryAgent label ICU events for longitudinal summaries.",
+  "key_points": [
+    "The source supports unresolved problem summary context as contextual information for ICU event summaries.",
+    "Use as semantic tagging and summary support only; do not infer diagnoses or treatments."
+  ],
+  "trigger_signals": [
+    "unresolved problem"
+  ],
+  "related_risk_types": [],
+  "used_by_agents": [
+    "PatientMemoryAgent",
+    "ClinicalSummaryAgent"
+  ],
+  "allowed_use": [
+    "risk explanation",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "automatic diagnosis",
+    "treatment order",
+    "drug dose recommendation",
+    "automatic treatment decision"
+  ],
+  "retrieval_keywords": [
+    "quality assurance",
+    "unresolved problem",
+    "memory tag",
+    "clinical summary"
+  ],
+  "evidence_location": {
+    "page_start": 2,
+    "page_end": 2,
+    "section_title": "Patient memory and summary support",
+    "quote": "ICU care, quality assurance/improvement and metrics, nonbenefi- treatments that have occurred in the United States in the"
+  },
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "memory_tags": [
+    "unresolved problem"
+  ],
+  "professional_summary_template": "Unresolved problem summary context: document observed event and human-reviewed interpretation.",
+  "allowed_terms": [
+    "unresolved problem",
+    "context",
+    "summary"
+  ],
+  "avoid_terms": [
+    "diagnosed by agent",
+    "treatment ordered by agent"
+  ]
+}

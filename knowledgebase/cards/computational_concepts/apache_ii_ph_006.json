@@ -1,0 +1,61 @@
+{
+  "concept_id": "apache_ii_ph_006",
+  "card_id": "apache_ii_ph_006",
+  "source_id": "msd_critical_illness_scoring_001",
+  "concept_name": "APACHE II arterial pH input",
+  "domain": "computational_concepts",
+  "card_type": "scoring_context",
+  "topic": "APACHE II arterial pH input",
+  "concept_type": "severity_score_input",
+  "purpose": "Explain one APACHE II input for dashboard, benchmark, or summary context.",
+  "inputs": [
+    "APACHE II arterial pH input"
+  ],
+  "outputs": [
+    "severity score context"
+  ],
+  "key_points": [
+    "The MSD manual APACHE II table includes apache ii arterial ph input as scoring context.",
+    "Use for explanation only; do not compute prognosis or make clinical decisions automatically."
+  ],
+  "trigger_signals": [
+    "pH",
+    "APACHE II"
+  ],
+  "related_risk_types": [
+    "persistent_shock_risk",
+    "respiratory_failure_risk",
+    "aki_risk"
+  ],
+  "used_by_agents": [
+    "RiskSentinelAgent",
+    "ClinicalSummaryAgent",
+    "WardCoordinatorAgent"
+  ],
+  "allowed_use": [
+    "score explanation",
+    "dashboard context",
+    "benchmark support"
+  ],
+  "forbidden_use": [
+    "direct clinical decision",
+    "automatic prognosis announcement",
+    "treatment order",
+    "drug dose recommendation"
+  ],
+  "retrieval_keywords": [
+    "pH",
+    "APACHE II",
+    "severity score",
+    "APACHE II arterial pH input"
+  ],
+  "evidence_location": {
+    "page_start": 2,
+    "page_end": 2,
+    "section_title": "APACHE II",
+    "quote": "6 动脉血pH ≥7.7 7.6~7.69 — 7.5~7.59"
+  },
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08"
+}

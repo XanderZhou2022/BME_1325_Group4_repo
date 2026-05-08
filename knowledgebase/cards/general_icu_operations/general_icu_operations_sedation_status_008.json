@@ -1,0 +1,62 @@
+{
+  "card_id": "general_icu_operations_sedation_status_008",
+  "source_id": "padis_update_2025_001",
+  "source_title": "Focused Update to ICU PADIS Guidelines: Pain, Anxiety, Sedation, Delirium, Immobility, and Sleep",
+  "domain": "general_icu_operations",
+  "subdomain": "memory_summary_support",
+  "population": "adult",
+  "card_type": "icu_operations_context",
+  "topic": "Sedation status memory tag",
+  "clinical_context": "Use to help PatientMemoryAgent and ClinicalSummaryAgent label ICU events for longitudinal summaries.",
+  "key_points": [
+    "The source supports sedation status memory tag as contextual information for ICU event summaries.",
+    "Use as semantic tagging and summary support only; do not infer diagnoses or treatments."
+  ],
+  "trigger_signals": [
+    "sedation_status"
+  ],
+  "related_risk_types": [],
+  "used_by_agents": [
+    "PatientMemoryAgent",
+    "ClinicalSummaryAgent"
+  ],
+  "allowed_use": [
+    "risk explanation",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "automatic diagnosis",
+    "treatment order",
+    "drug dose recommendation",
+    "automatic treatment decision"
+  ],
+  "retrieval_keywords": [
+    "agitation/sedation",
+    "sedation_status",
+    "memory tag",
+    "clinical summary"
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 1,
+    "section_title": "Patient memory and summary support",
+    "quote": "of Pain, Anxiety, Agitation/Sedation, Delirium,"
+  },
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "memory_tags": [
+    "sedation_status"
+  ],
+  "professional_summary_template": "Sedation status memory tag: document observed event and human-reviewed interpretation.",
+  "allowed_terms": [
+    "sedation_status",
+    "context",
+    "summary"
+  ],
+  "avoid_terms": [
+    "diagnosed by agent",
+    "treatment ordered by agent"
+  ]
+}

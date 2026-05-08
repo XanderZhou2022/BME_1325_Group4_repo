@@ -1,0 +1,61 @@
+{
+  "concept_id": "apache_ii_chronic_health_014",
+  "card_id": "apache_ii_chronic_health_014",
+  "source_id": "msd_critical_illness_scoring_001",
+  "concept_name": "APACHE II chronic health points",
+  "domain": "computational_concepts",
+  "card_type": "scoring_context",
+  "topic": "APACHE II chronic health points",
+  "concept_type": "severity_score_input",
+  "purpose": "Explain one APACHE II input for dashboard, benchmark, or summary context.",
+  "inputs": [
+    "APACHE II chronic health points"
+  ],
+  "outputs": [
+    "severity score context"
+  ],
+  "key_points": [
+    "The MSD manual APACHE II table includes apache ii chronic health points as scoring context.",
+    "Use for explanation only; do not compute prognosis or make clinical decisions automatically."
+  ],
+  "trigger_signals": [
+    "慢性",
+    "APACHE II"
+  ],
+  "related_risk_types": [
+    "persistent_shock_risk",
+    "respiratory_failure_risk",
+    "aki_risk"
+  ],
+  "used_by_agents": [
+    "RiskSentinelAgent",
+    "ClinicalSummaryAgent",
+    "WardCoordinatorAgent"
+  ],
+  "allowed_use": [
+    "score explanation",
+    "dashboard context",
+    "benchmark support"
+  ],
+  "forbidden_use": [
+    "direct clinical decision",
+    "automatic prognosis announcement",
+    "treatment order",
+    "drug dose recommendation"
+  ],
+  "retrieval_keywords": [
+    "慢性",
+    "APACHE II",
+    "severity score",
+    "APACHE II chronic health points"
+  ],
+  "evidence_location": {
+    "page_start": 3,
+    "page_end": 3,
+    "section_title": "APACHE II",
+    "quote": "加慢性健康评分：免疫低下或有严重器官功能不全史者，择期手术加2分；免疫低下或有严重器官功能不全史者未手术治疗或急诊术后者"
+  },
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08"
+}

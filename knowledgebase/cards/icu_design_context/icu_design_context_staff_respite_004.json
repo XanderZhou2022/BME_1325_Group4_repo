@@ -1,0 +1,47 @@
+{
+  "card_id": "icu_design_context_staff_respite_004",
+  "source_id": "adult_icu_design_2024_001",
+  "source_title": "Society of Critical Care Medicine 2024 Guidelines on Adult ICU Design",
+  "domain": "icu_design_context",
+  "subdomain": "adult_icu_design",
+  "population": "adult",
+  "card_type": "design_context",
+  "topic": "Integrated staff break and respite spaces",
+  "clinical_context": "Use only for ICU environment/design background, not clinical risk scoring.",
+  "key_points": [
+    "The source explicitly discusses integrated staff break and respite spaces as an adult ICU design issue.",
+    "This card is excluded from RiskSentinelAgent default retrieval."
+  ],
+  "trigger_signals": [
+    "staff respite"
+  ],
+  "related_risk_types": [],
+  "used_by_agents": [
+    "ClinicalSummaryAgent"
+  ],
+  "allowed_use": [
+    "ICU design background",
+    "environment context"
+  ],
+  "forbidden_use": [
+    "risk scoring",
+    "automatic clinical decision",
+    "treatment order",
+    "resource triage decision"
+  ],
+  "retrieval_keywords": [
+    "break/respite",
+    "staff respite",
+    "ICU design",
+    "architecture"
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 1,
+    "section_title": "Adult ICU design",
+    "quote": "break/respite spaces, advanced infection prevention features, and flexible surge Sarah Monchar, MS, PA-C, MBA, FCCM21"
+  },
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08"
+}

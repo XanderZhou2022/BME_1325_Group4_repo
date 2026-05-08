@@ -1,0 +1,61 @@
+{
+  "concept_id": "apache_ii_creatinine_009",
+  "card_id": "apache_ii_creatinine_009",
+  "source_id": "msd_critical_illness_scoring_001",
+  "concept_name": "APACHE II serum creatinine input",
+  "domain": "computational_concepts",
+  "card_type": "scoring_context",
+  "topic": "APACHE II serum creatinine input",
+  "concept_type": "severity_score_input",
+  "purpose": "Explain one APACHE II input for dashboard, benchmark, or summary context.",
+  "inputs": [
+    "APACHE II serum creatinine input"
+  ],
+  "outputs": [
+    "severity score context"
+  ],
+  "key_points": [
+    "The MSD manual APACHE II table includes apache ii serum creatinine input as scoring context.",
+    "Use for explanation only; do not compute prognosis or make clinical decisions automatically."
+  ],
+  "trigger_signals": [
+    "肌酐",
+    "APACHE II"
+  ],
+  "related_risk_types": [
+    "persistent_shock_risk",
+    "respiratory_failure_risk",
+    "aki_risk"
+  ],
+  "used_by_agents": [
+    "RiskSentinelAgent",
+    "ClinicalSummaryAgent",
+    "WardCoordinatorAgent"
+  ],
+  "allowed_use": [
+    "score explanation",
+    "dashboard context",
+    "benchmark support"
+  ],
+  "forbidden_use": [
+    "direct clinical decision",
+    "automatic prognosis announcement",
+    "treatment order",
+    "drug dose recommendation"
+  ],
+  "retrieval_keywords": [
+    "肌酐",
+    "APACHE II",
+    "severity score",
+    "APACHE II serum creatinine input"
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 1,
+    "section_title": "APACHE II",
+    "quote": "危重病人评分系统 - 急救医学 - MSD诊疗手册专业版"
+  },
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08"
+}

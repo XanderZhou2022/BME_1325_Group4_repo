@@ -1,0 +1,63 @@
+{
+  "card_id": "padis_post_icu_anxiety_017",
+  "source_id": "padis_update_2025_001",
+  "source_title": "Focused Update to ICU PADIS Guidelines: Pain, Anxiety, Sedation, Delirium, Immobility, and Sleep",
+  "domain": "padis_sedation_delirium",
+  "subdomain": "padis_symptom_management",
+  "population": "adult",
+  "card_type": "guideline_context",
+  "topic": "Post-ICU anxiety/PTSD outcome context",
+  "clinical_context": "Use for adult ICU symptom-management summaries and human-reviewed intervention tracking.",
+  "key_points": [
+    "The source explicitly discusses post-icu anxiety/ptsd outcome context in adult ICU PADIS symptom-management context.",
+    "This card must not be used to select, order, or dose a sedative, antipsychotic, or sleep medication."
+  ],
+  "trigger_signals": [
+    "post ICU anxiety"
+  ],
+  "related_risk_types": [],
+  "used_by_agents": [
+    "BedsideMonitorAgent",
+    "InterventionTrackerAgent",
+    "PatientMemoryAgent",
+    "ClinicalSummaryAgent"
+  ],
+  "allowed_use": [
+    "risk explanation",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "automatic diagnosis",
+    "treatment order",
+    "drug dose recommendation",
+    "automatic treatment decision"
+  ],
+  "retrieval_keywords": [
+    "post-ICU anxiety",
+    "post ICU anxiety",
+    "PADIS",
+    "ICU",
+    "delirium",
+    "sedation"
+  ],
+  "evidence_location": {
+    "page_start": 3,
+    "page_end": 3,
+    "section_title": "PADIS focused update",
+    "quote": "6) Occurrence of post-ICU anxiety"
+  },
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "professional_summary_template": "Post-ICU anxiety/PTSD outcome context: summarize as ICU symptom-management context requiring clinician interpretation.",
+  "allowed_terms": [
+    "post-ICU anxiety",
+    "ICU context"
+  ],
+  "avoid_terms": [
+    "dose",
+    "automatic medication order",
+    "definitive treatment"
+  ]
+}
