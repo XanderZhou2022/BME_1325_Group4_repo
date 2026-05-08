@@ -11,7 +11,7 @@ from psycopg.types.json import Json
 
 from app.orchestrator.event_dispatcher import dispatch_event_chain
 from app.services.event_pipeline import write_intervention, write_lab, write_vital_sign
-from app.services.ids import new_id
+from app.services.ids import new_encounter_id, new_id
 from app.schemas import InterventionEventCreate, LabEventCreate, VitalSignEventCreate
 
 from .schemas import DemoDbEffects, DemoHospitalState, DemoNextResponse, DemoTimelineItem
@@ -126,6 +126,8 @@ def _create_patient_bed_admission(conn: Connection, sim_time: datetime, step_ind
     bid = f"demo_b_{((step_index - 1) % 20) + 1:02d}"
     aid = f"demo_adm_{step_index:05d}"
     sev = random.choice(["stable", "unstable", "critical"])
+    encounter_id = new_encounter_id(sim_time)
+    care_phase = "critical" if sev == "critical" else "stable"
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -147,12 +149,14 @@ def _create_patient_bed_admission(conn: Connection, sim_time: datetime, step_ind
         cur.execute(
             """
             INSERT INTO admissions (
-                admission_id, patient_id, bed_id, admission_code, admit_time, status,
-                primary_diagnosis, admission_reason, severity_on_admission, attending_team, scenario_tag
-            ) VALUES (%s, %s, %s, %s, %s, 'active', %s, %s, %s, 'DEMO_TEAM', %s)
+                admission_id, encounter_id, patient_id, bed_id, admission_code, admit_time, discharge_time,
+                status, encounter_status, primary_diagnosis, admission_reason, severity_on_admission,
+                attending_team, scenario_tag
+            ) VALUES (%s, %s, %s, %s, %s, %s, NULL, 'active', 'ADMITTED', %s, %s, %s, 'DEMO_TEAM', %s)
             """,
             (
                 aid,
+                encounter_id,
                 pid,
                 bid,
                 f"DEMO-{step_index:05d}",
@@ -163,13 +167,30 @@ def _create_patient_bed_admission(conn: Connection, sim_time: datetime, step_ind
                 SIM_TAG,
             ),
         )
-    return {"admission_id": aid, "patient_id": pid, "bed_id": bid, "severity": sev}
+        cur.execute(
+            """
+            INSERT INTO patient_state_current (
+                admission_id, patient_id, bed_id, current_vitals, active_problems, active_risks,
+                latest_interventions, care_phase
+            ) VALUES (%s, %s, %s, '{}'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, %s)
+            ON CONFLICT (admission_id) DO NOTHING
+            """,
+            (aid, pid, bid, care_phase),
+        )
+    return {"admission_id": aid, "encounter_id": encounter_id, "patient_id": pid, "bed_id": bid, "severity": sev}
 
 
 def _discharge_random(conn: Connection, admission: dict[str, Any], sim_time: datetime) -> dict[str, Any]:
     with conn.cursor() as cur:
         cur.execute(
-            "UPDATE admissions SET status = 'discharged', discharge_time = %s, updated_at = NOW() WHERE admission_id = %s",
+            """
+            UPDATE admissions
+            SET status = 'discharged',
+                discharge_time = %s,
+                encounter_status = 'DISCHARGED',
+                updated_at = NOW()
+            WHERE admission_id = %s
+            """,
             (sim_time, admission["admission_id"]),
         )
         cur.execute("UPDATE beds SET status = 'empty', updated_at = NOW() WHERE bed_id = %s", (admission["bed_id"],))
