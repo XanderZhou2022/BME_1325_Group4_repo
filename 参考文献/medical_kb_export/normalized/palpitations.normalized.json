@@ -1,0 +1,127 @@
+{
+  "complaint_id": "palpitations",
+  "title": "Palpitations",
+  "aliases": [
+    "palpitations",
+    "heart racing",
+    "心悸",
+    "心跳很快",
+    "心慌"
+  ],
+  "keywords": [
+    "chest pain",
+    "syncope",
+    "shortness of breath",
+    "胸痛",
+    "晕厥",
+    "呼吸困难"
+  ],
+  "related_symptoms": [
+    "chest_pain",
+    "syncope",
+    "dizziness",
+    "breathing_difficulty"
+  ],
+  "required_slots": [
+    "palpitations_onset",
+    "syncope",
+    "chest_pain",
+    "dizziness",
+    "breathing_difficulty"
+  ],
+  "question_graph": [
+    {
+      "question_id": "pl_onset",
+      "link_id": "palpitations.onset",
+      "slot": "palpitations_onset",
+      "text": {
+        "zh": "心悸是突然开始的还是慢慢出现的？每次大概持续多久？",
+        "en": "Did the palpitations start suddenly or gradually, and how long do episodes last?"
+      },
+      "type": "string",
+      "required": true,
+      "enable_when": [],
+      "answer_options": [],
+      "purpose": "Onset/episode duration helps identify arrhythmia patterns.",
+      "tags": [
+        "palpitations_onset",
+        "palpitations"
+      ]
+    },
+    {
+      "question_id": "pl_syncope",
+      "link_id": "palpitations.syncope",
+      "slot": "syncope",
+      "text": {
+        "zh": "发作时有没有晕厥或差点晕倒？",
+        "en": "Any fainting or near-fainting with episodes?"
+      },
+      "type": "boolean",
+      "required": true,
+      "enable_when": [],
+      "answer_options": [],
+      "purpose": "Syncope suggests high-risk arrhythmia.",
+      "tags": [
+        "syncope",
+        "palpitations"
+      ]
+    }
+  ],
+  "explanations": [
+    {
+      "explanation_id": "pl_ecg",
+      "topic": "ecg_first",
+      "text": {
+        "zh": "心悸常见的第一步检查是心电图和生命体征评估；如果症状间歇性，医生也可能根据情况安排动态心电监测或抽血检查电解质等。",
+        "en": "First-line evaluation for palpitations often includes ECG and vitals; if intermittent, ambulatory monitoring or labs (electrolytes) may be considered."
+      },
+      "scope": "patient_facing",
+      "related_tests": [
+        "ECG",
+        "Labs"
+      ],
+      "tags": [
+        "palpitations",
+        "ecg",
+        "labs"
+      ]
+    }
+  ],
+  "red_flags": [
+    {
+      "red_flag_id": "pl_redflags",
+      "text": {
+        "zh": "心悸合并胸痛、呼吸困难或晕厥需要优先评估。",
+        "en": "Palpitations with chest pain, dyspnea, or syncope needs urgent evaluation."
+      },
+      "rationale": {
+        "zh": "可能提示严重心律失常或心脏缺血等，需要尽快检查。",
+        "en": "Could indicate serious arrhythmia or ischemia."
+      },
+      "tags": [
+        "palpitations",
+        "red_flag"
+      ]
+    }
+  ],
+  "exam_focus": [
+    "heart rate/rhythm",
+    "blood pressure",
+    "cardiac exam"
+  ],
+  "test_considerations": [
+    "ECG",
+    "electrolytes",
+    "troponin if chest pain"
+  ],
+  "source": {
+    "source_guideline": "local ED teaching note",
+    "source_section": "Palpitations initial ECG",
+    "curator": "BME1325 Group",
+    "review_status": "draft",
+    "effective_date": "2026-04-23",
+    "evidence_level": "expert_consensus"
+  },
+  "version": "v1",
+  "last_reviewed": "2026-04-23"
+}

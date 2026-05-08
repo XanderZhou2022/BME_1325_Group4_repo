@@ -1,0 +1,164 @@
+{
+  "complaint_id": "headache",
+  "title": "Headache",
+  "aliases": [
+    "headache",
+    "severe headache",
+    "头痛",
+    "头很疼",
+    "剧烈头痛"
+  ],
+  "keywords": [
+    "worst headache",
+    "sudden onset",
+    "neck stiffness",
+    "vomiting",
+    "突发",
+    "最严重头痛",
+    "颈项强直",
+    "呕吐"
+  ],
+  "related_symptoms": [
+    "nausea",
+    "vomiting",
+    "neuro_deficit",
+    "syncope",
+    "fever"
+  ],
+  "required_slots": [
+    "duration",
+    "worsening_pain",
+    "syncope",
+    "fever",
+    "vomiting"
+  ],
+  "question_graph": [
+    {
+      "question_id": "hd_duration",
+      "link_id": "headache.duration",
+      "slot": "duration",
+      "text": {
+        "zh": "头痛是从什么时候开始的（大概几点/哪一天）？",
+        "en": "When did the headache start (roughly what time/day)?"
+      },
+      "type": "string",
+      "required": true,
+      "enable_when": [],
+      "answer_options": [],
+      "purpose": "Anchor onset for time-sensitive neuro causes.",
+      "tags": [
+        "duration",
+        "headache"
+      ]
+    },
+    {
+      "question_id": "hd_worse",
+      "link_id": "headache.worsening",
+      "slot": "worsening_pain",
+      "text": {
+        "zh": "这段时间头痛有在加重吗？",
+        "en": "Has the headache been getting worse over time?"
+      },
+      "type": "boolean",
+      "required": true,
+      "enable_when": [],
+      "answer_options": [],
+      "purpose": "Worsening pattern can imply intracranial pathology.",
+      "tags": [
+        "worsening_pain",
+        "headache"
+      ]
+    },
+    {
+      "question_id": "hd_syncope",
+      "link_id": "headache.syncope",
+      "slot": "syncope",
+      "text": {
+        "zh": "有晕厥、抽搐或意识模糊吗？",
+        "en": "Any fainting, seizure, or confusion?"
+      },
+      "type": "boolean",
+      "required": true,
+      "enable_when": [],
+      "answer_options": [],
+      "purpose": "Red flags for serious neurologic events.",
+      "tags": [
+        "syncope",
+        "headache"
+      ]
+    }
+  ],
+  "explanations": [
+    {
+      "explanation_id": "hd_ct_mri",
+      "topic": "ct_vs_mri",
+      "text": {
+        "zh": "突发剧烈头痛、伴神经功能异常、外伤后头痛或出现意识改变时，医生通常会优先考虑急诊影像评估；急诊常先做头颅CT排除出血等紧急情况，必要时再进一步做MRI评估。",
+        "en": "For sudden severe headache, neurologic deficits, post-trauma headache, or altered mental status, urgent imaging may be needed. In the ED, CT is often first to rule out hemorrhage; MRI may follow for further evaluation."
+      },
+      "scope": "patient_facing",
+      "related_tests": [
+        "CT",
+        "MRI"
+      ],
+      "tags": [
+        "headache",
+        "imaging",
+        "ct",
+        "mri"
+      ]
+    },
+    {
+      "explanation_id": "hd_why_onset",
+      "topic": "why_onset",
+      "text": {
+        "zh": "我先问起病时间，是因为某些严重原因（例如出血或中风相关问题）对时间非常敏感，明确起病时间有助于决定检查优先级。",
+        "en": "I ask about onset time because some dangerous causes are time-sensitive; knowing onset helps prioritize urgent tests."
+      },
+      "scope": "patient_facing",
+      "related_tests": [],
+      "tags": [
+        "headache",
+        "explain"
+      ]
+    }
+  ],
+  "red_flags": [
+    {
+      "red_flag_id": "hd_redflags",
+      "text": {
+        "zh": "突发最严重头痛、意识改变、抽搐、明显单侧无力或持续呕吐需要优先处理。",
+        "en": "Sudden worst headache, altered mental status, seizure, focal weakness, or persistent vomiting needs urgent evaluation."
+      },
+      "rationale": {
+        "zh": "这些表现提示可能存在颅内出血或严重神经系统问题，需要先排除危及生命的原因。",
+        "en": "These features may indicate intracranial hemorrhage or serious neurologic disease and require urgent workup."
+      },
+      "tags": [
+        "headache",
+        "red_flag"
+      ]
+    }
+  ],
+  "exam_focus": [
+    "neuro exam",
+    "vital signs",
+    "meningismus screening"
+  ],
+  "test_considerations": [
+    "CT head",
+    "consider MRI",
+    "basic labs if febrile",
+    "ECG if syncope"
+  ],
+  "source": {
+    "source_guideline": "local ED teaching note",
+    "source_section": "Headache red flags and imaging",
+    "curator": "BME1325 Group",
+    "review_status": "draft",
+    "effective_date": "2026-04-23",
+    "evidence_level": "expert_consensus"
+  },
+  "version": "v1",
+  "last_reviewed": "2026-04-23"
+}

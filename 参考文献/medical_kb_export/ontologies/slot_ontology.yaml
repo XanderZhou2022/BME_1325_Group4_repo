@@ -1,0 +1,75 @@
+version: v1
+slots:
+  duration:
+    type: string
+    description: Symptom onset/timeline (e.g., yesterday morning, 2 hours ago).
+    examples: ["yesterday", "2 hours", "since this morning", "昨天下午", "今天早上10点"]
+  worsening_pain:
+    type: boolean
+    description: Whether symptom/pain is getting worse over time.
+    examples: ["yes", "no", "是的", "没有加重"]
+  pain_score:
+    type: number
+    description: Pain score 0-10.
+    allowed_range: [0, 10]
+    examples: ["8/10", "3", "10级"]
+  fever:
+    type: boolean
+    description: Subjective or measured fever.
+    examples: ["yes", "no", "发烧", "不发烧"]
+  breathing_difficulty:
+    type: boolean
+    description: Shortness of breath / breathing difficulty.
+    examples: ["喘不上气", "呼吸困难", "no shortness of breath"]
+  syncope:
+    type: boolean
+    description: Fainting or near-fainting.
+    examples: ["fainted", "near syncope", "晕厥", "差点晕倒"]
+  vomiting:
+    type: boolean
+    description: Vomiting present.
+    examples: ["vomiting", "呕吐", "没有吐"]
+  nausea:
+    type: boolean
+    description: Nausea present.
+    examples: ["nausea", "恶心"]
+  dysuria:
+    type: boolean
+    description: Painful urination.
+    examples: ["尿痛", "burning urination"]
+  hematuria:
+    type: boolean
+    description: Blood in urine.
+    examples: ["血尿", "pink urine"]
+  flank_pain:
+    type: boolean
+    description: Flank pain (possible renal source).
+    examples: ["腰痛", "flank pain"]
+  urinary_frequency:
+    type: boolean
+    description: Increased urinary frequency/urgency.
+    examples: ["尿频", "尿急"]
+  back_pain_red_flag:
+    type: boolean
+    description: Back pain red-flag features (trauma, fever, neuro deficit, bladder/bowel issues).
+    examples: ["new weakness", "尿潴留", "saddle anesthesia"]
+  palpitations_onset:
+    type: string
+    description: Palpitations onset/timeline.
+    examples: ["sudden", "intermittent", "持续", "阵发"]
+  chest_pain:
+    type: boolean
+    description: Chest pain associated with palpitations.
+    examples: ["yes", "no", "胸痛"]
+  dizziness:
+    type: boolean
+    description: Dizziness/lightheadedness.
+    examples: ["头晕", "lightheaded"]
+  exertional_trigger:
+    type: boolean
+    description: Triggered by exertion.
+    examples: ["walking triggers", "运动后"]
+  neuro_deficit:
+    type: boolean
+    description: Focal neurologic deficit (weakness, speech, vision).
+    examples: ["单侧无力", "言语不清", "vision loss"]

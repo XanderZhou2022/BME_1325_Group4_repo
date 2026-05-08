@@ -1,0 +1,49 @@
+complaint_id: "<snake_case_id>"
+title: "<human readable title>"
+aliases: ["<alias1>", "<alias2>"]
+keywords: ["<keyword1>", "<keyword2>"]
+related_symptoms: ["<symptom1>", "<symptom2>"]
+required_slots: ["duration"]
+question_graph:
+  - question_id: "<id>"
+    link_id: "<linkId>"
+    slot: "duration"
+    text:
+      zh: "<zh question text>"
+      en: "<en question text>"
+    type: "string"
+    required: true
+    enable_when: []
+    answer_options: []
+    purpose: "<why this question>"
+    tags: ["duration"]
+explanations:
+  - explanation_id: "<id>"
+    topic: "<topic>"
+    text:
+      zh: "<patient-facing explanation>"
+      en: "<patient-facing explanation>"
+    scope: "patient_facing"
+    related_tests: ["<TEST>"]
+    tags: ["<tag>"]
+red_flags:
+  - red_flag_id: "<id>"
+    text:
+      zh: "<red flag text>"
+      en: "<red flag text>"
+    rationale:
+      zh: "<why it matters>"
+      en: "<why it matters>"
+    tags: ["<tag>"]
+exam_focus: ["<exam focus>"]
+test_considerations: ["<test considerations>"]
+source:
+  source_guideline: "<guideline>"
+  source_section: "<section>"
+  curator: "<name>"
+  review_status: "draft"
+  effective_date: "2026-04-23"
+  evidence_level: "expert_consensus"
+version: "v1"
+last_reviewed: "2026-04-23"
+

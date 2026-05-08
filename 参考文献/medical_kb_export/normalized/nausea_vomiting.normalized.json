@@ -1,0 +1,123 @@
+{
+  "complaint_id": "nausea_vomiting",
+  "title": "Nausea/Vomiting",
+  "aliases": [
+    "nausea",
+    "vomiting",
+    "恶心",
+    "呕吐",
+    "一直吐"
+  ],
+  "keywords": [
+    "dehydration",
+    "blood in vomit",
+    "coffee grounds",
+    "脱水",
+    "呕血"
+  ],
+  "related_symptoms": [
+    "vomiting",
+    "fever",
+    "syncope",
+    "abdominal_pain"
+  ],
+  "required_slots": [
+    "duration",
+    "vomiting",
+    "fever",
+    "syncope"
+  ],
+  "question_graph": [
+    {
+      "question_id": "nv_duration",
+      "link_id": "nausea_vomiting.duration",
+      "slot": "duration",
+      "text": {
+        "zh": "恶心或呕吐是从什么时候开始的？",
+        "en": "When did the nausea/vomiting start?"
+      },
+      "type": "string",
+      "required": true,
+      "enable_when": [],
+      "answer_options": [],
+      "purpose": "Timeline helps assess severity and dehydration risk.",
+      "tags": [
+        "duration",
+        "nausea_vomiting"
+      ]
+    },
+    {
+      "question_id": "nv_vomit",
+      "link_id": "nausea_vomiting.vomiting",
+      "slot": "vomiting",
+      "text": {
+        "zh": "现在是否仍在呕吐，能否喝下水不吐？",
+        "en": "Are you still vomiting, and can you keep fluids down?"
+      },
+      "type": "boolean",
+      "required": true,
+      "enable_when": [],
+      "answer_options": [],
+      "purpose": "Fluid tolerance indicates dehydration risk.",
+      "tags": [
+        "vomiting",
+        "nausea_vomiting"
+      ]
+    }
+  ],
+  "explanations": [
+    {
+      "explanation_id": "nv_next",
+      "topic": "next_steps",
+      "text": {
+        "zh": "持续呕吐时医生会优先评估脱水和电解质紊乱风险；根据情况可能需要验血、电解质检查、补液，若伴明显腹痛或发热等，也可能进一步评估感染或腹部急症。",
+        "en": "With persistent vomiting, ED prioritizes dehydration/electrolyte risk; labs and IV fluids may be needed, and further evaluation depends on pain/fever and other features."
+      },
+      "scope": "patient_facing",
+      "related_tests": [
+        "Labs"
+      ],
+      "tags": [
+        "nausea_vomiting",
+        "next_steps"
+      ]
+    }
+  ],
+  "red_flags": [
+    {
+      "red_flag_id": "nv_redflags",
+      "text": {
+        "zh": "持续呕吐伴晕厥、吐血或意识改变需要优先处理。",
+        "en": "Persistent vomiting with syncope, blood, or altered mental status needs urgent care."
+      },
+      "rationale": {
+        "zh": "可能提示严重脱水或消化道出血等，需要尽快评估。",
+        "en": "May indicate severe dehydration or GI bleeding."
+      },
+      "tags": [
+        "nausea_vomiting",
+        "red_flag"
+      ]
+    }
+  ],
+  "exam_focus": [
+    "hydration status",
+    "abdominal exam",
+    "vital signs"
+  ],
+  "test_considerations": [
+    "electrolytes",
+    "CBC",
+    "consider imaging if severe abdominal pain"
+  ],
+  "source": {
+    "source_guideline": "local ED teaching note",
+    "source_section": "Vomiting and dehydration",
+    "curator": "BME1325 Group",
+    "review_status": "draft",
+    "effective_date": "2026-04-23",
+    "evidence_level": "expert_consensus"
+  },
+  "version": "v1",
+  "last_reviewed": "2026-04-23"
+}

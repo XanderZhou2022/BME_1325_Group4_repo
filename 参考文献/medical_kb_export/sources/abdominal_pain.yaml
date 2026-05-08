@@ -1,0 +1,60 @@
+complaint_id: abdominal_pain
+title: Abdominal Pain
+aliases: ["abdominal pain", "belly pain", "腹痛", "肚子痛", "右下腹痛"]
+keywords: ["rebound", "vomiting", "fever", "migration", "反跳痛", "呕吐", "发热", "右下腹"]
+related_symptoms: ["vomiting", "fever", "syncope"]
+required_slots: ["duration", "worsening_pain", "vomiting", "fever"]
+question_graph:
+  - question_id: ap_duration
+    link_id: abdominal_pain.duration
+    slot: duration
+    text: {zh: "腹痛是从什么时候开始的？", en: "When did the abdominal pain start?"}
+    type: string
+    required: true
+    enable_when: []
+    answer_options: []
+    purpose: "Onset guides differential (acute surgical vs inflammatory)."
+    tags: ["duration", "abdominal_pain"]
+  - question_id: ap_worse
+    link_id: abdominal_pain.worsening
+    slot: worsening_pain
+    text: {zh: "疼痛是否在持续加重？", en: "Is the pain getting worse over time?"}
+    type: boolean
+    required: true
+    enable_when: []
+    answer_options: []
+    purpose: "Worsening may indicate evolving surgical abdomen."
+    tags: ["worsening_pain", "abdominal_pain"]
+explanations:
+  - explanation_id: ap_ultrasound_ct
+    topic: imaging_choice
+    text:
+      zh: "腹痛是否需要做影像取决于疼痛部位、是否加重、是否发热/呕吐等。急诊常先做腹部超声评估胆囊/泌尿等问题；若怀疑阑尾炎、肠梗阻或腹腔感染等，可能需要腹部CT进一步明确。"
+      en: "Imaging depends on location and risk features. Ultrasound is often used first for biliary/urinary causes; CT may be needed for appendicitis, obstruction, or intraabdominal infection."
+    scope: patient_facing
+    related_tests: ["Ultrasound", "CT"]
+    tags: ["abdominal_pain", "imaging"]
+  - explanation_id: ap_why_worse
+    topic: why_worsening
+    text:
+      zh: "我问是否加重，是为了判断是否存在进行性炎症或需要尽快处理的急腹症，从而决定检查和处理优先级。"
+      en: "I ask about worsening to assess for evolving inflammation or surgical emergencies and prioritize tests."
+    scope: patient_facing
+    related_tests: []
+    tags: ["abdominal_pain", "explain"]
+red_flags:
+  - red_flag_id: ap_redflags
+    text: {zh: "剧烈或进行性加重腹痛、持续呕吐、发热或晕厥提示需要优先评估。", en: "Severe/worsening pain, persistent vomiting, fever, or syncope needs urgent evaluation."}
+    rationale: {zh: "这些表现可能提示阑尾炎、肠梗阻或感染等，需要尽快排除危险原因。", en: "These can indicate appendicitis, obstruction, or infection and require urgent workup."}
+    tags: ["abdominal_pain", "red_flag"]
+exam_focus: ["abdominal exam", "peritonitis signs", "hydration status"]
+test_considerations: ["basic labs", "urinalysis", "ultrasound", "CT abdomen if indicated"]
+source:
+  source_guideline: "local ED teaching note"
+  source_section: "Abdominal pain initial workup"
+  curator: "BME1325 Group"
+  review_status: draft
+  effective_date: "2026-04-23"
+  evidence_level: expert_consensus
+version: v1
+last_reviewed: "2026-04-23"

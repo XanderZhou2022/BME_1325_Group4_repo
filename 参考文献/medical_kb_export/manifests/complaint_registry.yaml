@@ -1,0 +1,18 @@
+version: v1
+complaints:
+  - complaint_id: headache
+    source: sources/headache.yaml
+  - complaint_id: abdominal_pain
+    source: sources/abdominal_pain.yaml
+  - complaint_id: dizziness
+    source: sources/dizziness.yaml
+  - complaint_id: fever
+    source: sources/fever.yaml
+  - complaint_id: dysuria
+    source: sources/dysuria.yaml
+  - complaint_id: nausea_vomiting
+    source: sources/nausea_vomiting.yaml
+  - complaint_id: back_pain
+    source: sources/back_pain.yaml
+  - complaint_id: palpitations
+    source: sources/palpitations.yaml

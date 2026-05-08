@@ -1,0 +1,122 @@
+{
+  "complaint_id": "dizziness",
+  "title": "Dizziness",
+  "aliases": [
+    "dizziness",
+    "lightheaded",
+    "vertigo",
+    "头晕",
+    "眩晕"
+  ],
+  "keywords": [
+    "faint",
+    "near syncope",
+    "stroke",
+    "晕厥",
+    "单侧无力",
+    "言语不清"
+  ],
+  "related_symptoms": [
+    "syncope",
+    "palpitations",
+    "neuro_deficit"
+  ],
+  "required_slots": [
+    "duration",
+    "syncope",
+    "neuro_deficit"
+  ],
+  "question_graph": [
+    {
+      "question_id": "dz_duration",
+      "link_id": "dizziness.duration",
+      "slot": "duration",
+      "text": {
+        "zh": "头晕是从什么时候开始的？",
+        "en": "When did the dizziness start?"
+      },
+      "type": "string",
+      "required": true,
+      "enable_when": [],
+      "answer_options": [],
+      "purpose": "Onset/time course helps distinguish benign vs dangerous causes.",
+      "tags": [
+        "duration",
+        "dizziness"
+      ]
+    },
+    {
+      "question_id": "dz_syncope",
+      "link_id": "dizziness.syncope",
+      "slot": "syncope",
+      "text": {
+        "zh": "有没有真的晕倒过或差点晕倒？",
+        "en": "Have you fainted or nearly fainted?"
+      },
+      "type": "boolean",
+      "required": true,
+      "enable_when": [],
+      "answer_options": [],
+      "purpose": "Syncope suggests perfusion/arrhythmia causes.",
+      "tags": [
+        "syncope",
+        "dizziness"
+      ]
+    }
+  ],
+  "explanations": [
+    {
+      "explanation_id": "dz_ecg",
+      "topic": "ecg_first",
+      "text": {
+        "zh": "头晕如果伴有心悸、胸闷或差点晕倒，医生通常会优先做心电图和生命体征评估，以排除心律失常等需要紧急处理的问题。",
+        "en": "If dizziness comes with palpitations or near-fainting, ECG and vitals are often prioritized to rule out arrhythmias."
+      },
+      "scope": "patient_facing",
+      "related_tests": [
+        "ECG"
+      ],
+      "tags": [
+        "dizziness",
+        "ecg"
+      ]
+    }
+  ],
+  "red_flags": [
+    {
+      "red_flag_id": "dz_redflags",
+      "text": {
+        "zh": "头晕合并晕厥、明显单侧无力或言语不清需要优先排除危险原因。",
+        "en": "Dizziness with syncope or focal neuro deficits needs urgent evaluation."
+      },
+      "rationale": {
+        "zh": "可能涉及心律失常或中枢神经系统问题，应尽快评估。",
+        "en": "Could involve arrhythmia or central neurologic disease."
+      },
+      "tags": [
+        "dizziness",
+        "red_flag"
+      ]
+    }
+  ],
+  "exam_focus": [
+    "neuro exam",
+    "orthostatic vitals",
+    "cardiac exam"
+  ],
+  "test_considerations": [
+    "ECG",
+    "glucose",
+    "consider imaging if neuro deficits"
+  ],
+  "source": {
+    "source_guideline": "local ED teaching note",
+    "source_section": "Dizziness: syncope and neuro screening",
+    "curator": "BME1325 Group",
+    "review_status": "draft",
+    "effective_date": "2026-04-23",
+    "evidence_level": "expert_consensus"
+  },
+  "version": "v1",
+  "last_reviewed": "2026-04-23"
+}

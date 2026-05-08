@@ -1,0 +1,122 @@
+{
+  "complaint_id": "fever",
+  "title": "Fever",
+  "aliases": [
+    "fever",
+    "high fever",
+    "发烧",
+    "发热",
+    "高热"
+  ],
+  "keywords": [
+    "chills",
+    "rigors",
+    "confusion",
+    "寒战",
+    "意识模糊",
+    "感染"
+  ],
+  "related_symptoms": [
+    "duration",
+    "breathing_difficulty",
+    "syncope"
+  ],
+  "required_slots": [
+    "duration",
+    "fever",
+    "breathing_difficulty"
+  ],
+  "question_graph": [
+    {
+      "question_id": "fv_duration",
+      "link_id": "fever.duration",
+      "slot": "duration",
+      "text": {
+        "zh": "发热是从什么时候开始的？",
+        "en": "When did the fever start?"
+      },
+      "type": "string",
+      "required": true,
+      "enable_when": [],
+      "answer_options": [],
+      "purpose": "Duration helps assess severity and need for tests.",
+      "tags": [
+        "duration",
+        "fever"
+      ]
+    },
+    {
+      "question_id": "fv_fever",
+      "link_id": "fever.fever",
+      "slot": "fever",
+      "text": {
+        "zh": "现在是否还在发热？",
+        "en": "Do you currently have fever?"
+      },
+      "type": "boolean",
+      "required": true,
+      "enable_when": [],
+      "answer_options": [],
+      "purpose": "Current fever affects immediate management.",
+      "tags": [
+        "fever"
+      ]
+    }
+  ],
+  "explanations": [
+    {
+      "explanation_id": "fv_labs",
+      "topic": "labs_common",
+      "text": {
+        "zh": "是否需要验血取决于发热持续时间、伴随症状和生命体征。急诊常会根据情况选择血常规、炎症指标或培养等，以判断是否存在严重感染或并发症。",
+        "en": "Need for blood tests depends on duration, accompanying symptoms, and vitals. ED may order CBC/inflammatory markers/cultures if serious infection is suspected."
+      },
+      "scope": "patient_facing",
+      "related_tests": [
+        "CBC",
+        "CRP"
+      ],
+      "tags": [
+        "fever",
+        "labs"
+      ]
+    }
+  ],
+  "red_flags": [
+    {
+      "red_flag_id": "fv_redflags",
+      "text": {
+        "zh": "发热合并意识改变、呼吸困难或低血压需要优先处理。",
+        "en": "Fever with confusion, breathing difficulty, or hypotension needs urgent care."
+      },
+      "rationale": {
+        "zh": "可能提示脓毒症或严重感染，需要尽快评估。",
+        "en": "Could indicate sepsis or severe infection."
+      },
+      "tags": [
+        "fever",
+        "red_flag"
+      ]
+    }
+  ],
+  "exam_focus": [
+    "vital signs",
+    "resp exam",
+    "mental status"
+  ],
+  "test_considerations": [
+    "CBC/CRP",
+    "chest imaging if respiratory symptoms",
+    "urinalysis if urinary symptoms"
+  ],
+  "source": {
+    "source_guideline": "local ED teaching note",
+    "source_section": "Fever initial labs",
+    "curator": "BME1325 Group",
+    "review_status": "draft",
+    "effective_date": "2026-04-23",
+    "evidence_level": "expert_consensus"
+  },
+  "version": "v1",
+  "last_reviewed": "2026-04-23"
+}

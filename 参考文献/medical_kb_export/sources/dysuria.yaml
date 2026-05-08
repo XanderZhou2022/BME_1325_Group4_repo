@@ -1,0 +1,52 @@
+complaint_id: dysuria
+title: Dysuria
+aliases: ["dysuria", "burning urination", "尿痛", "尿频", "尿急"]
+keywords: ["hematuria", "flank pain", "fever", "血尿", "腰痛", "发热"]
+related_symptoms: ["urinary_frequency", "hematuria", "flank_pain", "fever"]
+required_slots: ["duration", "dysuria", "hematuria", "flank_pain", "fever"]
+question_graph:
+  - question_id: du_dysuria
+    link_id: dysuria.dysuria
+    slot: dysuria
+    text: {zh: "排尿时是否有尿痛（灼痛）或明显疼痛？", en: "Do you have burning or pain when you urinate?"}
+    type: boolean
+    required: true
+    enable_when: []
+    answer_options: []
+    purpose: "Confirm dysuria as primary symptom."
+    tags: ["dysuria"]
+  - question_id: du_duration
+    link_id: dysuria.duration
+    slot: duration
+    text: {zh: "这种尿路不适是从什么时候开始的？", en: "When did these urinary symptoms start?"}
+    type: string
+    required: true
+    enable_when: []
+    answer_options: []
+    purpose: "Timeline helps assess infection severity."
+    tags: ["duration", "dysuria"]
+explanations:
+  - explanation_id: du_ua
+    topic: urinalysis
+    text:
+      zh: "尿痛/尿频通常会先做尿常规来判断是否有感染或血尿；如果伴发热或腰痛，医生也可能考虑进一步验血或影像来排除肾盂肾炎或结石等。"
+      en: "Dysuria/frequency is often evaluated with urinalysis. With fever or flank pain, blood tests or imaging may be considered for pyelonephritis or stones."
+    scope: patient_facing
+    related_tests: ["Urinalysis"]
+    tags: ["dysuria", "labs"]
+red_flags:
+  - red_flag_id: du_redflags
+    text: {zh: "尿路症状合并发热或腰痛需要优先评估。", en: "Urinary symptoms with fever or flank pain need urgent evaluation."}
+    rationale: {zh: "可能提示上尿路感染或结石相关并发症，需要尽快处理。", en: "Could indicate upper UTI or stone complications."}
+    tags: ["dysuria", "red_flag"]
+exam_focus: ["abdominal/flank tenderness", "vital signs"]
+test_considerations: ["urinalysis", "urine culture", "consider imaging if flank pain"]
+source:
+  source_guideline: "local ED teaching note"
+  source_section: "UTI vs stone screening"
+  curator: "BME1325 Group"
+  review_status: draft
+  effective_date: "2026-04-23"
+  evidence_level: expert_consensus
+version: v1
+last_reviewed: "2026-04-23"

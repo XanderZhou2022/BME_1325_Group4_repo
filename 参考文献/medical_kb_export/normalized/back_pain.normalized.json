@@ -1,0 +1,126 @@
+{
+  "complaint_id": "back_pain",
+  "title": "Back Pain",
+  "aliases": [
+    "back pain",
+    "low back pain",
+    "腰痛",
+    "背痛",
+    "下背痛"
+  ],
+  "keywords": [
+    "trauma",
+    "fever",
+    "weakness",
+    "urinary retention",
+    "外伤",
+    "发热",
+    "无力",
+    "尿潴留"
+  ],
+  "related_symptoms": [
+    "fever",
+    "neuro_deficit",
+    "dysuria"
+  ],
+  "required_slots": [
+    "duration",
+    "worsening_pain",
+    "back_pain_red_flag",
+    "fever"
+  ],
+  "question_graph": [
+    {
+      "question_id": "bp_duration",
+      "link_id": "back_pain.duration",
+      "slot": "duration",
+      "text": {
+        "zh": "腰背痛是从什么时候开始的？",
+        "en": "When did the back pain start?"
+      },
+      "type": "string",
+      "required": true,
+      "enable_when": [],
+      "answer_options": [],
+      "purpose": "Onset helps assess injury vs infection patterns.",
+      "tags": [
+        "duration",
+        "back_pain"
+      ]
+    },
+    {
+      "question_id": "bp_redflag",
+      "link_id": "back_pain.red_flag",
+      "slot": "back_pain_red_flag",
+      "text": {
+        "zh": "有没有外伤、发热、腿无力/麻木，或排尿排便异常（尿潴留/失禁）？",
+        "en": "Any trauma, fever, leg weakness/numbness, or bladder/bowel changes (retention/incontinence)?"
+      },
+      "type": "boolean",
+      "required": true,
+      "enable_when": [],
+      "answer_options": [],
+      "purpose": "Screen for cauda equina, infection, fracture.",
+      "tags": [
+        "back_pain",
+        "red_flag"
+      ]
+    }
+  ],
+  "explanations": [
+    {
+      "explanation_id": "bp_imaging",
+      "topic": "imaging_choice",
+      "text": {
+        "zh": "腰背痛是否需要影像取决于是否有外伤、发热或神经症状等红旗表现；若存在红旗，医生可能会考虑X光或CT/MRI来评估骨折或神经压迫等情况。",
+        "en": "Imaging for back pain depends on red flags like trauma, fever, or neurologic symptoms; if present, X-ray/CT/MRI may be considered."
+      },
+      "scope": "patient_facing",
+      "related_tests": [
+        "X-ray",
+        "CT",
+        "MRI"
+      ],
+      "tags": [
+        "back_pain",
+        "imaging"
+      ]
+    }
+  ],
+  "red_flags": [
+    {
+      "red_flag_id": "why_red_flags",
+      "text": {
+        "zh": "腰背痛合并外伤、发热或神经症状需要优先评估。",
+        "en": "Back pain with trauma, fever, or neurologic symptoms needs urgent evaluation."
+      },
+      "rationale": {
+        "zh": "这些问题提示可能存在骨折、感染或马尾综合征风险，所以会优先询问。",
+        "en": "These suggest fracture, infection, or cauda equina risk, so we ask early."
+      },
+      "tags": [
+        "back_pain",
+        "red_flag"
+      ]
+    }
+  ],
+  "exam_focus": [
+    "neuro exam",
+    "spine tenderness",
+    "gait"
+  ],
+  "test_considerations": [
+    "imaging if red flags",
+    "labs if fever"
+  ],
+  "source": {
+    "source_guideline": "local ED teaching note",
+    "source_section": "Back pain red flags",
+    "curator": "BME1325 Group",
+    "review_status": "draft",
+    "effective_date": "2026-04-23",
+    "evidence_level": "expert_consensus"
+  },
+  "version": "v1",
+  "last_reviewed": "2026-04-23"
+}

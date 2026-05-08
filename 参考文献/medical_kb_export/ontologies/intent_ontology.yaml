@@ -1,0 +1,39 @@
+version: v1
+intents:
+  smalltalk:
+    selective_rag: false
+    priority: 0
+    patterns:
+      - "^(hi|hello|hey|你好|在吗|ok|okay)$"
+  confirm_yes_no:
+    selective_rag: false
+    priority: 1
+    patterns:
+      - "^(yes|no|y|n|是|是的|对|不|不是|没有|无|否|嗯)$"
+  ask_imaging:
+    selective_rag: true
+    priority: 10
+    patterns:
+      - "(ct|mri|x-?ray|拍片|影像|扫描|超声|b超)"
+      - "(should\\s+i\\s+do|do\\s+i\\s+need|要不要|应该.*(做|拍)|需不需要)"
+  ask_labs:
+    selective_rag: true
+    priority: 9
+    patterns:
+      - "(blood test|cbc|lab|验血|抽血|化验)"
+      - "(should\\s+i\\s+do|do\\s+i\\s+need|要不要|需不需要)"
+  ask_next_steps:
+    selective_rag: true
+    priority: 8
+    patterns:
+      - "(next step|what next|接下来|下一步|一般怎么查|怎么处理)"
+  ask_why_question:
+    selective_rag: true
+    priority: 7
+    patterns:
+      - "(why.*ask|why.*question|为什么问|为啥问|问这个干嘛|为什么要问)"
+  free_text_update:
+    selective_rag: true
+    priority: 5
+    patterns:
+      - ".*"

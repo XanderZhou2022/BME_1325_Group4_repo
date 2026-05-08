@@ -1,0 +1,85 @@
+version: v1
+defaults:
+  k: 5
+cases:
+  - case_id: hd_q_duration
+    complaint_id: headache
+    intent: free_text_update
+    next_slot: duration
+    query_text: "我头很疼，昨天开始的"
+    expected_hits:
+      - must_contain: ["头痛", "什么时候"]
+        chunk_type: question
+        slot: duration
+  - case_id: hd_ex_imaging
+    complaint_id: headache
+    intent: ask_imaging
+    next_slot: duration
+    query_text: "我应该做什么影像，CT还是MRI？"
+    expected_hits:
+      - must_contain: ["CT", "MRI"]
+        chunk_type: explanation
+        topic: ct_vs_mri
+  - case_id: ap_q_worse
+    complaint_id: abdominal_pain
+    intent: free_text_update
+    next_slot: worsening_pain
+    query_text: "腹痛越来越重"
+    expected_hits:
+      - must_contain: ["加重"]
+        chunk_type: question
+        slot: worsening_pain
+  - case_id: dz_q_syncope
+    complaint_id: dizziness
+    intent: free_text_update
+    next_slot: syncope
+    query_text: "我头晕，差点晕倒"
+    expected_hits:
+      - must_contain: ["晕倒"]
+        chunk_type: question
+        slot: syncope
+  - case_id: fv_ex_labs
+    complaint_id: fever
+    intent: ask_labs
+    next_slot: duration
+    query_text: "我发烧需要验血吗？"
+    expected_hits:
+      - must_contain: ["验血"]
+        chunk_type: explanation
+        topic: labs_common
+  - case_id: dy_q_dysuria
+    complaint_id: dysuria
+    intent: free_text_update
+    next_slot: dysuria
+    query_text: "尿痛尿频"
+    expected_hits:
+      - must_contain: ["尿痛"]
+        chunk_type: question
+        slot: dysuria
+  - case_id: nv_ex_imaging
+    complaint_id: nausea_vomiting
+    intent: ask_next_steps
+    next_slot: vomiting
+    query_text: "一直吐，下一步一般怎么查？"
+    expected_hits:
+      - must_contain: ["脱水"]
+        chunk_type: explanation
+        topic: next_steps
+  - case_id: bp_q_redflag
+    complaint_id: back_pain
+    intent: ask_why_question
+    next_slot: back_pain_red_flag
+    query_text: "你为什么要问这个？"
+    expected_hits:
+      - must_contain: ["为什么"]
+        chunk_type: red_flag
+        red_flag_id: why_red_flags
+  - case_id: pl_ex_next
+    complaint_id: palpitations
+    intent: ask_next_steps
+    next_slot: palpitations_onset
+    query_text: "心悸下一步一般怎么查？"
+    expected_hits:
+      - must_contain: ["心电图"]
+        chunk_type: explanation
+        topic: ecg_first
