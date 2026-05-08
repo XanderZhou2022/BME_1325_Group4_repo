@@ -10,6 +10,20 @@ from app.services.ids import new_id
 from app.services.hospital_bus import mirror_agent_event_row
 
 
+def _db_row_value(row: Any, key: str, index: int = 0) -> Any:
+    """Read one column from fetchone(): tuple rows use index, dict/Mapping/psycopg Row use key."""
+    if row is None:
+        return None
+    try:
+        return row[key]
+    except (KeyError, TypeError, IndexError):
+        pass
+    try:
+        return row[index]
+    except (KeyError, TypeError, IndexError):
+        return None
+
+
 def emit_agent_lifecycle_event(
     conn: Connection,
     *,
@@ -45,7 +59,7 @@ def emit_agent_lifecycle_event(
             (admission_id,),
         )
         enc_row = cur.fetchone()
-    encounter_id = enc_row[0] if enc_row else None
+    encounter_id = _db_row_value(enc_row, "encounter_id", 0)
     pl = payload or {}
     mirror_agent_event_row(
         table_event_id=event_id,
