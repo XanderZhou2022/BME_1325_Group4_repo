@@ -1,0 +1,105 @@
+{
+  "schema_version": "icu_agent.extraction_status.v1",
+  "sources": [
+    {
+      "source_id": "adult_eol_icu_2025_001",
+      "filename": "society_of_critical_care_medicine_clinical.32.pdf",
+      "status": "ok",
+      "method": "pdftotext",
+      "page_count": 13,
+      "empty_pages": [],
+      "human_review_required": true,
+      "extracted_at": "2026-05-08"
+    },
+    {
+      "source_id": "adult_icu_admission_triage_001",
+      "filename": "icu_admission,_discharge,_and_triage_guidelines__a.15.pdf",
+      "status": "ok",
+      "method": "pdftotext",
+      "page_count": 50,
+      "empty_pages": [],
+      "human_review_required": true,
+      "extracted_at": "2026-05-08"
+    },
+    {
+      "source_id": "adult_icu_design_2024_001",
+      "filename": "society_of_critical_care_medicine_2024_guidelines.15.pdf",
+      "status": "ok",
+      "method": "pdftotext",
+      "page_count": 11,
+      "empty_pages": [],
+      "human_review_required": true,
+      "extracted_at": "2026-05-08"
+    },
+    {
+      "source_id": "clinical_deterioration_rapid_response_2024_001",
+      "filename": "society_of_critical_care_medicine_guidelines_on.14.pdf",
+      "status": "ok",
+      "method": "pdftotext",
+      "page_count": 17,
+      "empty_pages": [],
+      "human_review_required": true,
+      "extracted_at": "2026-05-08"
+    },
+    {
+      "source_id": "crisis_resource_allocation_2026_001",
+      "filename": "society_of_critical_care_medicine_guidelines_for.20.pdf",
+      "status": "ok",
+      "method": "pdftotext",
+      "page_count": 11,
+      "empty_pages": [],
+      "human_review_required": true,
+      "extracted_at": "2026-05-08"
+    },
+    {
+      "source_id": "medication_safety_icu_001",
+      "filename": "clinical_practice_guideline__safe_medication_use.32.pdf",
+      "status": "ok",
+      "method": "pdftotext",
+      "page_count": 39,
+      "empty_pages": [],
+      "human_review_required": true,
+      "extracted_at": "2026-05-08"
+    },
+    {
+      "source_id": "msd_critical_illness_scoring_001",
+      "filename": "危重病人评分系统 - 急救医学 - MSD诊疗手册专业版.pdf",
+      "status": "ok",
+      "method": "pdftotext",
+      "page_count": 4,
+      "empty_pages": [],
+      "human_review_required": true,
+      "extracted_at": "2026-05-08"
+    },
+    {
+      "source_id": "padis_update_2025_001",
+      "filename": "a_focused_update_to_the_clinical_practice.17.pdf",
+      "status": "ok",
+      "method": "pdftotext",
+      "page_count": 17,
+      "empty_pages": [],
+      "human_review_required": true,
+      "extracted_at": "2026-05-08"
+    },
+    {
+      "source_id": "picu_admission_triage_001",
+      "filename": "criteria_for_critical_care_infants_and_children_.7.pdf",
+      "status": "ok",
+      "method": "pdftotext",
+      "page_count": 41,
+      "empty_pages": [],
+      "human_review_required": true,
+      "extracted_at": "2026-05-08"
+    },
+    {
+      "source_id": "potentially_inappropriate_treatments_001",
+      "filename": "Responding-Requests-for-Potentially-Inappropriate-Treatments-ICU.pdf",
+      "status": "ok",
+      "method": "pdftotext",
+      "page_count": 13,
+      "empty_pages": [],
+      "human_review_required": true,
+      "extracted_at": "2026-05-08"
+    }
+  ]
+}

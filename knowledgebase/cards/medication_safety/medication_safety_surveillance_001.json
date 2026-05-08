@@ -1,0 +1,76 @@
+{
+  "related_risk_types": [
+    "persistent_shock_risk",
+    "respiratory_failure_risk",
+    "aki_risk"
+  ],
+  "allowed_use": [
+    "risk explanation",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "automatic diagnosis",
+    "treatment order",
+    "drug dose recommendation",
+    "automatic treatment decision"
+  ],
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "card_id": "medication_safety_surveillance_001",
+  "source_id": "medication_safety_icu_001",
+  "source_title": "Clinical Practice Guideline: Safe Medication Use in the ICU",
+  "domain": "medication_safety",
+  "subdomain": "surveillance",
+  "population": "mixed",
+  "card_type": "medication_safety_context",
+  "topic": "Active medication safety surveillance",
+  "clinical_context": "Use when medication-related events, adverse effects, or possible medication errors need review.",
+  "key_points": [
+    "The guideline frames safe ICU medication use around environment and patients, the medication-use process, and patient safety surveillance.",
+    "Active surveillance can include reporting, identification, evaluation, and monitoring of medication errors or adverse drug events.",
+    "No medication dosing or ordering recommendation is provided by this card."
+  ],
+  "trigger_signals": [
+    "new medication event",
+    "possible adverse drug event",
+    "medication error concern",
+    "unexpected clinical change after medication"
+  ],
+  "direct_risk_source": false,
+  "used_by_agents": [
+    "InterventionTrackerAgent",
+    "RiskSentinelAgent",
+    "ClinicalSummaryAgent"
+  ],
+  "retrieval_keywords": [
+    "medication safety",
+    "ADE",
+    "adverse drug event",
+    "medication error",
+    "surveillance",
+    "monitoring"
+  ],
+  "intervention_types": [
+    "medication administration",
+    "infusion",
+    "medication reconciliation",
+    "high-alert medication process"
+  ],
+  "observation_targets": [
+    "adverse drug events",
+    "medication errors",
+    "unexpected clinical deterioration",
+    "renal or hepatic risk context"
+  ],
+  "response_language": [
+    "Medication-related events should be reviewed within the ICU medication safety process."
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 3,
+    "section_title": "Objective / Conclusions",
+    "quote": "safe medication use practices for the critically ill"
+  }
+}

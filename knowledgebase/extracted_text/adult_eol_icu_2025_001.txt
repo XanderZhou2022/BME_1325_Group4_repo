@@ -1,0 +1,799 @@
+
+--- Page 1 ---
+December 2025 • Volume 53 • Number 12 • Pages e2734–e2746
+
+
+
+
+         SPECIAL ARTICLE
+
+       Society of Critical Care Medicine Clinical Practice
+       Guidelines on Adult End-of-Life Care in the ICU
+                                                                                               Mary Faith Marshall, PhD, FCCM,
+       KEYWORDS: end-of-life care; end-of-life decision-making; evidence-based                   HEC-C1
+       practice; intensive care unit; symptom management                                       F. Daniel Davis, PhD, HEC-C2
+                                                                                               Patricia A. Fogelman, DNP, FAAHPM,
+                                                                                                  ACHPN, FNPC3
+       RATIONALE                                                                               Simon Oczkowski, MD, MHSc, MSc4
+                                                                                               Julie C. Reid, MSc, PT, PhD5
+       Evidence-based practice has evolved significantly since the release of the 2008
+                                                                                               Daniel Arellano, PhD, RN, ACNP-BC,
+       American College of Critical Care Medicine (ACCM) Consensus Statement of                  FNP-BC, FCCM, FAANP6
+       recommendations for end-of-life (EOL) care in the ICU. These guidelines rep-            Rebecca A. Aslakson, MD, PhD,
+       resent new knowledge and address previously unconsidered issues.                           FAAHPM, FCCM7
+                                                                                               Joshua Campbell, PharmD, BCCCP8
+
+       OBJECTIVES                                                                              Katherine Courtright, MD, MS9
+                                                                                               Katarine Egressy, MD, MPH, FCCP10
+       To identify and disseminate evidence-based recommendations based on cur-                Elizabeth Epstein, PhD, RN, HEC-C,
+       rent research to better understand how to deliver appropriate and effective                 FAAN1
+       adult EOL care in the ICU.                                                              Ebonye Green, MNSc, ACNPC-AG,
+                                                                                                 CNRN, SCRN, APRN, FNCS11
+                                                                                               May Hua, MD, MS12
+       INTRODUCTION
+                                                                                               Preeti R. John, MD, MPH, FACS,
+       A multidisciplinary team approach to EOL care in the ICU is crucial regardless             FCCM, HEC-C13
+
+       of age. Up to 20% of ICU patients have goals that are not medically attainable          Erin K. Kross, MD14
+
+       or their treatment plan does not align with their achievable goals (1, 2). Thus,        Niels D. Martin, MD, FACS, FCCM15
+
+       it is paramount that we better understand how to assist with decision-making,           Bethany A. Melo, PA-C, MPH16
+
+       mitigate conflict about treatment goals, address suffering, and enhance capacity        Susanne Muehlschlegel, MD, MPH,
+                                                                                                 FNCS, FCCM, FAAN17
+       for adult EOL care in the ICU. This includes detailed knowledge of how EOL
+                                                                                               Silvia Perez-Protto, MD, MSc, MBA,
+       care fits into the delivery of high-quality ICU care as well as into such processes         FCCM18
+       as organ donation. Further discussion of organ donation is beyond the scope of          Ben Roberts, CRNP, AGACNP-BC,
+       this guideline. We refer you to your health system policies and local state laws          ACHPN19
+       for further information regarding discussion of organ donation. Recognizing             Daniel Shalev, MD20
+       that terminology may vary between regions, we provide a supplementary glos-             Jennifer Wescoe Singley, MEd, NCC21
+       sary (https://links. lww.com/CCM/H792) of terms commonly used in EOL care.              Shawna L. Strickland, PhD, CAE, RRT,
+                                                                                                 FAARC22
+                                                                                               Karen A. Korzick   , MD, MA, FCCP,
+       METHODOLOGY                                                                                FACP, FCCM2
+
+       Detailed methods can be found in the Supplementary Materials (https://links.
+       lww.com/CCM/H791).
+
+       PANEL SELECTION
+                                                                                               Copyright © 2025 by the Society
+       A call for interested panel members was submitted to the Society of Critical            of Critical Care Medicine. All Rights
+       Care Medicine (SCCM) membership and through the SCCM Ethics Committee                   Reserved.
+       membership in 2021. Selection criteria included: diversity of professional              DOI: 10.1097/CCM.0000000000006856
+
+
+       e2734     www.ccmjournal.org                                                          December 2025 • Volume 53 • Number 12
+
+
+
+--- Page 2 ---
+                                                                                                         Special Article
+
+expertise in clinical care and/or research in topic areas   to COVIDENCE (Covidence, Melbourne, VIC,
+associated with EOL care in the ICU and/or ethics;          Australia) for screening. Each reference was screened
+diversity of practice environment to include urban,         in duplicate by two screeners, and any reference
+suburban, and rural healthcare system representation;       marked by either screener as potentially relevant was
+diversity of stage in career to include early-, mid-, and   advanced for full-text screening. Full-text screening
+advanced-career clinicians; diversity in personal dem-      was done in duplicate, with the two methodologists
+ographics; and representation of patient/family per-        (J.C.R. or S.O.) making a final decision of study eli-
+spectives with the intent that our panel represent the      gibility in the event of disagreement between the two
+diverse communities to which our adult ICU patients         screeners (Supplementary Materials: PRISMA Flow
+belong.                                                     Diagrams, https://links.lww.com/CCM/H791).
+
+QUESTION SELECTION AND                                      DATA ABSTRACTION, ANALYSIS, AND
+OUTCOME PRIORITIZATION                                      EVIDENCE SUMMARIES
+The membership of the 2020–2021 SCCM Ethics                 The methodology team conducted data abstraction
+Committee developed an initial list of guideline ques-      using a standardized spreadsheet, assessing risk of
+tions. Working with the methodologists, the panel           bias using the modified Cochrane Risk of Bias tool for
+chairs and co-chairs then edited this list and struc-       randomized controlled trials (RCTs) and the modified
+tured it in Population, Intervention, Comparison, and       CLARITY (a tool that assesses the risk of bias in cohort
+Outcome (PICO) format. The PICO questions were              studies) tool for observational studies (4, 5). Where fea-
+organized into three domains: improving communica-          sible, meta-analyses of evidence for each PICO ques-
+tion about EOL care in the ICU, improving provision         tion were conducted using RevMan 5.4 (Cochrane's
+of EOL care/symptom management for patients in the          Software for Preparing and Mainting Cochrane
+ICU, and addressing the educational needs of clini-         Reviews. London, United Kingdom) (4). For dichoto-
+cians, patients, families and surrogate decision-makers     mous variables, we reported relative risk and absolute
+in ICU EOL care. This proposed list was circulated to       risk difference. For continuous variables, mean differ-
+the guideline panel, and in a series of teleconferences,    ence, or standardized mean difference, as appropriate,
+including all panelists, the questions were modified and    each with a corresponding 95% CI. For each outcome
+refined into a final list of ten PICO questions. Based      for which there was data available, we rated the cer-
+upon clinical interest and expertise, the chairs assigned   tainty of evidence as “high,” “moderate,” “low,” or “very
+panelists to PICO question working groups. Following        low” in accordance with standard GRADE practice (6).
+GRADE (a structured framework for evaluating and            We used the highest-certainty evidence available, typ-
+grading the quality of evidence) guidance, each work-       ically RCTs, if available. Qualitative evidence, or data
+ing group, led by one of the chairs or co-chairs, re-       otherwise not amenable to meta-analysis, was narra-
+fined a list of outcomes for each PICO question, which      tively summarized in tables and considered to be of
+were categorized according to their importance for          low certainty.
+decision-making as either “critical,” “important,” or “of
+limited importance,” considering the perspectives of        DEVELOPMENT AND VOTING UPON
+patients, families, and ICU staff (Table 1) (3).            RECOMMENDATIONS
+                                                            Each working group provided feedback on the evi-
+SEARCH STRATEGY AND STUDY
+                                                            dence summaries and worked through an Evidence-
+SELECTION
+                                                            to-Decision (ETD) framework to develop a draft
+A medical librarian conducted systematic searches of        recommendation for each PICO question. The ETDs
+article databases and clinical trial registries from da-    considered the balance of desirable and undesirable
+tabase inception to January 31, 2023; this was subse-       effects, the certainty of evidence, resource implications,
+quently updated to October 8, 2024 (Supplemental            equity, feasibility, and acceptability of each interven-
+Materials: Search Strategies, https://links.lww.            tion. The entire panel voted on each recommendation,
+com/CCM/H791). Search results were uploaded                 its justification, implementation issues, and research
+
+Critical Care Medicine                                                               www.ccmjournal.org     e2735
+
+
+
+--- Page 3 ---
+Marshall et al
+
+considerations. Following SCCM practice, greater           Acceptability to clinicians and institutions was unclear
+than 80% agreement of 70% of eligible panel voters was     because it was not assessed. The resource costs associ-
+considered consensus for a recommendation. We used         ated with the use of a given tool range from significant
+standard GRADE terminology “we recommend” for              (e.g., for a communication facilitator) to low (e.g., a
+strong recommendations and “we suggest” for condi-         printed decision aid).
+tional recommendations. To delineate non-GRADEd               The heterogeneity of these structured tools poses
+good practice statements, we used alternative wording      the most formidable challenge to their broad-based
+(e.g., “ICU clinicians should...”).                        implementation across different settings. It is likely
+                                                           that they will need to be adapted to reflect their local
+                                                           environments and may require modification and staff
+RECOMMENDATIONS AND                                        education and training. As for directions for future
+RATIONALES
+                                                           research, we suggest a potential focus on paper- and
+1.1) We suggest using structured tools to facilitate       web-based decision aides: they can be standardized for
+shared decision-making for EOL treatment deci-             use across different settings and compared with other
+sions in the ICU (Conditional recommendation,              tools are of relatively low cost, enhancing the poten-
+moderate certainty evidence).                              tial for broad-based deployment. Panel member (S.M.)
+   Remark: While there is no single ideal tool to use,     had a conflict of interest with this PICO question and
+those studied in the ICU setting include communica-        did not vote on it.
+tion facilitators; structured meeting plans; and paper-/      1.2a) We suggest ICUs develop resources for edu-
+web-based decision aids.                                   cating substitute decision-makers on their role in
+   Shared decision-making is central to patient/           making decisions on behalf of decisionally inca-
+person-centered care. Clinician approaches to shared       pable patients (Conditional recommendation, low
+decision-making vary widely, however, as do prac-          certainty evidence).
+tices for communicating prognosis and integrating the         1.2b) ICUs should have a standardized process
+values and preferences of patients and their families      for identifying and documenting the legal surrogate
+into EOL decision-making. Decision aides and other         decision-maker for decisionally incapable patients,
+structured tools are designed to enhance the concord-      including for those for whom a surrogate cannot be
+ance between the care that patients receive and their      identified, in accordance with local laws and organi-
+values and preferences. A systematic review of 14 RCTs     zational policy (Good Practice Statement).
+of tools for shared decision-making found evidence            Remark: The process for doing this is best done at
+that they improve patient and family satisfaction and      a hospital/system level and the persons responsible
+quality of communication. In addition to enhancing         may vary between ICUs but could include the clinical
+patient-centeredness, the use of such tools may also,      team, social workers, ethics team, legal services, or risk
+in the panel’s judgment, help improve equity in EOL        management.
+decision-making and ICU-based care.                           Many ICU patients are decisionally incapable and
+   The evidence does not reveal a clear, consistent im-    rely on substitute decision-makers who may not
+pact on such key patient outcomes as decisions about       know their goals and preferences to make decisions
+treatment and length of stay. It does demonstrate that     about EOL care. The primary benefit of having a sub-
+these tools likely help to reduce anxiety, depression,     stitute decision-maker is that patients without them
+and other serious mental health symptoms among             have delayed EOL decisions and prolonged lengths of
+family members of ICU patients (7, 8). In addition,        stay in the ICU (9, 10). While there are usually legal
+none of the reviewed studies uncovered any unde-           requirements for clinicians/hospitals/healthcare sys-
+sirable effects in the use of these tools, which appear    tems to identify the substitute decision-maker, this is
+to be feasible to implement (but unclearly feasible to     not always done consistently, and decision-makers are
+sustain). Most of the tools studied were acceptable to     often unfamiliar with their responsibilities or may not
+patients and families, but their potential to yield pos-   have discussed treatment goals and preferences with
+sibly distressing information (e.g., about differences     the patient (11–13). The panel made a Good Practice
+in values and preferences) should be acknowledged.         Statement on the basis of this indirect evidence.
+
+e2736     www.ccmjournal.org                                                      December 2025 • Volume 53 • Number 12
+
+
+
+--- Page 4 ---
+                                                                                                        Special Article
+
+   There is some evidence regarding education and         not the full range of outcomes associated with either
+preparation of substitute decision-makers in their role   service; few studies have focused on ICU-based psy-
+using web- and paper-based tools. Although the cer-       chology services or pastoral/spiritual care. Thus, there
+tainty of evidence is low due to imprecision from the     are significant limitations in the evidence undergird-
+small size of the studies (14–16), they may improve       ing recommendations for this broad range of differ-
+quality of shared decision-making and communica-          ent services within a context that varies considerably
+tion. Resources required to develop and implement         depending upon the patient, their decisional capacity,
+these may vary but are not moderate or large. The         their overall prognosis, and the unique characteristics
+panel made a conditional recommendation support-          of the patient’s family and care team. Current evidence
+ing their use.                                            indicates that palliative medicine and clinical ethics
+   Substitute decision-maker education interven-          consults result in a moderate increase in decisions to
+tions may improve quality of shared decision-making,      limit treatments and likely result in a small reduc-
+communication, and family mental health symptoms          tion in both ICU and hospital lengths of stay (19, 20).
+(post-traumatic stress disorder [PTSD] symptoms,          Evidence additionally points to the small possibility
+anxiety, and depression symptoms) (17). They may          that supportive consultations have an adverse effect on
+also build trust between the substitute decision-maker    patient care at the EOL; however, the clinical relevance
+and the clinical team (18). Educational interventions     of this remains unclear. For example, the involvement
+may vary depending on the health literacy and cultural    of palliative medicine may reduce family ratings (as
+appropriateness of the process and materials.             reflected in their satisfaction scores) concerning the
+   Research priorities include: 1) which approaches to    quality of communication because difficult conversa-
+identifying and educating surrogate decision-makers       tions with consulting services may be distressing to
+best result in timely EOL life decisions that are con-    families despite being clinically appropriate. Evidence
+sistent with legal requirements and patient preferences   regarding resources required to establish and sustain
+and 2) how systematic approaches to educating sub-        these services is of low certainty. It is highly likely that
+stitute decision-makers vary between cultural groups      clinicians’ respective salary costs vary significantly
+and faith traditions where decision-making may not        due to differences in the forms of expertise, training,
+be viewed individualistically, and how this may affect    and continuing education required for daily practice.
+equity.                                                   These services also differ in terms of funding support
+   1.3) We suggest proactive consultation of Palliative   (e.g., neither clinical ethics consultation nor spiritual
+Care/Palliative Medicine and/or Ethics Consult            care consultation is currently reimbursed). Evidence is
+Service, when available, to assist with defining goals    unclear whether these services contribute to improve-
+of care for ICU patients who may no longer benefit        ments in health equity. In the panel’s judgment, the im-
+from critical care (Conditional recommendation,           pact is likely to vary between different clinical settings
+low certainty evidence).                                  and patient populations due to variations in both indi-
+   Intractable conflicts in EOL decision-making can       vidual and community values.
+have lingering, adverse effects on ICU patients’ fami-       With respect to future research, we suggest the de-
+lies and on members of the clinical team. This con-       velopment of well-designed, controlled studies fo-
+ditional recommendation rests on evidence—of low          cused on the outcomes of such under-researched
+certainty—that the use of supportive services may         interventions as ICU-based psychology and spir-
+bring additional, complementary forms of exper-           itual care in addressing the often-challenging fa-
+tise to ICU clinicians, patients, and their families as   milial dynamics that can unfold in the context of EOL
+they navigate the complexities of communication and       decision-making. We also suggest research to illumi-
+decision-making at the EOL.                               nate the outcomes of moral distress consultation on
+   Knowledge gaps and research opportunities are as-      this occupational hazard of ICU care.
+sociated with each of these services, some of which          1.4) We suggest implementing institutional poli-
+have been studied more than others. Most studies have     cies to address conflicts over futile and potentially
+investigated various outcomes of EOL-care interven-       inappropriate treatments in the ICU (Conditional
+tions by palliative medicine and clinical ethics, but     recommendation, low certainty evidence).
+
+Critical Care Medicine                                                              www.ccmjournal.org     e2737
+
+
+
+--- Page 5 ---
+Marshall et al
+
+
+TABLE 1.
+Summary of Recommendations
+                                                                                                                  Strength of
+ PICO Question                                                       Recommendation                             Recommendation
+
+ 1.0. Improving communication about EOL care in the ICU
+  1.1. Should we recommend specific inter- 1.1. We suggest using structured tools to facilitate        Conditional rec-
+      ventions to enhance shared                  shared decision-making for EOL treatment deci-          ommendation,
+      decision-making between patients, family    sions in the ICU.                                       moderate certainty
+      members/surrogates, and the clinical       Remark: While there is no single ideal tool to use,      evidence
+      team? (clinical team can include ICU,        those studied in the ICU setting include commu-
+      but also other specialty services, such as   nication facilitators; structured meeting plans; and
+      palliative medicine, surgery, oncology)?     paper/web-based decision aids.
+  1.2. Should we recommend specific inter- 1.2a. We suggest ICUs develop resources for edu-                   Conditional recom-
+      ventions to ensure procedural due pro-     cating substitute decision-makers on their role in              mendation, low
+      cess for substitute decision-making on     making decisions on behalf of decisionally inca-                certainty evidence
+      behalf of decisionally incapable patients? pable patients.
+                                                    1.2b. ICUs should have a standardized process for Good practice
+                                                      identifying and documenting the legal surrogate     statement
+                                                      decision-maker for decisionally incapable patients,
+                                                      including those for whom a surrogate cannot be
+                                                      identified, in accordance with local laws and or-
+                                                      ganizational policy.
+                                                    Remark: The process for doing this is best done a
+                                                      hospital/system level and the persons responsible
+                                                      may vary between ICUs but could include the
+                                                      clinical team, social workers, ethics team, legal
+                                                      services, or risk management.
+  1.3. Should we recommend consultation           1.3. We suggest proactive consultation of Palliative        Conditional recom-
+      with such services as clinical ethics,         Care/Palliative Medicine and/or Ethics Consult              mendation, low
+      moral distress, palliative medicine, psy-      Service, when available, to assist with defining            certainty evidence
+      chology, and/or pastoral/spiritual care to     goals of care for ICU patients who may no longer
+      prevent or mitigate conflicts over treat-      benefit from critical care.
+      ment decisions at EOL?
+  1.4. Should we recommend specific in-           1.4. We suggest implementing institutional policies      Conditional recom-
+      stitutional policies to reduce futile and      to address conflicts over futile and potentially inap-   mendation, low
+      potentially inappropriate treatments           propriate treatments in the ICU.                         certainty evidence
+      when there are conflicts during EOL
+      decision-making?
+ 2.0. Improving provision of EOL care/symptom management for patients in the ICU
+  2.1. Should we recommend specific treat-        2.1. We suggest using protocolized approaches               Conditional rec-
+      ments to ensure delivery of effective          to withdrawal of life-sustaining treatments and             ommendation,
+      symptom management for dying ICU               symptom management in the ICU, including                    moderate certainty
+      patients?                                      assessment and management of symptoms pre-                  evidence
+                                                     extubation, during weaning, and after extubation.
+  2.2. Should we recommend specific               2.2a. ICU clinicians should explore and support pa-         Good practice
+      interventions to address the cultural,         tient and family cultural, spiritual, and family tradi-    statement
+      spiritual, and family traditions and needs     tions at the EOL.
+      of patients and families in the ICU at the    2.2b. We suggest using a semi-structured approach Conditional recom-
+      EOL?                                            to supporting patients and families and address-   mendation, low
+                                                      ing spiritual care needs including an introductory certainty evidence
+                                                      meeting, weekly follow-up, and post-hospital dis-
+                                                      charge follow-up.
+                                                                                                                          (Continued)
+
+e2738     www.ccmjournal.org                                                                     December 2025 • Volume 53 • Number 12
+
+
+
+--- Page 6 ---
+                                                                                                                       Special Article
+
+
+TABLE 1. (Continued)
+Summary of Recommendations
+                                                                                                                 Strength of
+ PICO Question                                                       Recommendation                            Recommendation
+  2.3. Should we recommend specific              2.3. We suggest consultation and collaboration              Conditional recom-
+      interventions such as collaboration with      with an Ethics Consult Service and/or Palliative            mendation, low
+      palliative medicine, mental health special-   Medicine, when available, to address the suffer-            certainty evidence
+      ists, spiritual care, or other care process   ing of ICU patients and families at the EOL, when
+      strategies such as care protocols to          there are challenges in mitigating conflicts, dis-
+      address, prevent, or mitigate suffering for   tress, or suffering.
+      ICU patients who are at risk of dying in
+      the ICU?
+ 3.0. Addressing educational needs of clinicians, patients, families, and surrogate decision-makers in ICU EOL care
+  3.1. Should we recommend strategies and 3.1a. We have insufficient evidence to recommend                   No recommenda-
+      policies to identify, prevent, and mitigate     for or against specific interventions to identify and     tion, low certainty
+      inequities based upon gender, gender            reduce unmet palliative care needs of specific            evidence
+      identity, sexual orientation, race, ethnicity,  populations receiving EOL care in the ICU.
+      faith traditions, country of origin, or soci-  3.1b. ICU clinicians providing EOL care should           Good practice
+      oeconomic status at the EOL?                     explore and address patient palliative care needs,      statement
+                                                      considering a patient’s gender, gender identity,
+                                                      sexual identity, race, ethnicity, faith traditions,
+                                                      country of origin, primary language, and socioeco-
+                                                      nomic status.
+  3.2. Should we recommend specific inter- 3.2. We suggest providing education and training in Conditional recom-
+      ventions or strategies, such as palliative palliative care for all ICU team members to improve mendation, very low
+      care education, to increase the capability the capability of providing EOL care in the ICU.    certainty evidence
+      of ICU team members to deliver high-
+      quality EOL care in the ICU?
+  3.3. Should we recommend specific inter- 3.3. We suggest clinicians provide educational            Conditional
+      ventions or strategies, such as education interventions to patients/families/surrogates at risk   recommendation,
+      efforts, to improve the understanding and of ICU admission to improve their understanding of      low certainty
+      expectations of patients at risk of ICU   ICU and EOL treatment options, realistic treatment      evidence
+      admission, their families, and non-ICU    outcomes, and advance care planning.
+      clinicians about EOL care in the ICU?
+EOL = end of life.
+
+
+   Conflicts during EOL decision-making in the ICU                  clinicians that they are adhering to local medico-legal
+can lead to potentially inappropriate treatment, in-                requirements and best practices for EOL care.
+crease suffering for patients and families, disrupt com-               A policy may improve equity by ensuring that treat-
+munication between and among patients, families, and                ment decisions are guided by a framework that can
+treatment teams, and distress clinicians.                           be applied fairly to all patients. Policies can promote
+   There is limited evidence regarding institutional pol-           due process and therefore increase equity (i.e., sim-
+icies to reduce potentially inappropriate treatment (21,            ilar patients are more likely to receive similar care in
+22). There is low certainty evidence that such policies             accordance with policies) (23–25). Due process ele-
+reduce the number of treatments provided to patients                ments and procedural safeguards such as criteria for
+without affecting mortality (23). Policies can support              use, incorporating patient/family member perspec-
+clinical teams and have the potential to reduce burnout             tives, second medical opinions, ethics consultation,
+and moral distress, although evidence on this is lack-              and institutional review and oversight are important
+ing. Clinicians likely value having institutional support           to ensure that such policies are used consistently and
+for withholding or withdrawing treatments that they                 applied fairly. They may also hold individual clinicians
+doubt will be beneficial. Having a policy may reassure              and institutions accountable for providing equitable
+
+Critical Care Medicine                                                                           www.ccmjournal.org     e2739
+
+
+
+--- Page 7 ---
+Marshall et al
+
+care by delineating clear standards for decision-            a superior method for extubation; either may be used
+making and which interventions should or should not          alongside a protocolized approach similar to that
+be provided.                                                 studied by Campbell and Yarandi (26). Special sub-
+   Policies to reduce potentially inappropriate treat-       groups, such as left ventricular assist device or extra-
+ments should be consistent with medico-legal require-        corporeal membrane oxygenation patients, may not fit
+ments in the institution’s jurisdiction. Limited data on     well into general protocols for WLST. The extubation
+time-limited trials of ICU care show the potential to        process should be informed by case-specific factors.
+improve clinician/family meetings and decrease the           No cost data was available to compare protocolized
+intensity and duration of ICU treatment (23).                WLST to usual care, or direct extubation to terminal
+   Many hospitals have such policies in place, demon-        weaning, but given the reduced doses of pharmaceuti-
+strating that they are feasible across a variety of policy   cals and a trend to shorter time to death post WSLT, we
+contexts. More research on the effects of institutional      suspect that protocols are cost effective. No evidence
+policies is required to understand cost-effectiveness,       exists to favor one pharmaceutical agent within a med-
+impact on patient and family satisfaction, clinician         ication class over others in the same class. Variation in
+burnout, and moral distress.                                 medication choices likely represents regional or system
+   2.1) We suggest using protocolized approaches             differences of unclear origins.
+to withdrawal of life-sustaining treatments and                 2.2a) ICU clinicians should explore and support
+symptom management in the ICU, including assess-             patient and family cultural, spiritual, and family tra-
+ment and management of symptoms pre-extubation,              ditions at the EOL (Good Practice Statement).
+during weaning, and after extubation (Conditional               Variation in patient/family beliefs, values, goals
+recommendation, moderate certainty evidence).                and prioritization attached to competing goals at the
+   Transitioning from ICU level of care to comfort-          EOL, such as consciousness vs. adequate control of
+focused care entails withdrawing life-sustaining treat-      pain, may require modification of protocols to meet
+ment (WLST), including mechanical ventilation, and           the needs of individual situations. It is extremely im-
+the effective, compassionate management of diverse           portant that ICU clinicians know about, understand,
+symptoms experienced by the ICU patient. Campbell            and work to support patient-specific values, beliefs,
+and Yarandi (26) prospectively examined the use of an        goals, and prioritization of goals in the context of EOL
+algorithmic approach to ICU WLST vs. usual care pro-         care. Following GRADE guidance, the panel made a
+cesses in a cluster RCT. Moderate certainty evidence         Good Practice Statement regarding patient/family ex-
+was found in favor of the protocol for respiratory dis-      pectations that cultural, spiritual, and family traditions
+tress symptoms, duration of survival after WLST, and         should be known, respected, and incorporated into the
+opioid and benzodiazepine doses. This study was lim-         care plan by the healthcare team delivering EOL care
+ited by imprecision due to a small sample size (n = 48       in the ICU. SCCM Guidelines on Family-Centered
+in protocol, n = 120 in usual care).                         Care may be useful in achieving these aims (30).
+   A total of three observational studies of very low to        2.2b) We suggest using a semi-structured approach
+low certainty examined direct extubation vs. terminal        to supporting patients and families and address-
+weaning (27–29). Direct extubation may result in             ing spiritual care needs including an introductory
+reduced duration of survival after WLST, lower doses         meeting, weekly follow-up, and post-hospital dis-
+of pharmaceutical agents used, and lower clinician job       charge follow-up (Conditional recommendation,
+strain scores. There was very low certainty evidence         low quality evidence).
+that terminal weaning may improve symptom man-                  Torke et al (31) examined the effects of a spiritual
+agement scores and very low certainty evidence of im-        care intervention on the well-being of ICU family
+pact on family psychologic health measures.                  surrogates in a small RCT and found that a semi-
+   Current evidence supports a protocolized approach         structured approach may improve family/surrogate
+to WLST in the ICU to improve symptom manage-                symptoms of anxiety, spiritual well-being, and family
+ment for patients. Using a protocol does not appear          satisfaction with care for those who chose to partici-
+to prolong the dying process and uses less medica-           pate. There was no evidence of undesirable effects in
+tion overall. Evidence is currently lacking to identify      the study. Feasibility is unclear, but many, if not most,
+
+e2740     www.ccmjournal.org                                                        December 2025 • Volume 53 • Number 12
+
+
+
+--- Page 8 ---
+                                                                                                          Special Article
+
+ICUs have access to spiritual care providers through         communication, and decision-making, fostering a
+some current mechanism within their healthcare               patient-centered environment and supporting clin-
+system. Cost implications are unclear. Spiritual care is     ical staff (34, 38). Integrating mental health support
+a health system cost center and does not bill for rev-       can improve decision-making and overall well-being,
+enue. However, this study provides evidence of the           while spiritual care enhances coping mechanisms and
+beneficial impact of spiritual care services to patients’    provides comfort during EOL decision-making (35).
+families and surrogates. Other limitations of the study         Although it may result in improved satisfaction with
+included a focus on spiritual and religious needs but        care (39), the panel found low certainty evidence for
+not cultural needs, low representation of faith tradi-       the effects of palliative care consultation for symptom
+tions other than Christianity, and low representation        management in the ICU due to the small number and
+of Asian and Latino participants.                            size of included trials (40). A single RCT, larger than
+   Research is needed to identify optimal spiritual care     the two palliative care trials (31), evaluated spiritual
+delivery using structured/semi-structured approaches         care consultation in the ICU. Limited evidence sug-
+in the care of ICU patients at the EOL and their fami-       gests that palliative care and spiritual care consultation
+lies. Research is also needed to identify culturally asso-   may improve family outcomes, including satisfac-
+ciated care needs as a separate domain from spiritual        tion with care and mental health symptoms. There is
+care needs.                                                  a small amount of data on psychologist consultation,
+   2.3) We suggest consultation and collaboration            and substantial uncertainty around the costs and feasi-
+with an Ethics Consult Service and/or Palliative             bility of these interventions, although the panel agreed
+Medicine, when available, to address the suffering of        they appear helpful. Current limited evidence presents
+ICU patients and families at the EOL, when there are         crucial opportunities for expanded research.
+challenges in mitigating conflicts, distress, or suffer-        3.1a) We have insufficient evidence to recommend
+ing (Conditional recommendation, low certainty               for or against specific interventions to identify and
+evidence).                                                   reduce unmet palliative care needs of specific pop-
+   A multidisciplinary, collaborative approach is essen-     ulations in EOL care in the ICU (No recommenda-
+tial to comprehensively address the suffering of ICU         tion, low certainty evidence).
+patients at risk of dying and mitigate physical, psycho-        3.1b) ICU clinicians providing EOL care should
+logic, and existential burdens (32). Communication           explore and address patient palliative care needs,
+between patients, families, and medical teams can            considering a patient’s gender, gender identity,
+often be inadequate (33). Multidisciplinary collab-          sexual identity, race, ethnicity, faith traditions,
+oration optimizes care, ensures symptom relief, and          country of origin, primary language, and socioeco-
+supports goal-concordant care delivery. Palliative care      nomic status (Good Practice Statement).
+teams are particularly adept at navigating complex dis-         Identifying and meeting the needs of a diverse popu-
+cussions about prognosis and treatment options and           lation of ICU patients at the EOL is a key component of
+aligning interventions with patient preferences, es-         excellent patient- and family-centered ICU care. Low
+pecially for those nearing the EOL (34, 35). Evidence        certainty evidence exists that patient-specific demo-
+shows that early integration of palliative care in the       graphic factors influence the experience of EOL care
+ICU improves symptom management, reduces length              in the ICU in varying desired and undesired ways, in-
+of stay, and facilitates transitions to appropriate care     cluding death rates in the ICU, decisions to limit treat-
+levels, including hospice (36).                              ment, use of hospice services preceding death, effective
+   Collaboration with mental health professionals            symptom management, delivery of goal-concordant
+addresses psychologic suffering, such as anxiety, de-        care, and quality of death and dying scores (41–46).
+pression, and PTSD, that can exacerbate physical             Following GRADE guidelines, the panel made a Good
+symptoms. Spiritual care professionals help patients         Practice Statement recommending that clinicians pro-
+and families navigate existential distress and find          viding EOL care explore and address unmet palliative
+meaning amid critical illness (37). Implementing stan-       care needs.
+dardized care protocols and pathways ensures con-               Cox et al (46) studied the use of a mobile application-
+sistent approaches to symptom management, family             based communication facilitation platform for family
+
+Critical Care Medicine                                                                www.ccmjournal.org     e2741
+
+
+
+--- Page 9 ---
+Marshall et al
+
+members of ICU patients that is designed to reduce          patient care by learning how to assess and manage
+inequities in unmet palliative care needs, especially for   physical symptoms common among patients nearing
+Black families. This small RCT found a possible larger      the EOL. All clinicians must have the knowledge and
+benefit to White families compared with Black families      skills to talk to patients and families about dying” (35).
+in identifying unmet palliative care needs. The study       These guidelines are a blueprint for healthcare team
+was limited by a small sample size and the reasons why      education.
+White families may have had greater benefit are un-            Evidence in non-ICU patient populations sug-
+clear. Davila et al (47) found that use of a dedicated      gests palliative care improves quality of life, reduces
+palliative care team for Spanish-speaking ICU patients      symptom distress, drives higher satisfaction and pos-
+during the Covid-19 pandemic may provide an oppor-          itive patient experiences, and reduces readmission and
+tunity for earlier palliative care consultation. Patel et   costs (52–54). Variations in the quality of ICU primary
+al (48) found that a culturally adaptive palliative care    palliative care and readiness to engage in specialty
+consultation for Hispanic patients using the Spikes         palliative care services significantly influence the use
+model was associated with a higher rate of conver-          of aggressive interventions near the EOL. These chal-
+sion of patients’ code status to do not resuscitate than    lenges can affect decision-making processes, symptom
+without the culturally adaptive consultation.               management, and care alignment with patients’ goals,
+   More research is needed on how to best identify and      resulting in variability in treatment intensity during
+optimally meet the EOL-care needs of ICU patients/          EOL care (50, 55). The use of specialty palliative care
+families from communities historically subjected to         consultation varies by provider and unit culture (56)
+bias in healthcare delivery. Members of at-risk com-        and is hindered by a lack of consensus on quality palli-
+munities must be included in study inception and            ative care metrics (57). Access to consultative palliative
+design. Research teams should partner with these            care is uneven and is influenced by geographical fac-
+communities instead of doing research “to” or “for”         tors, organizational mission, and/or leadership (58).
+them. The effects of a diverse healthcare team on how          Educating ICU team members in primary palliative
+EOL care is experienced by at-risk patients/commu-          care knowledge and skills is essential for integrating
+nities requires study. Incorporation of social science      primary palliative care into the ICU, improving care
+methods frequently missing in current research of the       quality for critically ill patients by addressing both
+unmet palliative care and EOL needs of historically         curative and palliative needs, and facilitating timely
+underserved populations in the ICU at the EOL should        recognition of when palliative care consultation is ap-
+be investigated.                                            propriate to optimize patient-centered care. However,
+   3.2) We suggest providing education and train-           educational interventions for ICU teams have yielded
+ing in palliative care for all ICU team members to          mixed results to date. A quality improvement educa-
+improve the capability of providing EOL care in the         tion intervention in the ICU resulted in a reduction in
+ICU (Conditional recommendation, very low cer-              ICU length of stay but no impact on patient- or family-
+tainty evidence).                                           centered outcomes (59). EOL ICU nursing education
+   The incorporation of palliative care practices in        strengthened knowledge of pain and disease symptom
+the ICU is endorsed by the 2018 National Consensus          management, and improved mindset, practical ap-
+Project (NCP) Clinical Practice Guidelines for Quality      plication and clinical confidence for ICU nurses car-
+Palliative Care, the ACCM, the Improving Palliative         ing for patients nearing death (60). Communication
+Care in the ICU project, and the European Society           training for ICU teams provided by palliative care
+of Intensive Care Medicine (35, 49–51). Emphasis is         certified experts yielded a significant reduction in im-
+placed on the importance of improving quality of life,      plementation of renal replacement therapy in patients
+reducing futile and potentially inappropriate interven-     with poor prognosis (61). Educational interventions
+tions, improving communication, and assisting fami-         to improve ICU team member communication skills
+lies during challenging decision-making processes.          using interactive educational methodologies resulted
+Domain 7 of the 2018 NCP guidelines specifically            in improved comfort in communication skills among
+emphasizes the capacity of interdisciplinary teams to       ICU physicians and nurses (60, 62, 63) The variability
+optimize EOL care quality: “Clinicians can improve          in resources and feasibility of educational efforts across
+
+e2742     www.ccmjournal.org                                                       December 2025 • Volume 53 • Number 12
+
+
+
+--- Page 10 ---
+                                                                                                                Special Article
+
+centers suggests that localized but mixed modality for-     intervention itself may have varied costs depending on
+mats are likely to be most effective to improve commu-      the implementation approach (e.g., staff costs vs. costs
+nication skills.                                            to develop and provide decision aids). Avoiding un-
+   Future research in ICU EOL care education is             wanted treatments (ICU admission, CPR, intubation)
+needed to better understand which educational inter-        may, in fact, be cost saving and reduce staff moral dis-
+ventions and methodologies will be effective with im-       tress and burnout. Such data may also be important for
+pact on improving staff self-efficacy in palliative care,   patients and families who are financial stakeholders in
+the economics of EOL care, and patient- and family-         care. Additional research is needed on costs and cost
+centered outcomes at the EOL in the ICU.                    effectiveness, as well as on the evolving literature on
+   3.3) We suggest clinicians provide educational           gamification techniques as an educational tool in EOL
+interventions to patients/families/surrogates at risk       care planning (77–79).
+of ICU admission to improve their understanding of
+ICU and EOL treatment options, realistic treatment          ACKNOWLEDGMENTS
+outcomes, and advance care planning (Conditional
+recommendation, low certainty evidence).                    We thank Karin Dearness for developing the elec-
+   Patients with serious acute or chronic illness are       tronic search strategies and Rachel Couban (McMaster
+at risk of ICU admission, which may or may not              University, Hamilton, ON, Canada) for peer review
+be congruent with their values and preferences for          of electronic search strategies. Also, we thank Henry
+care (64). Interventions to educate and assist with         Ajzenberg and Gazal Haddad for their work on the lit-
+decision-making in the inpatient setting, before ICU        erature searches, data abstraction, and analysis.
+care is needed, may help to limit unwanted treatments
+in the ICU and allow more effective symptom pallia-          1 University of Virginia Center for Health Humanities and
+                                                               Ethics, Schools of Medicine and Nursing, Charlottesville,
+tion at the EOL (65–68).
+                                                               VA.
+   We identified 15 RCTs evaluating a variety of edu-
+                                                             2 Center for Translational Bioethics and Health Policy,
+cational interventions (paper, video). These likely im-        Geisinger College of Health Sciences, Danville, PA.
+prove patient knowledge scores, may reduce decisional        3 Department of Palliative Medicine, Mount Nittany Health,
+conflict, and result in more decisions to withhold or          State College, PA.
+withdraw treatments. This supports the concept that,         4 Department of Medicine, McMaster University, Hamilton,
+in many cases, informed patients are likely to want to         ON, Canada.
+forgo ICU interventions (69–72). Other data show no          5 School of Rehabilitation Science, McMaster University,
+                                                               Hamilton, ON, Canada.
+increase in decisions to forgo cardiopulmonary resus-
+                                                             6 Division of Anesthesiology and Critical Care, University
+citation (CPR) (73), but less conflict regarding treat-        of Texas Health Science Center, Cizik School of Nursing,
+ment options (74), or smaller effects upon decisional          Houston, TX.
+conflict or knowledge (75). One study demonstrated           7 Department of Anesthesiology, University of Vermont Larner
+benefit for documented goals of care conversations in          College of Medicine, Burlington, VT.
+racialized and ethnically minoritized populations (76).      8 Pharmacy Residency Program, Guthrie Robert Packer
+Interventions should be tailored to the population: ac-        Hospital, Sayre, PA.
+cessible, understandable, and relevant (e.g., language,      9 Palliative and Advanced Illness Research Center, University
+                                                               of Pennsylvania School of Medicine, Philadelphia, PA.
+culture, visual/auditory materials) in order to be equi-
+                                                            10 Department of Medicine, University of Virginia, Charlottesville,
+table and efficacious.                                         VA.
+   The primary uncertainty is about resources and           11 NUSL Neurosciences, University of Arkansas for Medical
+their impact, which are expected to vary with the type         Sciences, Little Rock, AR.
+of intervention. Patients and families who are strug-       12 Department of Anesthesiology, Columbia University College
+gling with decision-making and having discussions              of Physicians and Surgeons, New York, NY.
+about EOL care may decline education, but it should         13 Department of Surgery, VA Maryland Health Care System
+                                                               and University of Maryland School of Medicine, Baltimore,
+be provided in other instances.
+                                                               MD.
+   There are few data on costs to health systems to pro-
+                                                            14 Department of Medicine, University of Washington, Seattle,
+vide these materials/services to decision-makers. The          WA.
+
+
+Critical Care Medicine                                                                   www.ccmjournal.org     e2743
+
+
+
+--- Page 11 ---
+Marshall et al
+
+15 Department of Surgery,          University   of   Pennsylvania,      5. Busse J, Guyatt G: Tool to Assess Risk of Bias in Case-
+   Philadelphia, PA.                                                       Controlled Studies. 2021. Ottawa, ON, Canada, Evidence
+16 Division of Critical Care, ChristianaCare Health System,                Partners. Available at: https:www.distiller.com/resources/
+   Wilmington, DE.                                                         methodological-resources/tool-to-assess-risk-of-bias-in-
+                                                                           cohort-studies-distillersr. Accessed June 17, 2025
+17 Department of Neurology, Johns Hopkins University School
+   of Medicine, Baltimore, MD.                                          6. Balshem H, Helfand M, Schunemann HJ, et al: GRADE guide-
+                                                                           lines: 3. Rating the quality of evidence. J Clin Epidemiol 2011;
+18 Intensive Care and Resuscitation Department, Cleveland                  64:401–406
+   Clinic, Cleveland, OH.
+                                                                        7. Garrouste-Orgeas M, Max A, Lerin T, et al: Impact of proac-
+19 Department of Internal Medicine, Johns Hopkins Bayview                  tive nurse participation in ICU family conferences: A mixed-
+   Medicine Center, Baltimore, MD.                                         method study. Crit Care Med 2016; 44:1116–1128
+20 Division of Geriatrics and Palliative Medicine, Weill Cornell        8. Robin S, Labarriere C, Dessertaine G, et al: Information pam-
+   Medicine, New York, NY.                                                 phlet given to relatives during the end-of-life decision in the
+21 Wescoe Foundation for Pulmonary Fibrosis, Coopersburg,                  ICU: An assess or blinded, randomized controlled trial. Chest
+   PA.                                                                     2021; 159:2301–2308
+22 Clinical, Research, and Education Divisions, American                9. Stachulski F, Siegerink B, Bosel J: Dying in the neurointen-
+   Epilepsy Society, Chicago, IL.                                          sive care unit after withdrawal of life-sustaining therapy:
+                                                                           Associations of advance directives and healthcare proxies
+Supplemental digital content is available for this article. Direct
+                                                                           with timing and treatment intensity. J Intensive Care Med 2021;
+URL citations appear in the printed text and are provided in the
+                                                                           36:451–458
+HTML and PDF versions of this article on the journal’s website
+(http://journals.lww.com/ccmjournal).                                  10. Walsh BC, Kimberly LL, Nolan A: A pilot study to understand
+                                                                           how physicians make end-of-life decisions for critically ill, un-
+Funding of these guidelines was provided solely by the Society             represented patients. Chest 2022; 162:A2665
+of Critical Care Medicine.
+                                                                       11. Block B, Jeon S, John Boscardin W, et al: Late goal-blinded
+Conflicts of interest on the part of individual panel members were         therapy: Critically ill older adults without a surrogate at the end
+identified and managed throughout the panel process; disclosures           of life. Crit Care Med 2019; 47:181
+were sought at the outset of each meeting. Dr. Muehlschlegel
+                                                                       12. Cohen AB, Benjamin AZ, Fried TR: End-of-life decision mak-
+was excluded from voting on one recommendation due to the
+                                                                           ing and treatment for patients with professional guardians. J
+possession of research funding related to recommendation con-
+                                                                           Am Geriatr Soc 2019; 67:2161–2166
+tent. Dr. Muehlschlegel was a consultant for Acasti Pharma. Dr.
+Muehlschlegel also received grant funding from the National            13. Davis L, Pedack A, Greenfield L, et al: Giving a voice to the
+Institutes of Health/National Institute of Nursing Research                voiceless: Effects of awaiting legal guardianship for end-of-life
+(R21NR020231 and Johns Hopkins University Department of                    decisions. Am J Crit Care 2018; 27:e14195
+Anesthesiology/Critical Care Medicine through the Stimulating          14. Robin S, Labarriere C, Sechaud G, et al: Information pamphlet
+and Advancing ASCM Research (StAAR) Investigator Award. Dr.                given to relatives during the end-of-life decision in the ICU:
+Martin was a consultant and advisor for Astra Zeneca, Nestle,              An assessor blinded, randomized controlled trial. Chest 2021;
+and FloBio, LLC. Dr. John is a government employee working at              159:2301–2308
+a Veteran Affairs hospital. Dr. Wescoe Singley holds a corporate       15. Suen AO, Butler RA, Arnold RM, et al: A pilot randomized trial
+membership for Boehringer Ingelheim. The remaining authors                 of an interactive web-based tool to support surrogate decision
+have disclosed that they do not have any potential conflicts of            makers in the intensive care unit. Ann Am Thorac Soc 2021;
+interest.                                                                  18:1191–1201
+For information regarding this article, E-mail: kakorzick@geis-        16. Turnbull AE, Chessare CM, Coffin RK, et al: A brief intervention
+inger.edu                                                                  for preparing ICU families to be proxies: A phase I study. PLoS
+                                                                           One 2017; 12:e0185483
+                                                                       17. Fang T, Du P, Wang Y, et al: Role mismatch in medical
+                                                                           decision-making participation is associated with anxiety and
+REFERENCES                                                                 depression in family members of patients in the intensive care
+ 1. Turnbull AE, Bosslet GT, Kross EK: Aligning use of intensive           unit. J Trop Med 2022; 2022:8027422
+    care with patient values in the USA: Past, present, and future.    18. Lincoln TE, Buddadhumaruk P, Arnold RM, et al: Association
+    Lancet Respir Med 2019; 7:626–638                                      between shared decision-making during family meetings
+ 2. Huynh TN, Kleerup EC, Wiley JF, et al: The frequency and cost          and surrogates’ trust in their ICU physician. Chest 2023;
+    of treatment perceived to be futile in crucial care. JAMA Intern       163:1214–1224
+    Med 2013; 173:1887–1894                                            19. Golob S, Zilinyi R, Godfrey S, et al: The prevalence of pallia-
+ 3. Guyatt GH, Oxman AD, Kunz R, et al: GRADE guidelines: 2.               tive care consultation in deceased COVID-19 patients and
+    Framing the question and deciding on important outcomes. J             its association with end-of-life care. J Palliat Med 2022;
+    Clin Epidemiol 2011; 64:395–400                                        25:70–74
+ 4. Review Manager: Version 5.4. Copenhagen: The Nordic                20. Schneiderman LJ, Gilmer T, Teetzel HD: Impact of ethics con-
+    Cochrane Centre. The Cochrane Collaboration, 2014. Available           sultations in the intensive care setting: A randomized, con-
+    at: revman.cochrane.org. Accessed September 24, 2025                   trolled trial. Crit Care Med 2000; 28:3920–3924
+
+
+e2744     www.ccmjournal.org                                                                        December 2025 • Volume 53 • Number 12
+
+
+
+--- Page 12 ---
+                                                                                                                                 Special Article
+
+21. Al Asaeed M, Almoosawi BM, Al Awainati M, et al:                      38. Davidson JE, Jones C, Bienvenu OJ: Family response to crit-
+    Characteristics and outcomes of mechanically ventilated                   ical illness: Postintensive care syndrome-family. Crit Care Med
+    elderly patients in the absence of an end-of-life care policy:            2012; 40:618–624
+    A retrospective study from Bahrain. Ann Saudi Med 2021;               39. Helgeson SA, Burnside RC, Robinson MT, et al: Early versus
+    41:222–231                                                                usual palliative care consultation in the intensive care unit. Am
+22. Lecuyer L, Chevret S, Thiery G, et al: The ICU trial: A new ad-           J Hosp Palliat Care 2022; 40:544–551
+    mission policy for cancer patients requiring mechanical venti-        40. Kamdar HA, Gianchandani S, Strohm T, et al: Collaborative
+    lation. Crit Care Med 2007; 35:808–814                                    integration of palliative care in critically ill stroke patients in
+23. Chang DW, Neville TH, Parrish J, et al: Evaluation of time-               the neurocritical care unit: A single center pilot study. J Stroke
+    limited trials among critically ill patients with advanced med-           Cerebrovasc Dis 2022; 31:106586
+    ical illnesses and reduction of nonbeneficial ICU treatments.         41. Muni S, Engelberg RA, Treece PD, et al: The influence of race/
+    JAMA Intern Med 2021; 181:786–794                                         ethnicity and socioeconomic status on end-of-life care in the
+24. Courtwright AM, Rubin E, Erler KS, et al: Experience with a               ICU. Chest 2011; 139:1025–1033
+    revised hospital policy on not offering cardiopulmonary resus-        42. Barwise A, Jaramillo C, Novotny P, et al: Differences in code
+    citation. HEC Forum 2022; 34:73–88                                        status and end-of-life decision making in patients with limited
+25. O’Toole EE, Youngner SJ, Juknialis BW, et al: Evaluation of               English proficiency in the intensive care unit. Mayo Clin Proc
+    a treatment limitation policy with a specific treatment-limiting          2018; 93:1271–1281
+    order page. Arch Intern Med 1994; 154:425–432                         43. Gutierrez C, Hsu W, Ouyang Q, et al: Palliative care interven-
+26. Campbell ML, Yarandi HN: Effectiveness of an algorithmic                  tion in the intensive care unit: Comparing outcomes among
+    approach to ventilator withdrawal at the end of life: A                   seriously ill Asian patients and those of other ethnicities. J
+    stepped wedge cluster randomized trial. J Palliat Med 2024;               Palliat Care 2014; 30:151–157
+    27:185–191                                                            44. Lee JJ, Long AC, Curtis JR, et al: The influence of race/eth-
+27. Robert R, Le Gouge A, Kentish-Barnes N, et al: Terminal                   nicity and education on family ratings of the quality of dying in
+    weaning or immediate extubation for withdrawing mechanical                the ICU. J Pain Symptom Manage 2016; 51:9–16
+    ventilation in critically ill patients (the ARREVE observational      45. Chertoff J, Olson A, Alnuaimat H: Does admission to the ICU pre-
+    study). Intensive Care Med 2017; 43:1793–1807                             vent African American disparities in withdrawal of life-sustaining
+28. Rocker GM, Heyland DK, Cook DJ, et al: Most critically ill                treatment? Crit Care Med 2017; 45:e1083–e1086
+    patients are perceived to die in comfort during withdrawal            46. Cox CE, Ashana DC, Riley IL, et al: Mobile application–based
+    of life support: A Canadian multicentre study. Can J Anaesth              communication facilitation platform for family members of crit-
+    2004; 51:623–630                                                          ically ill patients: A randomized clinical trial. JAMA Netw Open
+29. Thellier D, Delannoy PY, Robineau O, et al: Comparison of terminal        2024; 7:e2349666
+    extubation and terminal weaning as mechanical ventilation with-       47. Davila C, Cartagena L, Byrne-Martelli S, et al: Creating a dedicated
+    drawal in ICU patients. Minerva Anestesiol 2016; 83:375–382               palliative care team for ICU Spanish speaking patients in response
+30. Hwang DY, Oczkowski SJW, Lewis K, et al: Society of Critical              to COVID-19. J Pain Symptom Manage 2023; 65:e315–e320
+    Care Medicine guidelines on family-centered care for adult            48. Patel NK, Passalacqua SA, Meyer KN, et al: Full code to do-
+    ICUs: 2024. Crit Care Med 2025; 53:e465–e482                              not-resuscitate: Culturally adapted palliative care consulta-
+31. Torke AM, Varner-Perez SE, Burke ES, et al: Effects of spiritual          tions and code status change among seriously ill Hispanic
+    care on well-being of intensive care family surrogates: A clin-           patients. Am J Hosp Palliat Care 2022; 39:791–797
+    ical trial. J Pain Symptom Manage 2023; 65:296–307                    49. Truog RD, Campbell ML, Curtis JR, et al; American Academy
+32. Metaxa V, Anagnostou D, Vlachos S, et al: Palliative care inter-          of Critical Care Medicine: Recommendations for end-of-life
+    ventions in intensive care units. Intensive Care Med 2021;                care in the intensive care unit: A consensus statement by the
+    47:1415–1425                                                              American College of Critical Care Medicine. Crit Care Med
+33. Azoulay E, Chevret S, Leleu G, et al: Half the families of inten-         2008; 36:953–963
+    sive care unit patients experience inadequate communication           50. Nelson JE, Basset R, Boss RD, et al: Models for structuring a
+    with physicians. Crit Care Med 2000; 28:3044–3049                         clinical initiative to enhance palliative care in the intensive care
+34. Lee JD, Jennerich AL, Engelberg RA, et al: Type of intensive              unit: A report from the IPAL-ICU project (Improving Palliative
+    care unit matters: Variations in palliative care for critically ill       Care in the ICU). Crit Care Med 2010; 38:1765–1772
+    patients with chronic, life-limiting illness. J Palliat Med 2020;     51. Kesecioglu J, Rusinova K, Alampi D, et al: European Society
+    24:857–864                                                                of Intensive Care Medicine guidelines on end of life and palli-
+35. National Consensus Project for Quality Palliative Care. Fourth            ative care in the intensive care unit. Intensive Care Med 2024;
+    Edition. Richmond, VA, National Coalition for Hospice and                 50:1740–1766
+    Palliative Care, 2018                                                 52. Kavalieratos D, Corbelli J, Zhang D, et al: Association between
+36. Aslakson R, Cheng J, Vollenweider D, et al: Evidence-based                palliative care and patient and caregiver outcomes: A system-
+    palliative care in the intensive care unit: A systematic review of        atic review and meta-analysis. JAMA 2016; 316:2104–2114
+    interventions. J Palliat Med 2014; 17:219–235                         53. May P, Garrido MM, Cassel JB, et al: Cost analysis of a pro-
+37. Puchalski C, Ferrel B, Virani R, et al: Improving the quality of          spective multi-site cohort study of palliative care consultation
+    spiritual care as a dimension of palliative care: The report of           teams for adults with advanced cancer: Where do cost savings
+    the consensus conference. J Palliat Med 2009; 12:885–904                  come from? Palliat Med 2017; 31:378–386
+
+
+Critical Care Medicine                                                                                   www.ccmjournal.org     e2745
+
+
+
+--- Page 13 ---
+Marshall et al
+
+54. Adelson K, Paris J, Horton JR, et al: Standardized criteria for         67. Lee RY, Kross EK, Downey L, et al: Efficacy of a
+    palliative care consultation on a solid tumor oncology service              communication-priming intervention on documented goals-
+    reduces downstream health care use. J Oncol Pract 2017;                     of-care discussions in hospitalized patients with serious ill-
+    13:e431–e440                                                                ness: A randomized clinical trial. JAMA Netw Open 2022;
+55. Lustbader D, Pekmezaris R, Frankenthaler M, et al: Palliative               5:e225088
+    medicine consultation impacts DNR designation and length of             68. Lin LH, Cheng HC, Chen YC, et al: Effectiveness of a
+    stay for terminal medical MICU patients. Palliat Support Care               video-based advance care planning intervention in hos-
+    2011; 9:401–406                                                             pitalized elderly patients: A randomized controlled trial.
+56. Baggs JG, Norton SA, Schmitt MH, et al: Intensive care unit                 Geriatr Gerontol Int 2021; 21:478–484
+    cultures and end-of-life decision making. J Crit Care 2007;             69. El-Jawahri A, Mitchell SL, Paasche-Orlow MK, et al: A ran-
+    22:159–168                                                                  domized controlled trial of a CPR and intubation video de-
+57. Bakitas M, Dionne-Odom JN, Kamal A, et al: Priorities for                   cision support tool for hospitalized patients. J Gen Intern
+    evaluating palliative care outcomes in intensive care units. Crit           Med 2015; 30:1071–1080
+    Care Nurs Clin North Am 2015; 27:395–411                                70. Jacobsen J, Robinson E, Jackson VA, et al: Development of
+58. Dumanovsky T, Augustin R, Rogers M, et al: The growth of pal-               a cognitive model for advance care planning discussions:
+    liative care in US hospitals: A status report. J Palliat Med 2016;          Results from a quality improvement initiative. J Palliat Med
+    19:8–15                                                                     2011; 14:331–336
+59. Curtis JR, Nielsen EL, Treece PD, et al: Effect of a quality-           71. Krones T, Budilivschi A, Karzig I, et al: Advance care pla-
+    improvement intervention on end-of-life care in the intensive               nning for the severely ill in the hospital: A randomized trial.
+    care unit: A randomized trial. Am J Respir Crit Care Med 2011;              BMJ Support Palliat Care 2022; 12:e411–e423
+    183:348–355                                                             72. Nicolasora N, Pannala R, Mountantonakis S, et al: If asked,
+60. Shushtari SSG, Molavynejad S, Adineh M, et al: Effect of end-               hospitalized patients will choose whether to receive life-
+    of-life nursing education on the knowledge and performance                  sustaining therapies. J Hosp Med 2006; 1:161–167
+    of nurses in the intensive care unit: A quasi-experimental              73. Richardson-Royer C, Naqvi I, Riffel C, et al: A video
+    study. BMC Nurs 2022; 21:102                                                depicting resuscitation did not impact upon patients’
+61. You JY, Ligasaputri LD, Katamreddy A, et al: A case-controlled              decision-making. Int J Gen Med 2018; 11:73–77
+    study evaluating the impact of dedicated palliative care train-         74. Kobewka D, Heyland DK, Dodek P, et al: Randomized con-
+    ing on critical care interventions at the end of life. J Palliat Care       trolled trial of a decision support intervention about car-
+    2021; 39:111–114                                                            diopulmonary resuscitation for hospitalized patients
+62. Downar J, Knickle K, Granton JT, et al: Using standardized                  who have a high risk of death. J Gen Intern Med 2021;
+    family members to teach communication skills and eth-                       36:2593–2600
+    ical principles to critical care trainees. Crit Care Med 2012;          75. Matlock DD, Keech TA, McKenzie MB, et al: Feasibility and
+    40:1814–1819                                                                acceptability of a decision aid designed for people fac-
+63. Krimshtein NS, Luhrs CA, Puntillo KA, et al: Training nurses for            ing advanced or terminal illness: A pilot randomized trial.
+    interdisciplinary communication with families in the intensive              Health Expect 2014; 17:49–59
+    care unit: An intervention. J Palliat Med 2011; 14:1325–1332            76. Curtis JR, Lee RY, Brumback LC, et al: Intervention to pro-
+64. Connors AF, Dawson NV, Desbiens NA, et al: A controlled                     mote communication about goals of care for hospitalized
+    trial to improve care for seriously ill hospitalized patients:              patients with serious illness: A randomized clinical trial.
+    The study to understand prognoses and preferences for out-                  JAMA 2023; 329:2028–2037
+    comes and risks of treatments (SUPPORT). JAMA 1995;                     77. Bass GA, Chang CWJ, Sorce LR, et al: Gamification in critical
+    274:1591–1598                                                               care education and practice. Crit Care Explor 2024; 6:e1034
+65. Ahronheim JC, Morrison RS, Morris J, et al: Palliative care in          78. Azizoddin DR, Thomas TH: Game changer: Is palliative care
+    advanced dementia: A randomized controlled trial and descrip-               ready for games? JCO Clin Cancer Inform 2022; 6:e2200003
+    tive analysis. J Palliat Med 2000; 3:265–273                            79. Liu L, Wang Y, Ho TC, et al: Co-designing a culturally-
+66. Detering KM, Hancock AD, Reade MC, et al: The impact of                     sensitive theory-driven advance care planning game with
+    advance care planning on end of life care in elderly patients:              Chinese older adults and healthcare providers. Palliat Med
+    Randomised controlled trial. BMJ 2010; 340:c1345                            2024; 38:343–351
+
+
+
+
+e2746     www.ccmjournal.org                                                                           December 2025 • Volume 53 • Number 12
+

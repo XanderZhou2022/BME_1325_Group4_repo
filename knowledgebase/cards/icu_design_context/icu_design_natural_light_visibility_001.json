@@ -1,0 +1,51 @@
+{
+  "related_risk_types": [],
+  "allowed_use": [
+    "ICU design background",
+    "environment context"
+  ],
+  "forbidden_use": [
+    "risk scoring",
+    "automatic clinical decision",
+    "treatment order",
+    "resource triage decision"
+  ],
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "card_id": "icu_design_natural_light_visibility_001",
+  "source_id": "adult_icu_design_2024_001",
+  "source_title": "Society of Critical Care Medicine 2024 Guidelines on Adult ICU Design",
+  "domain": "icu_design_context",
+  "subdomain": "environment",
+  "population": "adult",
+  "card_type": "design_context",
+  "topic": "ICU visibility, windows, and natural lighting",
+  "clinical_context": "Use only as background for ICU environment or design discussion, not risk scoring.",
+  "key_points": [
+    "The design guideline strongly recommends high-visibility ICU layouts and windows/natural lighting in patient rooms.",
+    "This card is excluded from RiskSentinelAgent retrieval by profile."
+  ],
+  "trigger_signals": [
+    "ICU design",
+    "unit renovation",
+    "natural lighting",
+    "visibility"
+  ],
+  "used_by_agents": [
+    "ClinicalSummaryAgent"
+  ],
+  "retrieval_keywords": [
+    "ICU design",
+    "natural lighting",
+    "windows",
+    "visibility",
+    "architecture"
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 2,
+    "section_title": "Results",
+    "quote": "high-visibility ICU layouts, windows and natural lighting"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "related_risk_types": [],
+  "allowed_use": [
+    "family communication draft",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "direct family delivery without clinician approval",
+    "definitive prognosis",
+    "treatment withdrawal recommendation",
+    "futility judgment"
+  ],
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "card_id": "family_communication_patient_family_concerns_001",
+  "source_id": "clinical_deterioration_rapid_response_2024_001",
+  "source_title": "SCCM Guidelines on Recognizing and Responding to Clinical Deterioration Outside the ICU",
+  "domain": "family_communication",
+  "subdomain": "patient_family_concerns",
+  "population": "mixed",
+  "card_type": "communication_principle",
+  "topic": "Including patient and family concerns in escalation",
+  "clinical_context": "Use to draft clinician-reviewed language acknowledging family observations about deterioration.",
+  "key_points": [
+    "The guideline suggests incorporating patient, family, and care partner concerns into decisions to obtain additional help.",
+    "Family concerns should be heard and addressed by the healthcare team."
+  ],
+  "trigger_signals": [
+    "family reports change",
+    "care partner concern",
+    "patient concern",
+    "request for additional opinion"
+  ],
+  "used_by_agents": [
+    "CompassionAgent",
+    "PatientMemoryAgent",
+    "ClinicalSummaryAgent"
+  ],
+  "retrieval_keywords": [
+    "family concern",
+    "care partner",
+    "communication",
+    "rapid response",
+    "additional help"
+  ],
+  "requires_clinician_approval": true,
+  "not_for_direct_family_delivery": true,
+  "family_friendly_language": [
+    "We will make sure your concerns are shared with the clinical team for review."
+  ],
+  "professional_preview_language": [
+    "Family/care partner concern noted; consider whether additional bedside review is indicated."
+  ],
+  "phrases_to_avoid": [
+    "Nothing is wrong.",
+    "The family is overreacting."
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 4,
+    "section_title": "Results / Patient-family concerns",
+    "quote": "patient/family/care partners’ concerns be included"
+  }
+}

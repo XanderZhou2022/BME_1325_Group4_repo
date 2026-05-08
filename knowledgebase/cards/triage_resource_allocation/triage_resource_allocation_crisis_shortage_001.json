@@ -1,0 +1,70 @@
+{
+  "related_risk_types": [
+    "persistent_shock_risk",
+    "respiratory_failure_risk",
+    "aki_risk"
+  ],
+  "allowed_use": [
+    "risk explanation",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "automatic diagnosis",
+    "treatment order",
+    "drug dose recommendation",
+    "automatic treatment decision"
+  ],
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "card_id": "triage_resource_allocation_crisis_shortage_001",
+  "source_id": "crisis_resource_allocation_2026_001",
+  "source_title": "SCCM Guidelines for Allocation of Critical Care Resources During Crisis-Level Shortages",
+  "domain": "triage_resource_allocation",
+  "subdomain": "crisis_shortage",
+  "population": "adult",
+  "card_type": "ethical_policy",
+  "topic": "Crisis-level shortage allocation context",
+  "clinical_context": "Use when WardCoordinator summarizes resource limitation and triage context for human leadership review.",
+  "key_points": [
+    "Crisis-level shortages are severe deficits of essential resources and services that drastically affect critical care delivery.",
+    "The guideline emphasizes evidence-based practices and processes, but reports limited evidence for many specific triage scenarios.",
+    "The card supports review structure only and cannot allocate scarce resources automatically."
+  ],
+  "trigger_signals": [
+    "ICU bed shortage",
+    "ventilator shortage",
+    "staff shortage",
+    "crisis standards",
+    "surge capacity"
+  ],
+  "used_by_agents": [
+    "WardCoordinatorAgent",
+    "ClinicalSummaryAgent",
+    "RiskSentinelAgent"
+  ],
+  "retrieval_keywords": [
+    "crisis shortage",
+    "scarce resources",
+    "triage",
+    "ICU capacity",
+    "surge",
+    "fairness"
+  ],
+  "priority_factors": [
+    "resource deficit",
+    "ICU capacity",
+    "patient flow",
+    "available care standards",
+    "human triage process"
+  ],
+  "resource_context": "Crisis-level shortages include products, personnel, and facilities.",
+  "fairness_or_ethics_note": "Use fair, transparent human processes; do not automate allocation or denial.",
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 2,
+    "section_title": "Rationale / Introduction",
+    "quote": "Crisis-level shortages refer to severe deficits"
+  }
+}

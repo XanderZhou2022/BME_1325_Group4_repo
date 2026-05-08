@@ -1,0 +1,66 @@
+{
+  "related_risk_types": [],
+  "allowed_use": [
+    "risk explanation",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "automatic diagnosis",
+    "treatment order",
+    "drug dose recommendation",
+    "automatic treatment decision"
+  ],
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "card_id": "padis_delirium_antipsychotic_uncertainty_001",
+  "source_id": "padis_update_2025_001",
+  "source_title": "Focused Update to ICU PADIS Guidelines",
+  "domain": "padis_sedation_delirium",
+  "subdomain": "delirium",
+  "population": "adult",
+  "card_type": "guideline_context",
+  "topic": "Delirium treatment evidence uncertainty",
+  "clinical_context": "Use when summarizing delirium context and the need for clinical judgment.",
+  "key_points": [
+    "The task force was unable to issue a recommendation on antipsychotics to treat delirium in adult ICU patients.",
+    "Delirium references in summaries should avoid implying an automatic medication intervention."
+  ],
+  "trigger_signals": [
+    "delirium",
+    "agitation",
+    "confusion",
+    "antipsychotic question"
+  ],
+  "used_by_agents": [
+    "PatientMemoryAgent",
+    "ClinicalSummaryAgent",
+    "CompassionAgent"
+  ],
+  "requires_clinician_approval": true,
+  "not_for_direct_family_delivery": true,
+  "retrieval_keywords": [
+    "delirium",
+    "antipsychotics",
+    "clinical judgment",
+    "ICU confusion"
+  ],
+  "professional_summary_template": "Delirium context present; medication implications require clinician assessment.",
+  "allowed_terms": [
+    "delirium context",
+    "uncertain evidence",
+    "clinician assessment"
+  ],
+  "avoid_terms": [
+    "give antipsychotic",
+    "dose",
+    "definitive treatment"
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 7,
+    "section_title": "Results / Recommendations",
+    "quote": "unable to issue recommendations"
+  }
+}

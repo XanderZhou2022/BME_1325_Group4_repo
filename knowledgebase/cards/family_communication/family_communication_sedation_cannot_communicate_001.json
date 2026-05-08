@@ -1,0 +1,67 @@
+{
+  "related_risk_types": [],
+  "allowed_use": [
+    "family communication draft",
+    "ICU diary support",
+    "clinician-reviewed explanation"
+  ],
+  "forbidden_use": [
+    "direct family delivery without clinician approval",
+    "definitive prognosis",
+    "treatment withdrawal recommendation",
+    "drug dose recommendation"
+  ],
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "card_id": "family_communication_sedation_cannot_communicate_001",
+  "source_id": "padis_update_2025_001",
+  "source_title": "Focused Update to ICU PADIS Guidelines",
+  "domain": "family_communication",
+  "subdomain": "sedation_family_explanation",
+  "population": "adult",
+  "card_type": "communication_principle",
+  "topic": "Family explanation: sedation may limit communication",
+  "clinical_context": "Use to draft clinician-approved family language when a sedated or ventilated patient cannot communicate normally.",
+  "key_points": [
+    "The PADIS update identifies anxiety, agitation/sedation, delirium, immobility, and sleep disruption as important adult ICU symptom domains.",
+    "Draft language should explain impaired communication gently and avoid prognosis or treatment recommendations."
+  ],
+  "trigger_signals": [
+    "sedation",
+    "mechanical ventilation",
+    "cannot communicate",
+    "family asks why patient is not awake"
+  ],
+  "used_by_agents": [
+    "CompassionAgent",
+    "PatientMemoryAgent"
+  ],
+  "retrieval_keywords": [
+    "family",
+    "sedation",
+    "cannot communicate",
+    "ventilator",
+    "delirium",
+    "anxiety"
+  ],
+  "requires_clinician_approval": true,
+  "not_for_direct_family_delivery": true,
+  "family_friendly_language": [
+    "Some ICU treatments and sedating medicines can make it hard for a patient to speak, stay awake, or remember clearly."
+  ],
+  "professional_preview_language": [
+    "Family asked about communication; draft should be reviewed by clinician against current sedation and ventilation status."
+  ],
+  "phrases_to_avoid": [
+    "They will not wake up.",
+    "This means recovery is impossible.",
+    "The medicine is harmless."
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 2,
+    "section_title": "Rationale / Methods",
+    "quote": "anxiety, agitation/sedation, delirium, immobility, and sleep disruption"
+  }
+}

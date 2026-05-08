@@ -1,0 +1,67 @@
+{
+  "related_risk_types": [],
+  "allowed_use": [
+    "ethical context",
+    "clinician-reviewed communication draft",
+    "conflict documentation support"
+  ],
+  "forbidden_use": [
+    "direct family delivery without clinician approval",
+    "futility judgment",
+    "unilateral treatment refusal by agent",
+    "automatic ethics decision"
+  ],
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "card_id": "end_of_life_potentially_inappropriate_treatment_001",
+  "source_id": "potentially_inappropriate_treatments_001",
+  "source_title": "Responding to Requests for Potentially Inappropriate Treatments in Intensive Care Units",
+  "domain": "end_of_life_ethics",
+  "subdomain": "conflict_resolution",
+  "population": "adult",
+  "card_type": "ethical_policy",
+  "topic": "Potentially inappropriate treatment conflict process",
+  "clinical_context": "Use when there is intractable disagreement about requested ICU treatments.",
+  "key_points": [
+    "The statement recommends using the term potentially inappropriate rather than futile for treatments that may have some chance of the requested effect but raise competing ethical concerns.",
+    "Persistent conflicts should be managed through a fair conflict-resolution process."
+  ],
+  "trigger_signals": [
+    "family requests disputed treatment",
+    "clinician concern about inappropriate treatment",
+    "conflict",
+    "ethics consult"
+  ],
+  "used_by_agents": [
+    "CompassionAgent",
+    "PatientMemoryAgent",
+    "ClinicalSummaryAgent",
+    "WardCoordinatorAgent"
+  ],
+  "retrieval_keywords": [
+    "potentially inappropriate treatment",
+    "futility",
+    "ethics committee",
+    "conflict resolution",
+    "shared decision making"
+  ],
+  "requires_clinician_approval": true,
+  "not_for_direct_family_delivery": true,
+  "family_friendly_language": [
+    "When there is disagreement, the team should use a fair review process and keep communication open."
+  ],
+  "professional_preview_language": [
+    "Potentially inappropriate treatment conflict: consider early consultants, fair review, and external review options according to policy."
+  ],
+  "phrases_to_avoid": [
+    "The requested care is useless.",
+    "The agent decides this is futile."
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 2,
+    "section_title": "Main Results",
+    "quote": "The term “potentially inappropriate” should be used"
+  }
+}

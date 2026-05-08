@@ -1,0 +1,739 @@
+
+--- Page 1 ---
+ SPECIAL ARTICLE
+
+Society of Critical Care Medicine 2024
+Guidelines on Adult ICU Design
+                                                                                         D. Kirk Hamilton, PhD, MSOD, BArch,
+RATIONALE: Advances in technology, infection control challenges—as with the                  FCCM, Emeritus FAIA & FACHA1
+COVID-19 pandemic—and evolutions in patient- and family-centered care high-              Jodie C. Gary, PhD, RN2
+light ideal aspects of ICU design and opportunities for enhancement.                     Elizabeth Scruth, PhD, MPH, RN, CNS,
+                                                                                             CCRN, CCNS, FCCM, FCNS, CPHQ3
+OBJECTIVES: To provide evidence-based recommendations for clinicians,
+                                                                                         Harry L. Anderson III, MD, FACS, FICS,
+administrators, and healthcare architects to optimize design strategies in new or           FCCM, FCCP, FAIM4
+renovation projects.
+                                                                                         Charles D. Cadenhead, BArch, FCCM,
+PANEL DESIGN: A guidelines panel of 27 members with experience in ICU                      Emeritus FAIA & FACHA5
+design met virtually from the panel’s inception in 2019 to 2024. The panel repre-        Simon J. Oczkowski, MD, MSc, MHSc6
+sented clinical professionals, architects, engineers, and clinician methodologists       Vincent I. Lau, MD, MSc, FRCPC7
+with expertise in developing evidence-based clinical practice guidelines. A formal       Jason Adler, MD, MBA, FCCM, FAAP,
+conflict of interest policy was followed throughout the guidelines-development              FCCP8
+process.                                                                                 Adel Bassily-Marcus, MD, FCCM9
+
+METHODS: Embase, Medline, CINAHL, Central, and Proquest were searched                    Benjamin S. Bassin, MD, FACEP, EDAC10
+from database inception to September 2023. The Grading of Recommendations                Joel Boyd, MBA, BSRT, RCP11
+Assessment, Development, and Evaluation approach was used to deter-                      Katharina M. Busl, MD, MS12
+mine certainty in the evidence and to formulate recommendations, sugges-                 James R. Crabb, PE13
+tions, and practice statements for each Population, Intervention, Control, and           Clifford Harvey, BA, BArch, MSc(HQ),
+Outcomes (PICO) question based on quality of evidence and panel consensus.                   OAA, FRAIC14
+Recommendations were provided when evidence was actionable; suggestions,                 Jason P. Hecht, PharmD, BCPS,
+when evidence was equivocal; and practice statements when the benefits of the               BCCCP, FCCM15
+intervention appeared to outweigh the risks, but direct evidence to support the          Milee Herweijer, Dr.Ir.16
+intervention did not exist.                                                              Kyle J. Gunnerson, MD, FCCM17
+
+RESULTS: The ICU Guidelines panel issued 17 recommendations based on                     Abdullahi S. Ibrahim, RN, CCRN, BNSc18
+15 PICO questions relating to ICU architecture and design. The panel strongly            Craig S. Jabaley, MD, FCCM19
+recommends high-visibility ICU layouts, windows and natural lighting in all pa-          Lewis J. Kaplan, MD, FACS, FCCP,
+tient rooms to enhance sleep and recovery. The panel suggests integrated staff              FCCM20
+break/respite spaces, advanced infection prevention features, and flexible surge         Sarah Monchar, MS, PA-C, MBA, FCCM21
+capacity. Because of insufficient evidence, the panel could not make a recommen-         Andrew Moody, MD22
+dation around in-room supplies, decentralized charting, and advanced heating,            Julie Lindeman Read, DNP, MS, RN,
+ventilation, and air conditioning systems.                                                   NE-BC23
+                                                                                         B. Christian Renne, MD24
+CONCLUSIONS: This ICU design guidelines is intended to provide expert guid-
+ance for clinicians, administrators, and healthcare architects considering erecting      Michael G. Sarosi, MD25
+
+a new ICU or revising an existing structure.                                             Sandra M. Swoboda, DNP, RN, FCCM26
+                                                                                         Kelly A. Thompson-Brazill, DNP,
+KEYWORDS: evidence-based design; guidelines; healthcare design; intensive                   ACNP-BC, FCCM27
+care unit architecture; intensive care unit design                                       Chris L. Wells, PhD, PT, CCS, ATC,
+
+
+
+
+T
+                                                                                            FCCM28
+                                                                                         Diana C. Anderson      , MD, MArch,
+       echnologic advances, infection control challenges—such as those                      FACHA29
+       with the COVID-19 pandemic—and the importance of patient- and
+       family-centered care have served to highlight ideal aspects of ICU                Copyright © 2025 by the Society of
+design and suggest opportunities for enhancement (1, 2). For example,                    Critical Care Medicine and Wolters
+prior Society of Critical Care Medicine (SCCM) design guidelines (1995–                  Kluwer Health, Inc. All Rights
+2012) did not envision remote manipulation of ventilator settings or infu-               Reserved.
+sion pumps (3, 4). Design elements spanning square footage, air handling,                DOI: 10.1097/CCM.0000000000006572
+
+
+e690     www.ccmjournal.org                                                                 March 2025 • Volume 53 • Number 3
+      Copyright © 2025 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 2 ---
+                                                                                                               Special Article
+
+airborne isolation, linkage to electronic and digital           1. ICU LAYOUT
+local or remote systems, as well as ICU organization
+                                                                1.1. Should High-Visibility vs. Low-Visibility
+and layout may be addressed during new construc-
+                                                                Layouts Be Used in ICUs?
+tion, revision of existing critical care space, or the
+conversion of previously non-ICU space to render                One primary determinant of patient visibility is ICU
+critical care. ICU location within a facility may in-           layout, and layouts facilitating ready visualization of
+fluence travel distances to other spaces such as pro-           patients may be more difficult to design and construct.
+cedural areas, satellite pharmacies, and other spaces           The visibility of patients at risk of deterioration is a
+such as elevators, diagnostic, or therapeutic areas             high priority and complements existing monitoring
+such as radiology (i.e., CT scan, MRI scan), the op-            devices, as the sickest patients benefit from early detec-
+erating rooms, cardiac catheterization laboratories,            tion of clinical deterioration (7, 8). Caring for patients
+endoscopy procedure suite, or interventional ra-                in more visible areas may allow staff to more rapidly
+diology. Attention to staff respite areas, as well as           intervene and to recognize when colleagues require as-
+safety and security for patients, families, visitors,           sistance. The panel noted that “visibility” specifically
+and staff is expected (5). Due to substantial shifts            refers to the patient, including their face, monitors,
+in healthcare, SCCM sought to update the 2012 ICU               and bedside alarms, as opposed to the room entryway
+Design Guidelines to provide expert guidance for                or nonpatient care design elements.
+clinicians, administrators, and healthcare architects              A Strong Recommendation was made in favor of
+considering new ICU design or renovation.                       high-visibility layouts, despite a low certainty of ev-
+                                                                idence that evaluated patient safety during critical
+METHODOLOGY                                                     illness. Patients requiring critical care benefit from
+                                                                effective monitoring and rapid team response to
+Since many aspects of ICU design are difficult to eval-         emerging threats as well as adverse events. Although
+uate using commonly applied evidence-based meth-                the certainty of evidence is low, this is a fundamental
+ods, a modified Delphi survey methodology was used              aspect of ICU care. The undesirable effects of high-
+to create a multiprofessional, expert consensus-based           visibility rooms (e.g., reduced privacy) (9) are believed
+set of statements. These guidelines’ construction is            to be minimal by comparison to the anticipated ben-
+based on Grading of Recommendations Assessment,                 efits and may be easily mitigated. ICU design for op-
+Development, and Evaluation (GRADE) guidelines                  timum patient visibility from staff workstations is a
+methodology (6). Fifteen Population, Intervention,              priority regardless of layout.
+Comparator, and Outcomes (PICO) questions related
+to ICU design were explored. Methodology, panel                 1.2. Should Centralized vs. Decentralized
+membership, PICO question-related data (e.g., evi-              Charting Areas Be Used in ICUs?
+dence summaries, evidence-to-decision framework,
+references, search strategy, and recommendation                 Historically, clinical care areas were commonly
+drafting) are detailed in the Supplement Materials              designed with a large, central area with seated work
+(http://links.lww.com/CCM/H668). The findings are               areas for staff to complete charting, documentation,
+intended to provide explicit guidance for new ICU               and other nonclinical tasks. It is uncertain whether
+construction or renovation.                                     ICU designs featuring decentralized staff areas, with
+                                                                multiple locations for charting, are more effective
+                                                                than traditional centralized layouts. Decentralization
+ICU DESIGN RATIONALES FOR                                       may allow staff to remain closer to individual patients
+RECOMMENDATIONS
+                                                                resulting in shorter response times, as well as improved
+Table 1 presents 17 Recommendations for ICU de-                 patient visibility and safety (10). The panel judged the
+sign, including five Good Practice Statements (GPSs),           overall evidence certainty to be low but assessed desir-
+resulting from 15 PICO questions. The panel identified          able and undesirable effects of centralized vs. decen-
+five themes within which to group questions, each of            tralized charting as likely to be closely matched and
+which are detailed below.                                       thus made no recommendation and that either could
+
+
+Critical Care Medicine                                                                      www.ccmjournal.org     e691
+        Copyright © 2025 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 3 ---
+Hamilton et al
+
+
+TABLE 1.
+Summary Recommendations
+ Theme                                    Recommendations                                     Evidence Strength
+
+ ICU layout             1.1. We recommend designing ICUs to have high           Strong recommendation, low certainty evidence
+                              patient visibility.
+                        1.2. Either decentralized or centralized ICUs staff     No recommendation, low certainty evidence
+                              charting areas may be used.
+                        1.3. We suggest ICUs use single-patient rooms           Conditional recommendation, very low certainty
+                              rather than open-bay layouts.                        of evidence
+                        1.4. New facilities should locate critical care units   Good practice statement
+                              as close as possible to frequently used non-
+                              ICU care sites (e.g., surgery, recovery, emer-
+                              gency, imaging, procedural areas) to reduce
+                              transport and adverse patient events.
+ Room design            2.1a. We recommend having windows and natural           Strong recommendation, low certainty of
+                               lighting in all ICU patient rooms.                  evidence
+                        2.1b. We suggest using noise-reduction strategies       Conditional recommendation, very low certainty
+                               (e.g., sound-absorbing tiles) to reduce ambient     of evidence
+                               noise.
+                        2.2. Either in-room or centralized supply room          No recommendation, very low certainty of
+                              location(s) may be used.                             evidence
+ Infection control      3.1. Either advanced HVAC systems or standard           No recommendation, very low certainty of
+                              HVAC systems can be used, depending on the           evidence
+                              resources available and feasibility of implemen-
+                              tation at a given site.
+                        3.2. ICUs should incorporate advanced infection         Good practice statement
+                              prevention features to prevent airborne, water-
+                              borne, and surface-borne transmission.
+
+ Infrastructure         4.1. We suggest designing ICUs with capacity for        Conditional recommendation, very low certainty
+                              monitoring and controlling devices outside of        of evidence
+                              patient rooms.
+                        4.2. We suggest building ICUs using tele-ICU            Conditional recommendation, very low certainty
+                              capacity.                                            of evidence
+                        4.3. ICU designs should plan for surges in patient      Good practice statement
+                              volumes, and this should consider the ICU
+                              space, as well as novel hospital spaces.
+                        4.4. We suggest nonwall-based life support              Conditional recommendation, very low certainty
+                              utility access (e.g., power columns, pendant-        of evidence
+                              mounted booms).
+ Staff space            5.1. We suggest using ergonomic designs in the          Conditional recommendation, very low certainty
+                              ICU both for staff workspaces and patient care       of evidence
+                              areas.
+                        5.2a. ICUs should include dedicated staff break         Good practice statement
+                               rooms.
+                        5.2b. We suggest separate quiet rooms and respite       Conditional recommendation, low certainty of
+                               spaces to promote staff wellbeing.                  evidence
+                        5.3. ICU designs should permit use of mobile            Good practice statement
+                              workstations or devices.
+HVAC = heating, ventilation, and air conditioning.
+
+
+
+e692     www.ccmjournal.org                                                                       March 2025 • Volume 53 • Number 3
+       Copyright © 2025 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 4 ---
+                                                                                                               Special Article
+
+be used. Both approaches carry significant patient and          settings (7, 10, 13–15). Decision-making regarding
+staff safety risks if not carefully implemented.                single-bed vs. multiple bed approaches highlight reali-
+   For either choice, efforts should be made to maxi-           ties such as variables of space, cost, equipment, and
+mize desirable and minimize undesirable effects. The            volume. Costs for each approach will vary significantly
+selected approach is likely to be impacted by ICU layout,       across construction, renovation, and operations. Based
+patient visibility (high priority), staff risk perceptions,     on low certainty data, and variable impacts between
+and available technologies. Many ICUs have both cen-            the two approaches, a conditional recommendation
+tralized and decentralized monitoring. Technological            for single-bed rooms was due to likely reduction of
+considerations may be particularly essential to support         infection, delirium and coma, as well as patient and
+decentralized staff in maintaining effective situational        family satisfaction. In addition to the above, there may
+awareness and support team-based care (e.g., remote             be local infection control requirements for isolation
+monitoring; portable communication devices/alarms;              rooms, based upon the jurisdiction, size, and ICU type
+staff areas). Tele-critical care is discussed in section 4.2.   to consider alongside other aspects of design (16, 17).
+
+1.3. Should Single-Bed Rooms vs. Open Bay                       1.4. Should Designs With Close Proximity vs.
+Layouts Be Used in ICUs?                                        Without Close Proximity to Key Destinations Be
+                                                                Used for ICUs?
+Major differences between single-bed vs. multibed
+rooms—besides square footage and occupancy—may                  Reducing travel distance and transport time for criti-
+be evaluated based on staff and patient impact. While           cally ill patients may reduce adverse event frequency
+single-bed rooms may enhance infection control, they            and staff injury risk; however, structural limitations
+may also complicate care as staff must exit and reen-           within a facility may serve to limit feasible options for
+ter multiple rooms during a typical shift. They fur-            the ICU physical location. Transport out of the ICU
+thermore limit visibility of patients compared with             is a high-risk event for patients, and risk appears re-
+an open layout. Reduced staff and/or family contact             lated to both time and distance (18). Patient transport
+with patients during the COVID-19 pandemic due                  requires substantial resources including monitoring
+to room entry limitations appeared to increase de-              and care devices, therapeutic agents, and clinicians
+lirium and coma risk; however, the evidence is of very          to support safety. Specific transport locations associ-
+low certainty (11). Based on existing data, there is a          ated with increased risk of death included radiology,
+low certainty of impact on family members and staff.            the operating room, and to procedures such as angi-
+Nonetheless, single patient rooms likely enhance pa-            ography and endoscopy (19). These influences persist
+tient and family satisfaction and may support staff             regardless of the complexity or resources available at
+comfort compared with multipatient rooms, especially            the intended destination. Ensuring proximity to key
+if multipatient rooms are a temporary adaptation to             destinations helps enable safe, quality care for all ICU
+surge volume. Single patient rooms offer higher levels          patients (20). It is desirable that ICU location within a
+of privacy and enhance the confidentiality of patient           facility reflects deliberate support of patient care pri-
+and family conversations with clinicians.                       orities vs. other factors (e.g., cost, aesthetics). Based
+    Adverse event risk perception or occurrence can             on this indirect evidence, a GPS was made to priori-
+drive clinician anxiety, especially in complex care             tize locating ICUs near key resources to reduce patient
+environments. A study of adverse events in an ICU               transport time.
+that transited from multibed to single occupancy
+single ICU rooms documented significant decreases               2. ROOM DESIGN
+in unforeseen cardiac arrest but significant increases
+in unplanned extubation; nine other potential adverse           2.1. Should Rooms With Environmental
+                                                                Features to Enhance Sleep and Recovery (Light
+events (e.g., falls, pressure ulcers) were not impacted by
+                                                                and Noise Mitigation, Natural Lighting) vs.
+room occupancy (12). Evidence for the effect of single-
+                                                                Standard Rooms Be Used in ICUs?
+bed rooms on adverse events is of very low certainty.
+Clinician survey data suggest that staff experience             Light and noise mitigation are priorities as ICU environ-
+more difficulty observing patients in single-bed room           ments commonly disrupt natural sleep cycles, promote
+
+Critical Care Medicine                                                                      www.ccmjournal.org     e693
+        Copyright © 2025 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 5 ---
+Hamilton et al
+
+delirium, and impede recovery. Incorporating natural           conditioning (HVAC) designs may include increased
+lighting, circadian lighting, and noise mitigation could       airflow or ventilation rates, incorporation of ultraviolet
+reduce sleep disruption (21–24). While early studies of        light, additional filtration beyond that required by the
+windows suggested a beneficial impact upon mortality           American Society of Heating, Refrigerating and Air-
+and delirium, effects remain unclear. Given the obser-         Conditioning Engineers (29) for natural ventilation,
+vational nature of the research, confounding risks and         and/or use of 100% outside air. While evidence sug-
+imprecise effect estimates, the panel assigned a low           gests there may be some benefit to advanced HVAC
+certainty of evidence for access to window views and/          systems to reduce pathogens, the impact of those
+or natural lighting on mortality, delirium, and venti-         systems on infections, morbidity, mortality, or other
+lator or ICU length of stay (25–28). Windows views             important patient-relevant outcomes remains uncer-
+are inherently desirable as they reduce the clinical           tain (30–32). Advanced HVAC system costs may be
+character of the setting, reflect current patient, family,     substantial, and there may be difficulties with adop-
+and staff expectations and are encoded in existing ICU         tion and use in some institutions as well as resource-
+standards. Therefore, a Strong Recommendation was              limited settings. There was insufficient evidence to
+made supporting windows in patient rooms.                      make a recommendation for or against using advanced
+   Studies of specific-design related features to address      HVAC systems.
+ICU noise mitigation were not identified. Noise can-
+celing ceiling tiles may enhance patient rest and staff        3.2. Should Advanced Infection Prevention
+communication (21). Common ICU noise sources in-               Features vs. No Advanced Infection Prevention
+clude staff activity and conversation, furniture move-         Features Be Used in ICUs?
+ment, other patients, visitors, and monitor and device
+alarms. Because alarms often exceed the World Health           Advanced infection prevention features may include
+Organization decibel standards they are associated             antimicrobial surfaces, specific handwashing sink
+with impaired sleep hygiene (22). The panel agreed             designs, location of personal protective equipment
+that the effect of ICU design noise mitigation strategies      (PPE), dedicated donning and doffing spaces, and
+warranted a very low certainty of evidence assessment          cleaning protocols. The evidence reviewed highlighted
+due to quite limited study data.                               nosocomial infection as a challenging source of mor-
+                                                               bidity and mortality in the ICU (33). There is no strong
+                                                               evidence supporting the efficacy of any single infection
+2.2. Should In-Room Supplies vs. Centralized
+                                                               control and prevention measure to address nosocomial
+Supply Rooms Be Used in ICUs?
+                                                               infection. While it is unclear which single advanced in-
+The panel found multiple facility specific approaches          fection prevention and control feature is most effective,
+to address this question. Given that very low empir-           the cumulative effect of multiple simultaneous inter-
+ical evidence was found to suggest the superiority of          ventions to mitigate nosocomial colonization, infec-
+one approach over the other, no recommendation was             tion, and localized outbreaks is anticipated to be large.
+made and that either in-room or centralized routine            Nonetheless, the interventions are designed to reduce
+supplies may be successfully used to support bedside           the likelihood of nosocomial pathogen acquisition and
+patient care.                                                  subsequent infection, especially in those with immune
+                                                               compromise. Guidance regarding interventions in-
+3. INFECTION CONTROL                                           cluded: 1) reducing or clearing pathogen bioburden
+                                                               (30, 34, 35); 2) improving hand hygiene compliance
+3.1. Should Advanced Heating, Ventilation, and                 (36–38); 3) attention to sink location, splash guard
+Air Conditioning Designs vs. Standard Heating,
+                                                               use, and water filter emplacement (39–42); 4) appro-
+Ventilation, and Air Conditioning Designs Be
+                                                               priate space for PPE (43); 5) pathogen-reducing or
+Used in ICUs?
+                                                               surface-cleaning enabling surface materials (44–48);
+The COVID-19 pandemic brought efforts to mit-                  and 6) the impact of push-plate door handles (49).
+igate respiratory transmission of pathogens into               Most interventions demonstrate face validity and
+sharper focus. Advanced heating, ventilation, and air          appear to reduce microbe counts on surfaces as well
+
+
+e694     www.ccmjournal.org                                                                  March 2025 • Volume 53 • Number 3
+       Copyright © 2025 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 6 ---
+                                                                                                               Special Article
+
+as patient colonization by antimicrobial resistant or           community and rural hospitals where rapid access to
+multidrug-resistant organism pathogens.                         critical care specialists may be problematic (52, 53).
+   Given the large potential harms associated with
+nosocomial infection, the panel established a GPS for           4.3. Should Flexible Surge Capacity vs. No
+planners to incorporate advanced infection prevention           Specific Design for Surge Capacity Be Used in
+features to prevent airborne, waterborne, and surface           ICUs?
+borne transmission. Such interventions should ideally
+occur in conjunction with local infection control and           We recommend ICU designs plan for surges in patient
+prevention clinicians experienced in assessing out-             volumes, whether this is done within the ICU or using
+break patterns and sources.                                     other unconventional spaces. The COVID-19 pan-
+                                                                demic highlighted the unpredictability of critical care
+                                                                needs and the importance of being able to rapidly aug-
+4. INFRASTRUCTURE                                               ment bed capacity to address patient volume surges.
+4.1. Should Outside-Room Monitoring and                         Surge capacity includes equipment, staff, and the ICU
+Control of Devices vs. Inside-Room Only                         physical infrastructure (i.e., beds or care locations).
+Monitoring and Control of Devices Be Used in                    While comparison studies of surge capacity were not
+ICUs?                                                           identified, strategies to rapidly increase capacity in-
+Technological advances have made it possible for                cluded: 1) cohorting multiple patients within a single
+ICU equipment to be monitored, documented, and                  room (54, 55); 2) using novel spaces for patient care
+controlled from outside the patient room. During                (56, 57); 3) leveraging resources across health systems
+the COVID-19 pandemic, this became an impor-                    such as load balancing across sites (58); 4) deploying
+tant consideration for frontline staff safety and effi-         monitors to increase observation capability (56); and
+ciency, while supporting infection control practices            5) emplacing portable high-efficiency particulate air
+and reducing PPE use. The ability to monitor and                filters to improve airborne isolation room complement
+control devices outside ICU rooms demonstrates face             (59). Additionally, staff augmentation may occur using
+validity as a beneficial intervention but is devoid of          a tiered-staffing structure where ICU clinicians guide
+robust evidence supporting efficacy (50). Overall flex-         teams of non-ICU clinicians to provide critical care
+ibility, safety, and convenience favor having monitor           during surges (60).
+and device control capacity duplicated outside the                  Surge planning requires acquisition, storage, and
+room. Such an approach should consider the impact               intermittent deployment of resources beyond those
+of locating staff further away from the patient dur-            required for usual care. Resources, along with space
+ing care episodes. When using remote interventions,             constraints, are likely to widely vary between sites.
+patient visibility and staff access to the care space are       COVID-19 pandemic surge challenges included in-
+essential.                                                      sufficient supply of medical gasses, suction, monitors,
+                                                                electrical outlets, and space for respite or dining while
+                                                                preserving interpersonal distances, equipment storage
+4.2. Should Advanced Remote Monitoring (e.g.,
+                                                                space in novel care zones, PPE storage, as well as don-
+Tele-Critical Care) vs. Usual Care Be Used in
+                                                                ning and doffing zones. Electrical outlets may be more
+ICUs
+                                                                readily increased in comparison to outlets for medical
+Tele-ICU programs may reduce mortality and ICU                  grade gasses (56, 59). Surge-driven space constraints,
+length of stay (51). Staffing costs may be high, but in-        especially in novel spaces, may limit care when mul-
+frastructure costs need not be financially prohibitive          tiple devices must be present at the same time (e.g.,
+based upon specific equipment and platform selec-               ventilator, continuous renal replacement therapy de-
+tions. It may be more difficult to install tele-ICU in-         vice, multiple medication infusion pumps). Novel
+frastructure after occupancy, especially if new wiring          space conversion should be specifically anticipated
+(including power) needs to be installed. The panel              to address anticipated challenges in unfamiliar loca-
+made a Conditional Recommendation for incor-                    tions, impaired sightlines, and nonstandard storage
+porating tele-critical care capability, particularly in         solutions.
+
+
+Critical Care Medicine                                                                      www.ccmjournal.org     e695
+        Copyright © 2025 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 7 ---
+Hamilton et al
+
+
+4.4. Should Nonwall-Based Access vs. Wall-                     nourishment, team education, as well as team bonding.
+Based Life Support Utilities Access Be Used in                 Accordingly, such spaces may promote staff well-being.
+ICUs?                                                             The panel made two recommendations. First, in-
+                                                               cluding dedicated staff break rooms that provided
+Wall-based support utilities, including power and
+                                                               storage lockers, washrooms with showers, and nutri-
+medical gas configurations, often require the bed to be
+                                                               tion areas arose as a GPS. An additional consideration
+moved away from the wall to access the head of the
+                                                               is to locate the break room within or near the ICU in
+patient (61). The clinical impact of nonwall-based life
+                                                               a space with windows for natural light. Second, the
+support systems is uncertain but may be substantial
+                                                               panel crafted a Conditional Recommendation for less
+in terms of flexibility. The potential advantage should
+                                                               essential “wellness rooms” or ‘respite spaces’ as prom-
+be balanced against greater cost compared with tradi-
+                                                               ising complements to break rooms, noting that there is
+tional headwall systems. Flexibility is anticipated to be
+                                                               limited evidence to support this as a routine practice
+valued by all users during usual and high-intensity ICU
+                                                               (65, 66).
+care (62). A boom configuration is likely the most flex-
+ible, but engenders more cost compared with a fixed
+column approach (63). The panel made a Conditional             5.3. Should Mobile Workstations or
+Recommendation for nonwall-based access, recogniz-             Combination Workstations vs. Fixed
+                                                               Workstations Be Used in ICUs?
+ing that there is no consensus regarding the specific
+design. Life support utility design and selection should       Computers are integral to healthcare documenta-
+occur in conjunction with end-users and related stake-         tion and clinical practice. Contemporaneous bedside
+holders to be congruent with usual practice while              access to laboratory results, diagnostic imaging, and
+addressing potential unanticipated needs.                      other elements of the electronic health record are rou-
+                                                               tine aspects of bedside care. Mobile devices that move
+5. STAFF SPACE                                                 in and out of isolation spaces present an infection con-
+                                                               trol issue and drive the need for in-room charting ca-
+5.1. Should Ergonomic Features vs. Usual
+                                                               pability. Workstations-on-wheels (WOWs) require
+Designs Be Used for ICUs?
+                                                               certain accommodations based on their size, charg-
+Staff workplace injuries are an issue in ICUs. There is        ing needs, and wireless network connectivity (66–68).
+limited and very low certainty of evidence for ergonom-        Wider hallways and common areas for rounds and
+ically designed structures and devices in the ICU, such        teamwork may need to accommodate staff utilizing
+as common ergonomic devices like adjustable desks,             WOWs. A GPS recommendation favors the use of mo-
+monitors, footrests, chairs, and other height-adjustable       bile devices.
+components. While there is insufficient evidence for a
+recommendation and ergonomically designed devices              UNADDRESSED ASPECTS OF ICU
+are more costly than standard ones, they may help re-          DESIGN
+duce injury, increase efficiency, enhance staff satisfac-
+tion, and reduce fatigue. In combination, each of these        The 15 PICO question limit left a wide variety of rele-
+benefits may also improve staff retention (64).                vant ICU design domains unexplored.
+                                                                  Key domains include but are not limited to: 1) room
+                                                               size, 2) family accommodations (visiting vs. sleeping),
+5.2. Should Integrated Break/Respite Space vs.
+                                                               3) service animal accommodations, 4) dedicated pro-
+Nonintegrated Break/Respite Spaces Be Used
+in ICUs?                                                       cedure rooms (with or without lead shielding), 5) lo-
+                                                               cation of administrative leadership space (inside or
+Staff satisfaction, burnout, and clinical performance          outside but adjacent), 6) ICU layout (straight, pods,
+may be influenced by the design, usability, and im-            rectangular, other), 7) total room number, 8) location
+pact provided by nonworkspaces, such as break                  of call rooms, 9) work spaces for allied health profes-
+rooms, breast pumping space, and respite areas. Break          sionals, 10) flooring materials, 11) location of sinks
+rooms are often multifunctional, providing space for           and toilets, 12) integrated shower in each room vs. no
+
+
+e696     www.ccmjournal.org                                                                  March 2025 • Volume 53 • Number 3
+       Copyright © 2025 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 8 ---
+                                                                                                                  Special Article
+
+shower or limited showers, 13) type of privacy accom-           are not addressed. Nonetheless, general principles for
+modations (drapery vs. on-demand window frosting,               considering ICU design are likely translatable to fixed
+14) location of care teams (on unit vs. within a closed         structures. Mobile critical care spaces are not covered
+core), 15) education supporting conference room(s),             herein and likely reflect military priorities instead of
+16) family consultation room(s), 17) methods of unit            ones relevant for civilian clinicians. Since only English
+access control, 18) signage (fixed, mobile, electronic),        language manuscripts were included, relevant studies
+and 19) ICU carbon footprint and waste manage-                  published in other languages would not inform guide-
+ment. Other design elements may be pursued that re-             lines development.
+flect unique site needs or constraints such as those in
+resource-limited or austere settings as well as general         CONCLUSIONS
+vs. specialty ICUs. Finally, it remains unclear how each
+of the guidelines recommendations or practice state-            These guidelines addresses aspects of current ICU
+ments will influence care and outcomes for patients,            de­sign to inform planning of new or renovated
+families, and staff. Each aspect merits specific focused        ICUs. It serves as a complement to recommendations
+inquiry.                                                        addressed in SCCM’s 2012 ICU design guidelines (4).
+                                                                The expert guidance reflects the impact of key drivers
+                                                                of bedside critical care delivery including technolog-
+LIMITATIONS                                                     ical advances, infection control imperatives, patient
+GRADE-based methodology has been used for these                 care exigencies, staff well-being, and challenges
+guidelines, which is a different approach from ear-             brought by the COVID-19 pandemic. Additional
+lier ICU Design Guidelines (3, 4). The systematic re-           areas of ICU design-relevant research are noted and
+view identified, at best, literature of low certainty, and      may drive future inquiry.
+most commonly literature of very low certainty, and
+occasionally areas deemed important by the panel                ACKNOWLEDGMENTS
+but with no relevant literature to evaluate. A paucity
+                                                                We thank Katryn Campbell and Karin Dearness, MLIS
+of high-quality research systematically evaluating the
+                                                                (St. Joseph’s Healthcare Hamilton, Hamilton, ON,
+impact of ICU design elements on clinical or patient-
+                                                                Canada) for development and peer review of the elec-
+important outcomes also impacted the panel’s strength
+                                                                tronic search strategies. Also, we thank you to those
+of evidence assessment in many domains, resulting in
+                                                                who helped with screening and data extraction: Mark
+only two Strong Recommendations. Although system-
+                                                                Hewitt, Julia Bidonde, Kate Kim, Kelly Nelson, and
+atic evaluation of the literature is an important element
+                                                                Fahad Siddiqui.
+of ideal guidelines development, future ICU design
+guidelines efforts will likely continue to require incor-
+porating expert opinion to craft guidance that is use-            1 Texas A&M University, College Station, TX.
+ful to individuals, teams, and organizations engaged in           2 College of Nursing, Texas A&M University Health Science
+                                                                    Center, Bryan, TX.
+ICU design work.
+                                                                  3 Northern California Safety, Quality and Regulatory Services—
+   Unlike other guidelines, public nonclinical input                Kaiser Foundation Hospital and Health Plan, Oakland, CA.
+was not sought as the major focus was ICU design                  4 Department of Surgery, Trinity Health Livonia, Livonia, MI.
+and not ICU use. SCCM’s 2017 Family-Centered                      5 Retired consultant, Houston, TX.
+Care guidelines (69) is currently under revision and              6 Department of Medicine, Department of Health Research
+is anticipated to inform how such care interfaces with              Methods, Evidence, and Impact, McMaster University,
+ICU design and use elements. Forthcoming SCCM                       Hamilton, ON, Canada.
+work products will separately address environmental               7 Department of Critical Care Medicine, Faculty of Medicine
+                                                                    and Dentistry, University of Alberta, Edmonton, AB, Canada.
+responsibility and sustainability in the ICU, which
+                                                                  8 Pediatric Intensive Care Unit and Pediatric Complex Care,
+may impact later green ICU design recommendations.
+                                                                    Joe DiMaggio Children’s Hospital, Hollywood, FL.
+These guidelines may not reflect design priorities in
+                                                                  9 Department of Surgery, Icahn School of Medicine at Mount
+some specialty ICUs. Additionally, specific adapta-                 Sinai, Institute for Critical Care Medicine, Mount Sinai
+tions for resource-limited or austere environments                  Health System, New York, NY.
+
+
+Critical Care Medicine                                                                        www.ccmjournal.org     e697
+        Copyright © 2025 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 9 ---
+Hamilton et al
+
+10 Department of Emergency Medicine, Division of Critical              COI forms are available from the SCCM and are updated on
+   Care, University of Michigan Health System, Ann Arbor, MI.          a regular basis. Dr. Anderson reports grant funding from the
+11 Pulmonary Clinical Services, The Permanente Medical                 Alzheimer’s Association (AACSF-22-923724) related to the
+   Group, Sacramento, CA.                                              design of community spaces for older adults and innovation
+                                                                       funding from Mass General Brigham related to ICU design and
+12 Departments of Neurology & Neurosurgery, University of
+                                                                       delirium; she received funding from Ovid BP. Dr. Oczkowski re-
+   Florida, College of Medicine, Gainesville, FL.
+                                                                       ceived funding from Fisher & Paykel. Dr. Bassin received funding
+13 Mazzetti, Inc., Atlanta, GA.                                        from CannonDesign. Dr. Busl received funding from the National
+14 Grand River Hospital & St. Mary’s General Hospital,                 Institute of Neurological Disorders and Stroke and the National
+   Kitchener, ON, Canada.                                              Institutes of Health (NIH) (U01NS124613 [AWD14238],
+15 Department of Pharmacy, Trinity Health Ann Arbor, Ann               NIH R01NS120924 [AWD10089]) related to management
+   Arbor, MI.                                                          of headache for patients with acute subarachnoid hemorrhage
+                                                                       in the ICU and the American Academy of Neurology; she dis-
+16 Wiegerinck Architects, Arnhem, The Netherlands.                     closed that she is Associate Editor for Critical Care Medicine.
+17 Departments of Emergency Medicine, Anesthesiology and               Dr. Kaplan disclosed he is Chair, Scientific Review panel for
+   Internal Medicine, University of Michigan, Ann Arbor, MI.           the Congressionally Directed Medical Review Panel; a partici-
+18 Intensive Care Unit, Aminu Kano Teaching Hospital, Kano,            pant in a Centers for Disease Control and Prevention funded
+   Nigeria.                                                            exploration of hospital room features to improve infection control;
+                                                                       and he is a past-President of the SCCM, an Associate Editor
+19 Department of Anesthesiology and the Emory Critical Care
+                                                                       for Critical Care Explorations, and an editorial board member of
+   Center, Emory University, Atlanta, GA.
+                                                                       Critical Care Medicine. Dr. Gunnerson serves on the Council of
+20 Division of Trauma, Surgical Critical Care and Emergency            the SCCM. Dr. Jabaley is an editorial board member of Critical
+   Surgery, Perelman School of Medicine, University of                 Care Medicine and Critical Care Explorations. Dr. Swoboda
+   Pennsylvania, Philadelphia, PA.                                     serves on Board of American College of Critical Care Medicine.
+21 Division of Trauma Surgical Critical Care and Injury                The remaining authors have disclosed that they do not have any
+   Prevention, Department of Surgery, Hackensack University            potential conflicts of interest.
+   Medical Center, Hackensack, NJ.                                     For information regarding this article, E-mail: diana.anderson@
+22 Pulmonary/Critical Care, The Permanente Medical Group,              dochitect.com
+   Fremont, CA.
+                                                                       The Society of Critical Care Medicine guidelines are intended for
+23 National Patient Care Services, Kaiser Foundation Health            general information only, are not medical advice, and do not replace
+   Plan, Oakland, CA.                                                  medical professional advice, which should be sought for any med-
+24 Division of Trauma, Emergency Surgery, Surgical Critical            ical condition. The full disclaimer for guidelines can be accessed at:
+   Care, Massachusetts General Hospital, Boston, MA.                   https://sccm.org/Clinical-Resources/Guidelines/Guidelines.
+25 Interventional Radiology/Department of Radiology, Trinity           The American College of Critical Care Medicine (ACCM), which
+   Health Ann Arbor, Ann Arbor, MI.                                    honors individuals for their achievements and contributions to
+26 Johns Hopkins University Schools of Medicine and Nursing,           multidisciplinary critical care medicine, is the consultative body
+   Baltimore, MD.                                                      of the Society of Critical Care Medicine, which possesses rec-
+                                                                       ognized expertise in the practice of critical care. The ACCM
+27 Georgetown University School of Nursing, Washington, DC.
+                                                                       has developed administrative guidelines and clinical practice
+28 Department of Rehabilitation Services, University of                parameters for the critical care practitioner. New guidelines and
+   Maryland Medical Center, Baltimore, MD.                             practice parameters are continually developed, and current ones
+29 Department of Neurology, Boston University, Boston, MA.             are systematically reviewed and revised. Librarian services, sys-
+Supplemental digital content is available for this article. Direct     tematic review, and analysis for these guidelines were provided
+URL citations appear in the printed text and are provided in the       contractually through the Guidelines in Intensive Care Medicine,
+HTML and PDF versions of this article on the journal’s website         Development and Evaluation Group, McMaster University,
+(http://journals.lww.com/ccmjournal).                                  Canada. Methodologists served as expert panel members spe-
+                                                                       cializing in this area.
+Funding for this guideline was provided solely by the Society of
+Critical Care Medicine.
+Society of Critical Care Medicine (SCCM) required all guideline
+task force members to attest to a declaration of interest statement    REFERENCES
+including all current and past financial conflicts of interest (COI)
+                                                                        1. Alhazzani W, Evans L, Alshamsi F, et al: Surviving sepsis cam-
+within 2 years before joining the guideline development process.
+                                                                           paign guidelines on the management of adults with corona-
+No task force members reported any financial COI related to
+                                                                           virus disease 2019 (COVID-19) in the ICU: First update. Crit
+the development and writing of the guideline. All members were
+                                                                           Care Med 2021; 49:e219–e234
+allowed to participate in all discussions and had equal weight
+in formulating the statements and voting. We allowed members            2. Mikkelsen ME, Devlin JW: The A2F bundle: Quantity and
+to exclude themselves from discussion and voting around spe-               quality matter. Crit Care Med 2021; 49:380–382
+cific questions if they felt important academic COI. There was          3. Guidelines for Intensive Care Unit Design: Guidelines/prac-
+no input or funding from industry to produce this guideline. The           tice parameters committee of the American College of Critical
+
+
+e698     www.ccmjournal.org                                                                              March 2025 • Volume 53 • Number 3
+       Copyright © 2025 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 10 ---
+                                                                                                                                 Special Article
+
+    Care Medicine, Society of Critical Care Medicine. Crit Care            21. Blomkvist V, Eriksen CA, Theorell T, et al: Acoustics and psy-
+    Med 1995; 23:582–588                                                       chosocial environment in intensive coronary care. Occup
+ 4. Thompson DR, Hamilton DK, Cadenhead CD, et al:                             Environ Med 2005; 62:e1
+    Guidelines for intensive care unit design. Crit Care Med 2012;         22. Padmakumar AD, Bhasin V, Wenham TN, et al: Evaluation
+    40:1586–1600                                                               of noise levels in intensive care units in two large teaching
+ 5. Bass GA, Chang CWJ, Winkle JM, et al: In-hospital violence                 hospitals—a prospective observational study. JCIS 2013;
+    and its impact on critical care practitioners. Crit Care Med               14:205–210
+    2024; 52:1113–1126                                                     23. Jung S, Kim J, Lee J, et al: Assessment of noise exposure and
+ 6. Guyatt GH, Oxman AD, Vist GE, et al; GRADE Working Group:                  its characteristics in the intensive care unit of a tertiary hos-
+    GRADE: An emerging consensus on rating quality of evidence                 pital. Int J Environ Res Public Health 2020; 17:4670
+    and strength of recommendations. BMJ 2008; 336:924–926                 24. Lucchini A, Giani M, Ferrari K, et al: Sound and light levels in a
+ 7. Apple MA: Comparative evaluation of Swedish intensive care                 general intensive care unit without windows to provide natural
+    patient rooms. HERD 2014; 7:78–93                                          light. Dimens Crit Care Nurs 2023; 42:115–123
+ 8. Lu Y, Wang Y: Design characteristics of acute care units in            25. Jafarifiroozabadi R, Joseph A, Bridges W, et al: The impact of
+    China. HERD 2014; 8:81–93                                                  daylight and window views on length of stay among patients
+ 9. McCallum A, McConigley R: Nurses’ perceptions of caring for                with heart disease: A retrospective study in a cardiac intensive
+    dying patients in an open critical care unit: A descriptive ex-            care unit. J Intensive Med 2023; 3:155–164
+    ploratory study. Int J Palliat Nurs 2013; 19:25–30                     26. Shepley MM, Gerbi RP, Watson AE, et al: The impact of daylight
+10. Rashid M, Khan N, Jones B: Physical and visual accessibilities             and views on ICU patients and staff. HERD 2012; 5:46–60
+    in intensive care units: A comparative study of open-plan and          27. Verceles AC, Liu X, Terrin ML, et al: Ambient light levels and
+    facetrack units. Crit Care Nurs Q 2016; 39:313–334                         critical care outcomes. J Crit Care 2013; 28:110.e1–e8
+11. Pun BT, Badenes R, Heras La Calle G, et al; COVID-19 Intensive         28. Wise PM, Wallace DS: Direct sunlight and ventilator weaning
+    Care International Study Group: Prevalence and risk factors for            outcomes. Holist Nurs Pract 2012; 26:350–355
+    delirium in critically ill patients with COVID-19 (COVID-D): A mul-    29. American Society of Heating, Refrigerating and Air-
+    ticentre cohort study. Lancet Respir Med 2021; 9:239–250                   Conditioning Engineers: ANSI/ASHRAE/ASHE 170
+12. Álvarez-Maldonado P, Hernández-Ríos G, Reding-Bernal A, et                 Standard: Standards for Natural and Mechanical Ventilation.
+    al: Adverse events in a new intensive care unit. Influence of              2021. Available at: https://webstore.ansi.org/standards/
+    healthcare facilities design and technology on incidence rates.            ashrae/ansiashraeashe1702021. Accessed June 14, 2024
+    Gac Med Mex 2019; 155:613–618                                          30. Arıkan I, Genç O, Uyar C, et al: Effectiveness of air purifiers in
+13. Lin FF, Chaboyer W, Foster M, et al: Facilitating the relocation           intensive care units: An intervention study. J Hosp Infect 2022;
+    of an intensive care unit from shared room to single room set-             120:14–22
+    ting: Staff perceptions on the effectiveness of a multicompo-          31. Anghel L, Popovici CG, Stătescu C, et al: Impact of HVAC-
+    nent intervention. Aust Crit Care 2019; 32:279–284                         systems on the dispersion of infectious aerosols in a car-
+14. Rashid M, Khan N, Jones B: Perceptual effects of physical                  diac intensive care unit. Int J Environ Res Public Health 2020;
+    and visual accessibilities in intensive care units: A quasi-               17:6582
+    experimental study. Crit Care Nurs Q 2018; 41:197–214                  32. Emmanuel U, Osondu ED, Kalu KC: Architectural design strat-
+15. Saha S, Noble H, Xyrichis A, et al: Staff experiences of work-             egies for infection prevention and control (IPC) in health-care
+    ing on a new critical care unit during the COVID 19 pandemic.              facilities: Towards curbing the spread of Covid-19. J Environ
+    JCIS 2022:67–68                                                            Health Sci Eng 2020; 18:1699–1707
+16. McKibben L, Horan T, Tokars JI, et al; Heathcare Infection             33. Abdul-Mutakabbir JC, Griffith NC, Shields RK, et al:
+    Control Practices Advisory Committee: Guidance on public re-               Contemporary perspective on the treatment of acineto-
+    porting of healthcare-associated infections: Recommendations               bacter baumannii infections: Insights from the Society of
+    of the healthcare infection control practices advisory commit-             Infectious Diseases Pharmacists. Infect Dis Ther 2021;
+    tee. Am J Infect Control 2005; 33:217–226                                  10:2177–2202
+17. NHS England: HBN 04-02 Critical Care Units: Planning and               34. Blazejewski C, Wallet F, Rouzé A, et al: Efficiency of hydrogen
+    Design. 2021. Available at: https://www.england.nhs.uk/pub-                peroxide in improving disinfection of ICU rooms. Crit Care
+    lication/critical-care-units-planning-and-design-hbn-04-02/.               2015; 19:30
+    Accessed August 4, 2024                                                35. Cutts T, Kasloff S, Safronetz D, et al: Decontamination of com-
+18. Bristol AA, Schneivader CE, Lin S-Y, et al: A systematic review            mon healthcare facility surfaces contaminated with SARS-
+    of clinical outcomes associated with intrahospital transitions. J          CoV-2 using peracetic acid dry fogging. J Hosp Infect 2021;
+    Healthc Qual 2020; 42:175–187                                              109:82–87
+19. Murata M, Nakagawa N, Kawasaki T, et al: Adverse events dur-           36. Ashley ML, van de Bruinhorst K, Olson D, et al: Improving hand
+    ing intrahospital transport of critically ill patients: A systematic       hygiene compliance in hospital care. Crit Care Med 2015;
+    review and meta-analysis. Am J Emerg Med 2022; 52:13–19                    43:227–228
+20. Knight PH, Maheshwari N, Hussain J, et al: Complications               37. Radhakrishna K, Waghmare A, Ekstrand M, et al: Real-time
+    during intrahospital transport of critically ill patients: Focus on        feedback for improving compliance to hand sanitization among
+    risk identification and prevention. Int J Crit Illn Inj Sci 2015;          healthcare workers in an open layout ICU using radiofre-
+    5:256–264                                                                  quency identification. J Med Syst 2015; 39:68
+
+
+Critical Care Medicine                                                                                     www.ccmjournal.org     e699
+        Copyright © 2025 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 11 ---
+Hamilton et al
+
+38. Levin PD, Golovanevski M, Moses AE, et al: Improved ICU              53. Ward MM, Ullrich F, Potter AJ, et al: Factors affecting staff
+    design reduces acquisition of antibiotic-resistant bacteria:             perceptions of tele-ICU service in rural hospitals. Telemed J E
+    A quasi-experimental observational study. Crit Care 2011;                Health 2015; 21:459–466
+    15:R211                                                              54. Al-Dorzi HM, Aldawood AS, Almatrood A, et al: Managing crit-
+39. Chico-Sánchez P, Gras-Valentí P, Algado-Sellés N, et al:                 ical care during COVID-19 pandemic: The experience of an
+    Effectiveness of the systematic use of antimicrobial filters             ICU of a tertiary care hospital. J Infect Public Health 2021;
+    in the water taps of critical care units for the prevention of           14:1635–1641
+    healthcare-associated infections with Pseudomonas aerugi-            55. Huang JH, Chang HT, Liao CH, et al: Rapid response of a
+    nosa. Am J Infect Control 2022; 50:435–439                               medical center upon the surge of COVID-19 epidemic in
+40. Diorio-Toth L, Wallace MA, Farnsworth CW, et al: Intensive care          Taiwan. J Microbiol Immunol Infect 2022; 55:1–5
+    unit sinks are persistently colonized with multidrug resistant       56. Cammarota G, Ragazzoni L, Capuzzi F, et al: Critical care surge
+    bacteria and mobilizable, resistance-conferring plasmids.                capacity to respond to the COVID-19 pandemic in Italy: A
+    mSystems 2023; 8:e0020623                                                rapid and affordable solution in the Novara hospital. Prehosp
+41. Schneider JS, Froböse NJ, Kuczius T, et al: Sink drains in a             Disaster Med 2020; 35:431–433
+    neonatal intensive care unit: A retrospective risk assessment        57. Oakley C, Pascoe C, Balthazor D, et al; QEHB COVID-19
+    and evaluation. Int J Environ Res Public Health 2023; 20:6692            Response Team: Assembly line ICU: What the long shops
+42. Sukhum KV, Newcomer EP, Cass C, et al: Antibiotic-resistant              taught us about managing surge capacity for COVID-19. BMJ
+    organisms establish reservoirs in new hospital built environ-            Open Qual 2020; 9:e001117
+    ments and are related to patient blood infection isolates.           58. Duggal A, Orsini E, Mireles-Cabodevila E, et al: Surge capacity
+    Commun Med (Lond) 2022; 2:62                                             and capability of intensive care units across a large healthcare
+43. Machry H, Matić Z, Oh Y, et al: Healthcare design to improve             system: An operational blueprint for regional integration. Am J
+    safe doffing of personal protective equipment for care of                Disaster Med 2021; 16:179–192
+    patients with COVID-19. Infect Control Hosp Epidemiol 2022;          59. O’Donoghue SC, Donovan B, Anderson J, et al: Doubling in-
+    43:1796–1805                                                             tensive care unit capacity by surging onto medical-surgical
+44. Chen See J, Ly T, Shope A, et al: A metatranscriptomics survey           units during the COVID-19 pandemic. Dimens Crit Care Nurs
+    of microbial diversity on surfaces post-intervention of cleanS-          2021; 40:345–354
+    URFACES® technology in an intensive care unit. Front Cell            60. Harris GH, Baldisseri MR, Reynolds BR, et al: Design for im-
+    Infect Microbiol 2021; 11:705593                                         plementation of a system-level ICU pandemic surge staffing
+45. Widmer AF, Kuster S, Dangel M, et al: Long-term antimicrobial            plan. Crit Care Explor 2020; 2:e0136
+    effectiveness of a silver-impregnated foil on high-touch hos-        61. Pati D, Evans J, Waggener L, et al: An exploratory examination
+    pital surfaces in patient rooms. Antimicrob Resist Infect Control        of medical gas booms versus traditional headwalls in intensive
+    2021; 10:120                                                             care unit design. Crit Care Nurs Q 2008; 31:340–356
+46. Esolen LM, Thakur L, Layon AJ, et al: The efficacy of self-          62. Evans J, Reyers E: Patient room considerations in the inten-
+    disinfecting bedrail covers in an intensive care unit. Am J Infect       sive care unit: Caregiver, patient, family. Crit Care Nurs Q 2014;
+    Control 2018; 46:417–419                                                 37:83–92
+47. Souli M, Antoniadou A, Katsarolis I, et al: Reduction of envi-       63. Hamilton DK: Horseshoe, cockpit, and dragonfly: Nurse move-
+    ronmental contamination with multidrug-resistant bacteria by             ment in headwall patient rooms. Crit Care Nurs Q 2019; 42:47–52
+    copper-alloy coating of surfaces in a highly endemic setting.        64. Coskun Beyan A, Dilek B, Demiral Y: The effects of multifac-
+    Infect Control Hosp Epidemiol 2017; 38:765–771                           eted ergonomic interventions on musculoskeletal complaints
+48. Schmidt MG, Attaway HH, Fairey SE, et al: Self-disinfecting              in intensive care units. Int J Environ Res Public Health 2020;
+    copper beds sustain terminal cleaning and disinfection                   17:3719
+    effects throughout patient care. Appl Environ Microbiol 2019;        65. Iqbal SA, Abubakar IR: Hospital outdoor spaces as respite
+    86:e01886–e01819                                                         areas for healthcare staff during the COVID-19 pandemic.
+49. Wojgani H, Kehsa C, Cloutman-Green E, et al: Hospital door               HERD 2022; 15:343–353
+    handle design and their contamination with bacteria: A real          66. Jacques JPB, Ribeiro RP, Scholze AR, et al: Wellness room as
+    life observational study. Are we pulling against closed doors?           a strategy to reduce occupational stress: Quasi-experimental
+    PLoS One 2012; 7:e40171                                                  study. Rev Bras Enferm 2018; 71:483–489
+50. Dain S, Rausch T, Goldman J, et al: Demonstration of remote          67. Rashid M: Developing scales to evaluate staff perception of
+    control of critical care ventilators and the integrated clinical         the effects of the physical environment on patient comfort, pa-
+    environment. Anesth Analg 2023; 136:83                                   tient safety, patient privacy, family integration with patient care,
+51. Spies CD, Paul N, Adrion C, et al; ERIC Study Group:                     and staff working conditions in adult intensive care units: A
+    Effectiveness of an intensive care telehealth programme to               pilot study. Crit Care Nurs Q 2007; 30:271–283
+    improve process quality (ERIC): A multicentre stepped wedge          68. Toivonen R, Choi D-S, Nevala N: Ergonomics product develop-
+    cluster randomised controlled trial. Intensive Care Med 2023;            ment of a mobile workstation for health care. J Usability Stud
+    49:191–204                                                               2011; 7:40–50
+52. Iwashita Y, Ishigame-Kitayama A, Yamamoto A, et al: The experi-      69. Davidson JE, Aslakson RA, Long AC, et al: Guidelines for
+    ence and the characteristics of patients with tele-ICU implemen-         family-centered care in the neonatal, pediatric, and adult ICU.
+    tation in a rural community hospital. Cureus 2023; 15:e41971             Crit Care Med 2017; 45:103–128
+
+
+
+e700     www.ccmjournal.org                                                                                 March 2025 • Volume 53 • Number 3
+        Copyright © 2025 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+

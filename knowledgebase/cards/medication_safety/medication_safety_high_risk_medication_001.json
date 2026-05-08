@@ -1,0 +1,67 @@
+{
+  "related_risk_types": [],
+  "allowed_use": [
+    "risk explanation",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "automatic diagnosis",
+    "treatment order",
+    "drug dose recommendation",
+    "automatic treatment decision"
+  ],
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "card_id": "medication_safety_high_risk_medication_001",
+  "source_id": "medication_safety_icu_001",
+  "source_title": "Clinical Practice Guideline: Safe Medication Use in the ICU",
+  "domain": "medication_safety",
+  "subdomain": "high_risk_medications",
+  "population": "mixed",
+  "card_type": "medication_safety_context",
+  "topic": "High-risk medications require safety process review",
+  "clinical_context": "Use when an intervention tracker sees high-alert medication processes or infusion-related safety concerns.",
+  "key_points": [
+    "The guideline notes that errors with high-risk medications may increase harm in ICU patients.",
+    "Double checks and other safety processes are discussed as system-level safeguards, not as autonomous agent actions."
+  ],
+  "trigger_signals": [
+    "high-risk medication",
+    "high-alert medication",
+    "infusion",
+    "possible overdose",
+    "administration concern"
+  ],
+  "used_by_agents": [
+    "InterventionTrackerAgent",
+    "ClinicalSummaryAgent"
+  ],
+  "retrieval_keywords": [
+    "high-risk medication",
+    "high-alert medication",
+    "double check",
+    "infusion",
+    "ADE"
+  ],
+  "intervention_types": [
+    "infusion",
+    "high-alert medication process",
+    "administration check"
+  ],
+  "observation_targets": [
+    "adverse drug event",
+    "medication error",
+    "patient harm signal"
+  ],
+  "response_language": [
+    "High-risk medication events should be summarized for clinician review without dosing advice."
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 18,
+    "section_title": "High-risk medication sections",
+    "quote": "high-risk medications may increase"
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "related_risk_types": [],
+  "allowed_use": [
+    "clinician-reviewed summary",
+    "family communication draft",
+    "ethical context"
+  ],
+  "forbidden_use": [
+    "direct prognosis announcement",
+    "treatment withdrawal recommendation",
+    "futility judgment",
+    "automatic treatment decision"
+  ],
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "card_id": "end_of_life_goals_of_care_context_001",
+  "source_id": "adult_eol_icu_2025_001",
+  "source_title": "SCCM Clinical Practice Guidelines on Adult End-of-Life Care in the ICU",
+  "domain": "end_of_life_ethics",
+  "subdomain": "goals_of_care",
+  "population": "adult",
+  "card_type": "ethical_policy",
+  "topic": "Goals of care and adult ICU end-of-life context",
+  "clinical_context": "Use when summarizing end-of-life communication context for clinician review.",
+  "key_points": [
+    "The guideline states that multidisciplinary end-of-life care in the ICU is crucial.",
+    "It frames decision-making, conflict mitigation, suffering, and end-of-life capacity as important adult ICU care issues."
+  ],
+  "trigger_signals": [
+    "goals of care discussion",
+    "end-of-life care",
+    "family meeting",
+    "unattainable goals"
+  ],
+  "used_by_agents": [
+    "CompassionAgent",
+    "PatientMemoryAgent",
+    "ClinicalSummaryAgent",
+    "WardCoordinatorAgent"
+  ],
+  "retrieval_keywords": [
+    "end-of-life",
+    "goals of care",
+    "shared decision-making",
+    "family meeting",
+    "suffering"
+  ],
+  "requires_clinician_approval": true,
+  "not_for_direct_family_delivery": true,
+  "family_friendly_language": [
+    "The team may ask what matters most to the patient so care discussions can reflect their values."
+  ],
+  "professional_preview_language": [
+    "EOL context: consider documented goals, decision-maker, symptom burden, and conflict risk."
+  ],
+  "phrases_to_avoid": [
+    "There is nothing left to do.",
+    "Care is futile."
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 2,
+    "section_title": "Introduction",
+    "quote": "assist with decision-making, mitigate conflict"
+  }
+}

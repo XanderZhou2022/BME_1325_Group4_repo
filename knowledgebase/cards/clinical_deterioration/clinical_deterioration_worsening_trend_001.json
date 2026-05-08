@@ -1,0 +1,65 @@
+{
+  "related_risk_types": [
+    "persistent_shock_risk",
+    "respiratory_failure_risk",
+    "aki_risk"
+  ],
+  "allowed_use": [
+    "risk explanation",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "automatic diagnosis",
+    "treatment order",
+    "drug dose recommendation",
+    "automatic treatment decision"
+  ],
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "card_id": "clinical_deterioration_worsening_trend_001",
+  "source_id": "clinical_deterioration_rapid_response_2024_001",
+  "source_title": "SCCM Guidelines on Recognizing and Responding to Clinical Deterioration Outside the ICU",
+  "domain": "clinical_deterioration",
+  "subdomain": "trend_escalation",
+  "population": "mixed",
+  "card_type": "risk_background",
+  "topic": "Worsening clinical trend",
+  "clinical_context": "Use when multiple measurements suggest new deterioration or failure to improve after an intervention.",
+  "key_points": [
+    "Clinical deterioration is described as potentially reversible morbidity and mortality when recognized and responded to early.",
+    "Focused education for bedside clinicians in signs of deterioration is suggested by the panel.",
+    "Use this card to explain why trend-based alerts should be reviewed by humans."
+  ],
+  "trigger_signals": [
+    "sustained abnormal vital signs",
+    "new deterioration",
+    "failure to improve after intervention"
+  ],
+  "direct_risk_source": false,
+  "risk_use_note": "General deterioration source only; does not define shock, ARDS, respiratory failure, or AKI.",
+  "used_by_agents": [
+    "BedsideMonitorAgent",
+    "RiskSentinelAgent",
+    "InterventionTrackerAgent",
+    "PatientMemoryAgent"
+  ],
+  "retrieval_keywords": [
+    "worsening trend",
+    "clinical deterioration",
+    "failure to improve",
+    "escalation",
+    "risk sentinel"
+  ],
+  "time_window_hint": "Prefer repeated evidence in last 1-6 hours depending on agent configuration.",
+  "allowed_summary_language": [
+    "The recent trajectory appears worse and should be interpreted by the clinical team."
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 3,
+    "section_title": "Rationale / Results",
+    "quote": "Clinical deterioration of patients hospitalized outside the ICU is a source of potentially reversible morbidity and mortality."
+  }
+}

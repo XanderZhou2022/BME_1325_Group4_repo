@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "icu_agent.computational_concept.schema.json",
+  "type": "object",
+  "required": [
+    "concept_id",
+    "card_id",
+    "source_id",
+    "concept_name",
+    "domain",
+    "card_type",
+    "topic",
+    "concept_type",
+    "purpose",
+    "inputs",
+    "outputs",
+    "used_by_agents",
+    "allowed_use",
+    "forbidden_use",
+    "retrieval_keywords",
+    "evidence_location",
+    "confidence",
+    "human_review_required",
+    "last_updated"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "concept_id": {"type": "string"},
+    "card_id": {"type": "string"},
+    "source_id": {"type": "string"},
+    "concept_name": {"type": "string"},
+    "domain": {"const": "computational_concepts"},
+    "card_type": {"const": "scoring_context"},
+    "topic": {"type": "string"},
+    "concept_type": {"type": "string"},
+    "purpose": {"type": "string"},
+    "inputs": {"type": "array", "items": {"type": "string"}},
+    "outputs": {"type": "array", "items": {"type": "string"}},
+    "used_by_agents": {"type": "array", "items": {"type": "string"}},
+    "allowed_use": {"type": "array", "items": {"type": "string"}},
+    "forbidden_use": {"type": "array", "items": {"type": "string"}},
+    "retrieval_keywords": {"type": "array", "items": {"type": "string"}},
+    "evidence_location": {
+      "type": "object",
+      "required": ["page_start", "page_end", "section_title", "quote"],
+      "properties": {
+        "page_start": {"type": "integer", "minimum": 1},
+        "page_end": {"type": "integer", "minimum": 1},
+        "section_title": {"type": "string"},
+        "quote": {"type": "string"}
+      }
+    },
+    "confidence": {"enum": ["high", "medium", "low"]},
+    "human_review_required": {"const": true},
+    "last_updated": {"type": "string"}
+  }
+}

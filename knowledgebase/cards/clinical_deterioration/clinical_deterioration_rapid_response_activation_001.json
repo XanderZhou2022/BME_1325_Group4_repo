@@ -1,0 +1,61 @@
+{
+  "related_risk_types": [
+    "persistent_shock_risk",
+    "respiratory_failure_risk",
+    "aki_risk"
+  ],
+  "allowed_use": [
+    "risk explanation",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "automatic diagnosis",
+    "treatment order",
+    "drug dose recommendation",
+    "automatic treatment decision"
+  ],
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "card_id": "clinical_deterioration_rapid_response_activation_001",
+  "source_id": "clinical_deterioration_rapid_response_2024_001",
+  "source_title": "SCCM Guidelines on Recognizing and Responding to Clinical Deterioration Outside the ICU",
+  "domain": "clinical_deterioration",
+  "subdomain": "rapid_response",
+  "population": "mixed",
+  "card_type": "escalation_principle",
+  "topic": "Rapid response system activation criteria",
+  "clinical_context": "Use when alerts imply the patient may need additional help or urgent bedside review.",
+  "key_points": [
+    "The panel recommends hospital-wide rapid response or medical emergency teams with explicit activation criteria.",
+    "Rapid response systems should include quality-improvement processes.",
+    "This card supports escalation wording, not automatic activation or clinical decision replacement."
+  ],
+  "trigger_signals": [
+    "acute deterioration",
+    "explicit RRT criteria met",
+    "staff concern",
+    "family concern"
+  ],
+  "direct_risk_source": false,
+  "used_by_agents": [
+    "BedsideMonitorAgent",
+    "RiskSentinelAgent",
+    "WardCoordinatorAgent",
+    "ClinicalSummaryAgent"
+  ],
+  "retrieval_keywords": [
+    "rapid response",
+    "RRT",
+    "medical emergency team",
+    "activation criteria",
+    "escalation"
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 3,
+    "section_title": "Results / Responding to clinical deterioration",
+    "quote": "hospital-wide deployment of a rapid response team or medical emergency team"
+  }
+}

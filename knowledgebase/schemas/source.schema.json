@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "icu_agent.source.schema.json",
+  "type": "object",
+  "required": ["source_id", "filename", "title", "domain", "population", "source_type", "priority", "used_by_agents", "use_now", "human_review_required", "notes"],
+  "additionalProperties": true,
+  "properties": {
+    "source_id": {"type": "string"},
+    "filename": {"type": "string"},
+    "title": {"type": "string"},
+    "domain": {"enum": ["clinical_deterioration", "triage_resource_allocation", "padis_sedation_delirium", "medication_safety", "end_of_life_ethics", "family_communication", "icu_design_context", "computational_concepts", "general_icu_operations"]},
+    "population": {"enum": ["adult", "pediatric", "mixed", "general"]},
+    "source_type": {"enum": ["clinical_guideline", "policy_statement", "scoring_system", "design_guideline", "computational_reference", "manual_reference"]},
+    "priority": {"enum": ["P0", "P1", "P2"]},
+    "used_by_agents": {"type": "array", "items": {"type": "string"}},
+    "use_now": {"type": "boolean"},
+    "human_review_required": {"const": true},
+    "notes": {"type": "string"}
+  }
+}

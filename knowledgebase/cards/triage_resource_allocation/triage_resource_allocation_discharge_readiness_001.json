@@ -1,0 +1,61 @@
+{
+  "related_risk_types": [],
+  "allowed_use": [
+    "risk explanation",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "automatic diagnosis",
+    "treatment order",
+    "drug dose recommendation",
+    "automatic treatment decision"
+  ],
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "card_id": "triage_resource_allocation_discharge_readiness_001",
+  "source_id": "adult_icu_admission_triage_001",
+  "source_title": "ICU Admission, Discharge, and Triage Guidelines",
+  "domain": "triage_resource_allocation",
+  "subdomain": "icu_discharge",
+  "population": "adult",
+  "card_type": "icu_operations_context",
+  "topic": "ICU discharge readiness and resource utilization",
+  "clinical_context": "Use when summarizing possible transfer readiness for human bed management review.",
+  "key_points": [
+    "The guideline discusses ICU discharge decisions in relation to lower level of care availability, prognosis, physiologic stability, and ongoing active interventions.",
+    "This card cannot be used to automatically discharge a patient."
+  ],
+  "trigger_signals": [
+    "possible ICU discharge",
+    "bed pressure",
+    "lower level of care available",
+    "stable trend"
+  ],
+  "used_by_agents": [
+    "WardCoordinatorAgent",
+    "ClinicalSummaryAgent"
+  ],
+  "retrieval_keywords": [
+    "ICU discharge",
+    "readiness",
+    "bed management",
+    "resource utilization",
+    "lower level of care"
+  ],
+  "priority_factors": [
+    "physiologic stability",
+    "active interventions",
+    "lower level care resources",
+    "readmission risk"
+  ],
+  "resource_context": "Use as background for bed-flow summaries.",
+  "fairness_or_ethics_note": "Discharge prompts require clinician and institutional review.",
+  "evidence_location": {
+    "page_start": 6,
+    "page_end": 25,
+    "section_title": "Discharge criteria",
+    "quote": "discharge from the ICU is appropriate"
+  }
+}

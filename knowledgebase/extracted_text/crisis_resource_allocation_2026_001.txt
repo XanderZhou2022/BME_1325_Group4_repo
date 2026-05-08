@@ -1,0 +1,707 @@
+
+--- Page 1 ---
+March 2026 • Volume 54 • Number 3 • Pages 619–629
+
+
+
+
+         SPECIAL ARTICLE
+
+       Society of Critical Care Medicine Guidelines
+       for the Allocation of Critical Care Resources to
+       Adults During Crisis-Level Shortages
+                                                                                                  Joseph L. Nates , MD, MBA,
+       RATIONALE: Efficient distribution of scarce critical care resources is essential              CMQ, MCCM (Chair)1
+       to save the most lives in times of crisis. Evidence-based practices and processes          Namita Jayaprakash, MB BCh
+       enhance clinical decision-making.                                                            BAO, MRCEM (Vice-Chair)2
+       OBJECTIVES: The objective of these guidelines was to develop evidence-based,               Kallirroi Laiya Carayannopoulos,
+       rather than expert-based, recommendations for triaging critically ill patients eli-          MD, MSc(c), FRCPC3
+       gible for ICU admission during times of crisis-level shortages in ICU capacity.            Kimia Honarmand, MD, PhD3
+       DESIGN: The American College of Critical Care Medicine Board convened a                    George L. Anesi, MD, MSCE, FCCM4
+       21-member multidisciplinary panel, comprising doctors in medicine, nursing, and            Lisa Bartlett Davis, BSc5
+       law; advanced practice providers; respiratory therapists; ethicists; and patient/          Megan E. Brunson, MSN, RN,
+       family representatives. The panel included two expert methodologists specialized             CCRN-CSC, CNL, FCCM6
+       in developing evidence-based recommendations in alignment with the Grading of
+                                                                                                  Leon L. Chen, DNP, AGACNP-BC,
+       Recommendations, Assessment, Development, and Evaluation (GRADE) meth-                       FCCM7
+       odology. Conflict-of-interest policies were strictly followed during all phases of
+                                                                                                  Michael D. Christian, MD, MSc,
+       guidelines development including task force selection and voting.                             MBA, FRCPC, DRCPSC, CCPE,
+       METHODS: The panel members identified and formulated five fundamental                         FCCM8
+       Patient, Intervention, Comparator, and Outcomes questions. The panel conducted             Maryluz Fuentes, MD, MSPH9
+       a systematic review for each question to identify the best available evidence, ana-        John J. Gallagher, DNP, RN,
+       lyzed the evidence, and assessed the certainty of the evidence using the GRADE                CCNS, CCRN-K, TCRN, CHSE,
+       methodology. The GRADE evidence-to-decision framework was used to formu-                      RRT, FCCM10
+       late the recommendations. Good practice statements were included to provide                Christopher G. Harrod, MS11
+       additional guidance.
+                                                                                                  Valerie Gutmann Koch, JD12
+       RESULTS: The panel generated one conditional recommendation and five no                    William S. Miles, MD, FCCM13
+       recommendation statements.
+                                                                                                  Tsuyoshi Mitarai, MD, FACEP,
+       CONCLUSIONS: Crisis-level shortages significantly disrupt patient care. Despite               FAAEM14
+       the role of triage in minimizing adverse outcomes, there is a lack of evidence, as         Aliza M. Narva, JD, MSN, RN,
+       opposed to expert opinion, to guide practice recommendations in the critical clin-            HEC-C15
+       ical scenarios considered by the panel.                                                    Charles L. Sprung, MD, JD, MCCM16
+       KEYWORDS: adults; clinical practice guidelines; intensive care unit; resource              Susan Stempek, MSc, MBA,
+       allocation; surge capacity; triage                                                           PA-C, FCCM17
+                                                                                                  Janice L. Zimmerman, MD, MCCM18
+
+
+
+
+       T
+                                                                                                  Bryan Boling, AGACNP-BC, DNP,
+               riage is the complex process of prioritizing the allocation of critical               FCCM (Vice-Chair)19,20
+               resources, and it is essential during situations involving crisis-level            Corinna Sicoutris, MSN,
+               shortages in the ICU (1). Crisis-level shortages refer to severe deficits            ACNP-BC, FCCM (Chair)21
+       of essential resources and services—including products (e.g., blood, ventila-
+       tors), personnel (e.g., respiratory therapists, nurses), and facilities (e.g., ICU
+       beds)—that drastically affect the delivery of care to critically ill patients. ICU         Copyright © 2026 by the Society
+                                                                                                  of Critical Care Medicine. All Rights
+       capacity is the maximum number of patients that an ICU can accommodate                     Reserved.
+       while maintaining a high level of specialized care and monitoring. The capacity
+                                                                                                  DOI: 10.1097/CCM.0000000000006998
+       of an ICU depends on multiple factors, such as physical space, availability of
+       Critical Care Medicine                                                                       www.ccmjournal.org     619
+               Copyright © 2026 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 2 ---
+Nates et al
+
+medical equipment, staffing levels, and the expertise           Table 1. The panel rated the relative importance of
+of healthcare professionals. Prioritizing patients also         each outcome to determine which outcomes were crit-
+requires managing these resources (e.g., patient-flow           ical or important for decision-making. A summary
+and other system inefficiencies) through a process              of the searched outcomes for all PICO questions is
+called flow-sizing, or matching capacity and demand             presented in Table S2 (https://links.lww.com/CCM/
+to ensure that all patients receive appropriate care            H862). The panel performed an extensive review of
+(2, 3).                                                         the scientific literature through November 2, 2023, to
+   In 1994, the Society of Critical Care Medicine               retrieve articles that addressed the PICO questions.
+(SCCM) Ethics Committee established the basic prin-             The search was conducted by a medical librarian using
+ciples of triage (e.g., meet ICU admission criteria,            MEDLINE, Embase, CENTRAL, ClinicalTrials.gov,
+expected survival benefit) (4). These principles have           and World Health Organization International Clinical
+remained valid to this day. In 2016, a SCCM taskforce           Trials Registry Platform (Preferred Reporting Items
+updated the 1999 ICU admission and triage guidelines            for Systematic reviews and Meta-Analyses diagrams,
+(5) and made extensive recommendations (6). In an               Figs. S1–S4, https://links.lww.com/CCM/H862, are
+effort to continuously improve the triage process, the          provided, as well as the search strategies and queries in
+updating of these guidelines was undertaken. Other              the Supplemental Materials, https://links.lww.com/
+key definitions are included in Table S1 (https://links.        CCM/H862). Search results were then uploaded to
+lww.com/CCM/H862).                                              Covidence for screening, full-text review, and data ex-
+                                                                traction (7).
+                                                                   Data extraction and risk of bias assessment was
+METHODOLOGY
+                                                                performed independently and in duplicate by two ex-
+In 2023, the American College of Critical Care                  perienced methodologists using pre-piloted forms.
+Medicine, the consultative body of SCCM, commis-                Conflicts were resolved by discussion between meth-
+sioned a panel of experts in critical care medicine to          odologists until consensus was reached. The risk of
+develop focused, evidence-based recommendations                 bias for randomized controlled trials (RCTs) was
+for triaging critically ill patients eligible for ICU ad-       assessed using the Cochrane Risk of Bias 2 for RCTs
+mission during times of crisis-level shortages in ICU           (8) and Clinical Advances through Research and
+capacity. This taskforce included physicians, advanced          Information Translation (CLARITY; McMaster
+practice providers, nurses, respiratory therapists, an          University, Hamilton, ON, Canada, 2025) tool for ob-
+ethicist, and other allied health and/or administrative         servational studies (9). Meta-analyses were performed
+professionals. Additionally, two methodologists from            on the outcomes of interest where possible, for each
+the Guidelines in Intensive Care Development and                PICO question using a web-based meta-analysis plat-
+Evaluation Group of McMaster University supported               form (10). Data that could not be quantitatively pooled
+guidelines development. Members of the panel were               or outcomes with insufficient studies to analyze were
+required to disclose conflicts of interest (COI) per the        summarized narratively.
+SCCM’s COI policy. COI was assessed at each phase                  The clinical practice recommendations were
+of the guidelines process and at every panel meeting.           then developed according to the Grading of
+Panel members with a relevant COI were excluded                 Recommendations, Assessment, Development, and
+from voting on the recommendation.                              Evaluation process (11). The Evidence-to-Decision
+   The panel conducted a systematic review of the               framework was completed by the panel using GradePro
+published scientific literature, focusing on patient-           software (12) for each PICO to develop a draft rec-
+oriented, clinically relevant outcomes to answer                ommendation considering the balance of desirable
+Patient, Intervention, Comparator, and Outcomes                 and undesirable effects, certainty of the evidence, re-
+(PICO) questions regarding the triage of critically ill         source considerations, feasibility, acceptability, and
+adults in the ICU. For each PICO question, the panel            equity considerations (see Supplemental Materials,
+identified three subgroups of interest: 1) normal op-           https://links.lww.com/CCM/H862, for evidence-
+erations, 2) short-term, and 3) long-term crisis-level          to-decision worksheets). Recommendations had to
+shortages. The final PICO questions are presented in            receive at least 80% consensus agreement by at least
+
+620     www.ccmjournal.org                                                                   March 2026 • Volume 54 • Number 3
+     Copyright © 2026 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 3 ---
+                                                                                                                              Special Article
+
+
+TABLE 1.
+ICU Triage Patient, Intervention, Comparator, and Outcomes Questions
+ Question 1. In situations of limited ICU bed availability for critically ill adult patients, should clinician judgment for
+  prioritization of admission be used over time-based admission to ICU?
+ Population                                       Intervention                           Comparator               Outcomes
+ Adult critically ill patients                    Clinician judgment (de-                Time-based               See Supplemental
+   (age ≥ 18 yr old defined by an ICU               fined as use of physician              admission                Materials and
+   admission request or order as per                assessment, patient fac-               (first-come,             Table S2 (https://
+   local hospital processes                         tor based, or severity of              first-served)            links.lww.com/
+ Setting: Limited ICU bed                           illness) system or strategy            to ICU                   CCM/H862)
+   availability as defined by included              for prioritization of admis-           (patients that
+   studies                                          sions to the ICU                       “meet ICU
+                                                                                           criteria” are
+ Subgroups of interest                                                                     admitted in
+  1) Normal operational surge condi-                                                      the order of
+      tions (> 90% of ICU beds are                                                         arrival or re-
+      occupied)                                                                            ferral to ICU)
+  2) Short-lived disasters
+      (hurricanes, etc)
+  3) Longer-term disasters
+      (pandemics, etc)
+ Question 2. In situations of limited ICU bed availability for critically ill adult patients, should a formal triage tool be used
+  vs. no triage tool?
+ Population                                       Intervention                           Comparator               Outcomes
+ Adult critically ill patients (age ≥ 18 yr       Objective triage tool (e.g.,           No objective             See Supplemental
+   old defined by an ICU admission re-             Sequential Organ Failure                triage tool              Materials and
+   quest or order as per local hospital            Assessment)                                                      Table S2 (https://
+   processes                                                                                                        links.lww.com/
+ Setting: Limited ICU bed availability as         Intervention subgroups of                                         CCM/H862)
+   defined by included studies                       interest (subject to data
+                                                     availability):
+ Subgroups of interest                              1) Triage system using
+                                                        machine learning/arti-
+                                                        ficial intelligence
+  1) Normal operational surge condi-               2) Diagnosis-based
+      tions (> 90% of ICU beds are
+      occupied)
+  2) Short-lived disasters                         3) Other specific triage
+      (hurricanes, etc)                                 tools
+  3) Longer-term disasters
+      (pandemics, etc)
+ Question 3A. In situations of limited ICU bed availability for critically ill adult patients, should patients awaiting an ICU
+  bed be transferred to another facility?
+ Question 3B. For patients not transferred to another facility, should hospitals with ICUs have a designated
+  non-ICU area that is prepared to board ICU patients during surge conditions vs. no designated non-ICU
+  area?
+                                                                                                                                (Continued)
+
+
+
+
+Critical Care Medicine                                                                                   www.ccmjournal.org     621
+          Copyright © 2026 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 4 ---
+Nates et al
+
+
+TABLE 1. (Continued)
+ICU Triage Patient, Intervention, Comparator, and Outcomes Questions
+ Population                                         Intervention                         Comparator                Outcomes
+ Adult critically ill patients (age ≥ 18 yr old     Interfacility transfer of patients   No interfacility          See Supplemental
+   defined by an ICU admission request or                                                  transfer                  Materials
+   order as per local hospital processes)                                                                            and Table S2
+ Setting: Limited ICU bed availability as                                                                            (https://links.
+   defined by included studies                                                                                       lww.com/CCM/
+                                                                                                                     H862)
+ Subgroups of interest
+  1) Normal operational surge conditions
+  2) Short-lived disasters (hurricanes, etc)
+  3) Longer-term disasters (pandemics, etc)
+ Hospitals with ICUs                                Having a designated non-ICU area     Standard care (no         See Supplemental
+                                                      that is prepared in advance of       designated non-           Materials
+                                                      surges to board ICU patients         ICU area)                 and Table S2
+                                                      during surge conditions                                        (https://links.
+ Setting: Limited ICU bed availability as de-       Potential subgroups:                                             lww.com/CCM/
+   fined by included studies                                                                                         H862)
+ Subgroups of interest                                1) ED (e.g., ED-ICU)
+  1) Normal operational surge conditions             2) Designated overflow areas
+                                                          (e.g., post-anesthesia care
+                                                          unit, operating room, inter-
+                                                          mediate care unit, etc)
+  2) Short-lived disasters (hurricanes, etc)         3) Specialty ICUs where
+  3) Longer-term disasters (pandemics,                   admitting diagnosis is
+      etc)                                                discordant to the specialty
+                                                          (e.g., chronic obstructive
+                                                          pulmonary disease exacer-
+                                                          bation admitted to surgical
+                                                          ICU), if available.
+
+ Question 4. In situations of limited ICU bed availability for critically ill adult patients, should patients boarded in non-ICU care
+  areas be managed by ICU trained practitioners or by the usual practitioners for that area (i.e., emergency medicine physi-
+  cian, anesthesiologist, hospitalist)?
+ Population                                         Intervention                         Comparator                Outcomes
+ Adult critically ill patients (age ≥ 18 yr old     Managed by usual ICU                 Managed by non-ICU See Supplemental
+   defined by an ICU admission request or            practitioners                         practitioners (e.g.,     Materials
+   order as per local hospital processes)                                                  ED, anesthesiolo-        and Table S2
+                                                                                           gist, hospitalists, etc) (https://links.
+ Setting: Patients boarded outside ICU                                                   Non-ICU practi-            lww.com/CCM/
+                                                                                           tioners super-           H862)
+                                                                                            vised by ICU
+                                                                                            practitioners
+ Question 5. During situations of limited ICU bed availability, in critically ill patients at high risk of dying in the ICU, should palli-
+  ative care services be involved early vs. at the usual clinician discretion?
+ Population                                         Intervention                         Comparator                Outcomes
+ Critically ill patients at high risk of dying in the Early involvement of palliative    Routine or no involve- See Supplemental
+   ICU during situations of limited ICU capacity        care service                       ment of palliative     Materials and
+ Setting: Limited ICU bed availability as                                                  care service           Table S2 (https://
+   defined by included studies                                                                                    links.lww.com/
+                                                                                                                  CCM/H862)
+ED = emergency department.
+
+622     www.ccmjournal.org                                                                              March 2026 • Volume 54 • Number 3
+     Copyright © 2026 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 5 ---
+                                                                                                               Special Article
+
+75% of the panel to be approved. These clinical prac-              Given the ethical and logistical complexity in-
+tice guidelines reflect the state of knowledge at the           volved in prioritizing ICU admissions, designing a
+time of publication.                                            study to address this PICO question poses significant
+                                                                challenges, as it would require controlled, real-time
+RECOMMENDATIONS                                                 decision-making across diverse clinical contexts, which
+                                                                may be unattainable and ethically impossible to over-
+Each recommendation statement was assigned a                    come. However, this question could potentially be
+strength (“Strong” or “Conditional”). A “Strong” rec-           explored through mathematical models applied to
+ommendation is one that clinicians should follow for            large, retrospectively or more likely prospectively col-
+nearly all patients (i.e., something that might qualify         lected datasets, utilizing pre-set rules to minimize se-
+as a quality measure). A “Conditional” recommenda-              lection bias, and factoring in bed capacity constraints
+tion reflects a lower degree of certainty in the appro-         to reflect real-world ICU dynamics more accurately.
+priateness of the patient care strategy. It requires that       One simulation study, using operational modeling and
+the clinician use clinical knowledge and expertise and          queueing theory with data generated from a single-
+strongly considers the individual patient’s values and          center ICU, attempted to address this problem (18).
+preferences to determine the best course of action.             The investigators considered first come, first served
+                                                                with specific thresholds to admit those with survival
+PICO 1. Clinician Judgment Vs. Time-Based                       advantage, or first come, first served with incremental
+Admission                                                       survival advantage and adjusting dynamically accord-
+                                                                ing to bed availability. A 1.2% marginal improvement
+We make no recommendation regarding the use of
+                                                                was reported with the more complex dynamic model.
+clinician judgment over time-based prioritization
+                                                                This study suggests that utilizing large triage multistudy
+for ICU admission in situations of limited ICU bed
+                                                                databases (19) applying mathematical models assisted
+availability due to insufficient evidence.
+                                                                by recently introduced artificial intelligence tools may
+   Rationale. During surge conditions, determining
+                                                                be one solution to this question in the future (18).
+an effective ICU admission prioritization method is
+essential to optimize patient outcomes. Clinician judg-
+                                                                PICO 2. Use of Objective Triage Tool
+ment incorporating all basic components of triage
+(13, 14), the time-based first come, first served or a          We make no recommendation regarding the use of a
+combination of these two methods are the most often             formal triage tool vs. no use of a triage tool in situa-
+used strategies. Understanding who benefits from                tions of limited ICU bed capacity due to insufficient
+ICU admission, which would further inform clinician             evidence.
+judgment-based approaches, is incredibly challenging                Rationale. Application of an objective or formal
+due to profound confounding and scant randomized                tool to the process of triaging patients to the ICU has
+trial data because of significant ethical issues and lo-        the potential benefit of enhancing consistency and
+gistical barriers. Instead, complex causal inference            fairness, reducing variation in practice, and minimiz-
+methods have been used with much work still to be               ing the potential for bias. Proposed frameworks for
+performed (6, 15–17).                                           triage have suggested approaches using eligibility or
+   A total of 1572 articles were screened with 78 meet-         prioritization criteria to serve as tools for this process
+ing full-text eligibility. The panel did not find any           (20). Consensus-derived objective criteria related to
+clinical studies directly addressing which of the two           vital signs and admission criteria have been proposed,
+approaches—clinician judgment or first come, first              although there is no clear single objective tool that has
+served—is the most effective during surge conditions.           emerged (6). The panel sought to understand whether
+The absence of direct evidence to address this question         a formal triage tool should be used vs. no triage tool in
+stems from the fact that, in real-world clinical prac-          situations of limited ICU bed availability for critically
+tice, clinicians use a combination of time-based and            ill adult patients.
+clinical judgment-based inputs, which are difficult to              A total of 572 articles were screened with 82 meet-
+quantify. Consequently, we were unable to make an               ing full-text eligibility. The panel further evaluated
+evidence-based recommendation.                                  eight studies (21–28) that potentially addressed the
+
+Critical Care Medicine                                                                       www.ccmjournal.org     623
+          Copyright © 2026 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 6 ---
+Nates et al
+
+application of a formal triage tool. Ultimately, these          to other patients affected by bed shortages at the origi-
+studies provided no direct evidence to support the              nating hospital or the effect of transfer on the receiving
+PICO question. These studies did not meet inclusion             facility’s resources and care standards. It is not known
+criteria because true surge conditions were not tested,         how the variability of ICU capacity constraints across
+non-ICU patients were included, outcomes for mor-               health systems and the potential influence of health
+tality predictiveness rather than triage decisions were         system structure (e.g., public vs. private), patient payor
+tested, and objective tools unrelated to triage or ICU          status, and geographical and transportation access to
+admission were used.                                            alternative facilities affect access to transfer or the de-
+                                                                cision itself. Transfer feasibility also varies significantly
+PICO 3a. Boarding of Patients When No ICU                       during short-term disasters, such as severe weather
+Space Available                                                 events, or prolonged crises, such as pandemics, high-
+We make no recommendation regarding the transfer                lighting the need for case-by-case decision-making.
+of ICU patients to another facility in the setting of           The panel judged that the resources required to facil-
+limited ICU bed capacity due to insufficient evi-               itate interfacility transfer are large. These could not
+dence with very low certainty.                                  only impede transfer but also create unfairness in the
+   Rationale. Limited ICU bed availability poses a              process. A study of the interregional transfers during
+critical challenge for hospitals. During crisis-level           the COVID-19 pandemic coordinated by the French
+shortages, clinicians are often compelled to consider           Regional Health Authority demonstrated a signifi-
+interfacility transfer as an option to secure appropriate       cant lower likelihood of transferring patients requir-
+care for critically ill patients. However, evidence guid-       ing noninvasive ventilation/high-flow oxygen therapy,
+ing this decision remains scarce.                               prone invasive mechanical ventilation, renal replace-
+   The panel screened a total of 620 articles with 51           ment therapy, extracorporeal membrane oxygenation,
+meeting full-text eligibility and one included as sup-          and even having higher Charlson Comorbidity Index
+porting evidence. A nonrandomized study by Duke                 (30). The panel was uncertain about whether the in-
+and Green (29) found no significant difference in mor-          tervention would be acceptable to stakeholders or fea-
+tality between 73 patients who underwent interfacility          sible to implement. Insurance coverage may adversely
+transfer (18; 24.7%) compared with 73 patients who              impact patients with low social economic status
+did not (13; 17.8%; Fig. S5, https://links.lww.com/             (evidence-to-decision worksheet, Table S4, https://
+CCM/H862). They reported a mean increase in length              links.lww.com/CCM/H862).
+of ICU stay and delay in ICU admission (mean dif-
+                                                                PICO 3b. Designated Non-ICU Areas During
+ference [MD], 15.0 d; 95% CI, 1.36–31.36 d and MD,
+                                                                Surge Conditions
+1.5 hr; 95% CI, 0.79–2.21 hr), respectively, in patients
+who underwent interfacility transfer compared with              We make no recommendation regarding the avail-
+those who did not (Figs. S6 and S7, https://links.              ability of designated non-ICU areas to board ICU
+lww.com/CCM/H862). The study (29) also reported                 patients during surge conditions due to insufficient
+a longer length of hospital stay among patients who             evidence.
+underwent interfacility transfer (MD, 1.7 d; 95% CI,               Rationale. Many organizations and health sys-
+–0.88 to 4.28 d) compared with patients who did not             tems are in a constant state of surge, whether from
+(Fig. S8, https://links.lww.com/CCM/H862).                      day-to-day normal operations, short-term disasters
+   The panel determined that the balance of benefits and        (e.g., hurricanes) or longer-term disasters as with the
+risks associated with interfacility transfer in this con-       COVID-19 pandemic. In the setting of limited ICU
+text remains uncertain (summary of evidence, Table              availability as defined by the studies, we investigated
+S3, https://links.lww.com/CCM/H862). Mortality out-             whether having a designated non-ICU area was better
+comes do not appear to differ between transferred and           than having no designated non-ICU area for overflow
+nontransferred patients, but the potential for increased        in hospitals with ICUs.
+hospital length of stay introduces cost and resource               The panel screened a total of 620 articles with 51
+implications that must be considered. Furthermore, the          meeting full-text eligibility. While 51 studies were
+studies do not account for the quality of care provided         assessed for eligibility, none had a study design
+
+624     www.ccmjournal.org                                                                   March 2026 • Volume 54 • Number 3
+     Copyright © 2026 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 7 ---
+                                                                                                               Special Article
+
+that directly compared the outcomes of critically ill           PICO 5. Involvement of Palliative Care Services
+patients cared for in a designated non-ICU area vs.             During Limited ICU Bed Availability
+no designated non-ICU area. Most studies reviewed
+                                                                In critical care patients at high risk of dying, we suggest
+were descriptive, lacked a comparator, had no out-
+                                                                that palliative care services be involved early as com-
+comes data, or compared patients boarding in non-
+                                                                pared with no palliative care services or usual care to
+specialty ICUs. Despite the clinical importance
+                                                                help reduce length of stay (conditional recommenda-
+of our PICO question, none of the studies directly
+                                                                tion, very low certainty evidence).
+addressed it. As a result, there is insufficient evidence
+                                                                    Rationale. The panel considered that the question
+to make a recommendation regarding whether hos-
+                                                                of whether early involvement of palliative care serv-
+pitals should have designated or no designated non-
+                                                                ices during time of limited resources was important.
+ICU areas to board adult critically ill patients in the
+                                                                It aimed to assess whether integrating palliative care
+setting of limited ICU bed capacity created during
+                                                                early on could not only enhance the quality of care but
+surge conditions.
+                                                                also improve resource utilization during periods of
+                                                                strained ICU resources. We explored mortality, quality
+PICO 4. Who Should Care for ICU Patients in
+                                                                of patient care at the end of life, family satisfaction, and
+Non-ICU Areas?
+                                                                resource utilization.
+We make no recommendation regarding whether                         A total of 163 studies were screened with 29 meeting
+patients boarded in non-ICU areas should be cared for           full-text eligibility and 11 included as supporting evi-
+by ICU trained practitioners vs. the usual practitioners        dence. A meta-analysis of eight studies (32–39) found
+for that area due to insufficient evidence.                     palliative care involvement compared with no pallia-
+   Rationale. Who should care for critically ill patients       tive care involvement in critically ill patients may have
+during times of surge when patients are boarding out-           no effect on the risk of mortality (risk ratio, 1.02; 95%
+side of an ICU was a question that was often asked              CI, 0.77–1.35) but the evidence is very uncertain (Fig.
+during the COVID- 19 pandemic. During those                     S9, https://links.lww.com/CCM/H862). A summary
+times, many organizations used “tiered” staffing mod-           of the types of palliative care services provided in the
+els whereby care was led by critical care practitioners         studies included for analysis are presented in Table 2.
+(medical doctors, registered nurses, advanced practice          A summary of findings from the studies is presented in
+providers, respiratory therapists, etc.), but providers         Table S5 (https://links.lww.com/CCM/H862).
+and teams were often recruited from areas that were                 A meta-analysis of two studies (41, 42) demon-
+less impacted by COVID-19. Even in nonpandemic                  strated very uncertain effect in the quality of dying
+times, it is a question that arises during ICU bed short-       and death (QODD) based on the QODD survey (MD,
+ages or surge conditions on a near daily basis at health        0.21 points; 95% CI, –3.51 to 3.94 points), in critically
+systems as patients board in emergency departments              ill patients with palliative care involvement compared
+or general floors waiting for a bed in the ICU.                 with no palliative care involvement (Fig. S10, https://
+   The panel screened a total of 620 articles with 51           links.lww.com/CCM/H862).
+meeting full-text eligibility. While 51 studies were                A meta-analysis of seven studies (32–34, 37, 38, 40,
+assessed for eligibility, none of the studies directly          41) demonstrated palliative care involvement com-
+addressed the above question. One study by Mitarai              pared with no palliative care involvement may reduce
+et al (31) evaluated the care of critically ill patients in     the length of hospital stay (MD, –2.24 d; 95% CI, –4.11
+the emergency department awaiting a medical ICU                 to –0.37 d), in critically ill patients but the evidence is
+(MICU) bed. However, the study was excluded since               very uncertain (Fig. S11, https://links.lww.com/CCM/
+the interventional group was cared for by ICU trained           H862). Another meta-analysis of ten studies (32–35,
+emergency medicine specialists while comparison                 37–42) demonstrated a potential reduction in the
+groups were cared for by MICU physicians. Thus, the             length of ICU stay (MD, –1.9 d; 95% CI, –2.32 to –1.48
+panel makes no recommendation regarding whether                 d), in critically ill patients with palliative care involve-
+patients boarded in non-ICU areas should be cared for           ment compared with no palliative care involvement
+by ICU trained practitioners vs. the usual practitioners        but similarly the evidence is very uncertain (Fig. S12,
+for that area.                                                  https://links.lww.com/CCM/H862).
+
+Critical Care Medicine                                                                       www.ccmjournal.org     625
+          Copyright © 2026 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 8 ---
+Nates et al
+
+
+TABLE 2.
+Summary of Palliative Care Services Provided in the Studies
+ Study                                                               PC Involvement
+
+ Ahrens et al (32), 2003;   Structured communication with families of seriously ill patients by communication team
+   Mosenthal et al (36),
+   2008
+ Campbell and Guzman Identification of patient’s advance directives or preferences about end-of-life care. Assistance
+   (40), 2003; Campbell with discussion of the prognosis and treatment options. Implementation of PC strategies when
+   and Guzman (39),     treatment goals change to a focus on comfort measures
+   2004
+ Curtis et al (41), 2008; Clinician education, local champions, academic detailing, feedback to clinicians, and system sup-
+   Curtis et al (42), 2011  port. Not targeted to patients or family members
+ Daly et al (33), 2010;     Intensive communication system for family decision-makers of long-stay ICU patients. Each
+   Lilly et al (35), 2003      meeting addressed medical update, values and preferences of the patient, goals of care,
+                               treatment plan, and milestones
+ Hsu-Kim et al (34), 2015 PC consultation with patient
+ Norton et al (37), 2007    Basic PC consultation consisting of: 1) chart review, 2) history of present illness, 3) discussions
+                              with medical ICU team, 4) review of PC recommendations with attending physician, and 5) com-
+                              pletion of assessment form with PC recommendations. Complete PC consultation consisting of:
+                              1) basic PC consultation, 2) regular involvement by the PC team with patient’s family members,
+                              3) full involvement of PC physician, 4) regular involvement of PC team in the patient’s treatment,
+                              and 5) availability of PC team for additional support for the patient and family as needed
+ Ma et al (38), 2019        PC consultation comprising of regular visits by PC team. PC consultation included: 1) chart
+                              review, 2) meeting with patient, 3) identifying physical and emotional needs of patient and family,
+                              4) PC plan, 5) communication with all parties regarding goals, values, and treatment decisions,
+                              and 6) follow-up with patient until discharge
+PC = palliative care.
+
+
+
+   A meta-analysis of two studies (41, 42) demon-                 palliative care services. The required resources would
+strated little to no difference in family satisfaction            vary depending on the model of service used (i.e.,
+with care based on the Family Satisfaction in the ICU             some models may be more costly to implement).
+survey (MD, 0.85 points; 95% CI, –1.99 to 3.7 points),            Given the lack of data, the panel was uncertain about
+in families of critically ill patients with palliative care       whether early palliative care would be cost-effective
+involvement compared with no palliative care involve-             to implement. The panel judged that the impact on
+ment but the evidence was very uncertain (Fig. S13,               health equity would probably be increased because
+https://links.lww.com/CCM/H862).                                  those with higher socioeconomic status tend to ad-
+   The overall certainty of evidence was very low due             vocate for themselves or their family members to ob-
+to risk of bias, inconsistency, and imprecision. While            tain such services. Paradoxically, the panel also felt
+evidence from included studies was inconsistent and               that in some areas, lower-income individuals may be
+retrospective in design, the recommendation reflects              more informed around death and dying and goals
+the panel’s view that defining and aligning goals of              of care. Some ethnic groups may be resistant to pal-
+care with patient’s values and preferences is vital to a          liative care involvement perhaps due to mistrust in
+critical illness-related hospitalization. The desirable           the system because of historical injustices. Last, the
+effects were weighed against the absence of observed              panel judged that early palliative care services would
+harm and the overarching priority of ensuring digni-              probably be acceptable to key stakeholders and fea-
+fied care at the end of life. As such, the panel judged           sible to implement in clinical practice (evidence-to-
+that the balance between the desirable and unde-                  decision worksheet, Table S6, https://links.lww.com/
+sirable effects probably favor early involvement of               CCM/H862).
+
+626     www.ccmjournal.org                                                                       March 2026 • Volume 54 • Number 3
+     Copyright © 2026 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 9 ---
+                                                                                                                      Special Article
+
+
+TABLE 3.
+ICU Triage Research Priorities
+ Topic                                                                       Research Priorities
+
+ Clinician judgment vs. time-based          Explore mathematical models’ applications in large databases (e.g., operational
+   admission                                  modeling and queueing theory)
+                                            Study the use of different types of artificial intelligence in real-time decision-
+                                              making across diverse clinical contexts (e.g., crisis-level resource shortages)
+ Use of objective triage tool               Evaluate the impact of the use of objective triage tools in resource-limited
+                                              situations on overall (system and population level) rates of survival, as well as
+                                              factors such as consistency of decision-making across providers, equity, and
+                                              fairness
+ Boarding of patients when no ICU space High-quality studies regarding the transfer of ICU patients to another facility in the
+   available                              setting of limited ICU bed capacity
+                                            Effects on healthcare systems, patient-centered outcomes, and cost efficiency
+                                            Broader availability and access to data from existing hospital systems or
+                                              insurance companies for research
+ Designated non-ICU areas during surge      High-quality observational studies of current practices. Randomized studies would
+   conditions                                 be preferred but are unlikely
+                                            Evaluation of timing of care delivery and quality outcomes, including to adherence
+                                              to guidelines as compared with traditional settings
+                                            Evaluation of cost and satisfaction (patient and staff)
+ Who should care for ICU patients in non- High-quality outcome studies of patients in non-ICU areas when cared for by ICU
+  ICU areas?                                providers (all team members) vs. non-ICU team members
+                                            For physicians, a comparison of board certification in critical care vs. not. For
+                                              other providers/team members like advanced practice providers, registered
+                                              nurses, etc. An exploration of core competencies
+ Involvement of palliative care services    Studies better defining resource requirements for the intervention and evaluating
+                                              cost-effectiveness
+                                            Randomized trials, cost-effectiveness analyses, and strategies to integrate
+                                              palliative care seamlessly into ICU workflows to determine the best ways to
+                                              support critically ill patients and their families during times of limited capacity
+
+
+RESEARCH AGENDA                                                   advanced clinical decision-support tools are available,
+                                                                  the final judgment regarding ICU triage should re-
+Crisis-level shortages significantly disrupt patient              main with the treating clinician, guided by the fun-
+care. During such incidents, critically ill patients              damental principles of triage applied to local context
+should have access to essential critical care services.           and available resources, and aligned with the patient’s
+However, despite the conceptual importance of tri-                wishes and values.
+age in minimizing adverse events and improving out-
+comes, there is insufficient evidence to guide practice
+recommendations in the critical clinical scenarios                ACKNOWLEDGMENTS
+considered by the task force. The absence of evidence             The Guidelines in Intensive Care Development and
+to inform how to undertake triage further emphasizes              Evaluation (GUIDE) group provided methodological
+the need for process guidelines and data monitoring               support throughout the guidelines development process.
+with transparent reporting and mechanisms for ac-                 We extend our sincere gratitude to Kusum Matthews,
+countability to foster ethical triage should it be re-            MD, MPH, MSCR, for her invaluable contributions to
+quired. Future research is paramount on several of the            the development of these clinical practice guidelines. Dr.
+topics covered by these guidelines, with a summary of             Matthews’ expert insights and willingness to share their
+research priorities presented in Table 3. Until more              clinical expertise and time have been instrumental in
+Critical Care Medicine                                                                             www.ccmjournal.org     627
+          Copyright © 2026 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 10 ---
+Nates et al
+
+shaping these guidelines. The guidelines leadership would          16 Department of Anesthesiology, Critical Care and Pain
+like to acknowledge Society of Critical Care Medicine                 Medicine, Hadassah Medical Organization and Faculty of
+                                                                      Medicine, Hebrew University of Jerusalem, Jerusalem, Israel.
+(SCCM) staff, Hariyali Patel, MHA, and Chandni
+                                                                   17 Pulmonary and Critical Care Medicine Department, Lahey
+Zabiegala, RRT, and American College of Critical Care                 Hospital & Medical Center, Burlington, MA.
+Medicine (ACCM) Board of Regents, Karin Reuter-Rice,               18 Avel eCare Medical Center, Sioux Falls, SD.
+PhD, NP, FCCM, and Ana Lia Graciano, MD, FCCM, for                 19 Department of Anesthesiology, Perioperative Critical Care,
+project management support throughout the guidelines                  and Pain Management, University of Kentucky, Lexington,
+development process. Additionally, Dan Woznica, PhD,                  KY.
+for his work on the implementation toolkit work for these          20 Acute Care Nurse Practitioner Program, Georgetown
+                                                                      University, Washington, DC.
+guidelines. The ACCM, which honors individuals for
+                                                                   21 Department of Nursing, University of Pennsylvania Health
+their achievements and contributions to multidiscipli-
+                                                                      System, Philadelphia, PA.
+nary critical care medicine, is the consultative body of the
+                                                                   Supplemental digital content is available for this article. Direct
+SCCM, which possesses recognized expertise in the prac-            URL citations appear in the printed text and are provided in the
+tice of critical care. The ACCM has developed adminis-             HTML and PDF versions of this article on the journal’s website
+trative guidelines and clinical practice parameters for the        (http://journals.lww.com/ccmjournal).
+critical care practitioner. New guidelines and practice            Funding for these guidelines was solely provided by the Society
+                                                                   of Critical Care Medicine.
+parameters are continually developed, and current ones
+                                                                   Dr. Anesi received research funding from the National Institutes
+are systematically reviewed and revised. Librarian serv-           of Health (K23HL161353, R01HL166269), the University of
+ices, systematic review, and analysis for these guidelines         Pennsylvania Perelman School of Medicine Thomas B. McCabe
+were provided contractually through the GUIDE Group,               and Jeannette E. Laws McCabe Fund, and the Leonard Davis
+McMaster University, Canada. Methodologists served as              Institute of Health Economics. Dr. Gallagher is an advisor for
+                                                                   Comind, a speaker for Medtronic, and an advisor for Philips
+expert panel members specializing in this area.                    Medical. The remaining authors have disclosed that they do not
+                                                                   have any potential conflicts of interest.
+                                                                   For information regarding this article, E-mail: jlnates@mdander-
+ 1 Division of Anesthesiology, Critical Care, and Pain Medicine,   son.org
+   The University of Texas, MD Anderson Cancer Center,
+   Houston, TX.
+ 2 Emergency Medicine, Henry Ford Health, Detroit, MI.
+ 3 Department of Medicine, McMaster University, Ontario, CA.
+                                                                   REFERENCES
+ 4 Department of Pulmonary, Allergy, and Critical Care,             1. Sprung CL, Joynt GM, Christian MD, et al: Adult ICU triage
+   University of Pennsylvania Perelman School of Medicine,             during the coronavirus disease 2019 pandemic: Who will live
+   Philadelphia, PA.                                                   and who will die? Recommendations to improve survival. Crit
+ 5 Cybersecurity ISSE, NSWC, Crane, IN.                                Care Med 2020; 48:1196–1202
+                                                                    2. Nates JL, Oropello JM, Badjatia N, et al; Academic Leaders
+ 6 Digital Transformation and Innovation Team, HCA Healthcare,
+                                                                       in Critical Care Task Force (ALCCM) of the Society of Critical
+   Nashville, TN.
+                                                                       Care Medicine: Flow-sizing critical care resources. Crit Care
+ 7 Department of Anesthesiology and Critical Care, Memorial            Med 2023; 51:1552–1565
+   Sloan Kettering Cancer Center, New York, NY.
+                                                                    3. Keene AB, Shiloh AL, Eisen L, et al: Critical care surge during
+ 8 Division of Critical Care Medicine, University British              the COVID-19 pandemic: Implementation and feedback from
+   Columbia, Vancouver, BC, Canada.                                    frontline providers. J Intensive Care Med 2021; 36:233–240
+ 9 Pulmonary Fibrosis Warriors, Estero, FL.                         4. Consensus statement on the triage of critically ill patients.
+10 School of Nursing, Case Western Reserve University,                 Society of Critical Care Medicine Ethics Committee. JAMA
+   Cleveland, OH.                                                      1994; 271:1200–1203
+11 Clinical Guideline Development, Society of Critical Care         5. Guidelines for intensive care unit admission, discharge, and
+   Medicine, Mount Prospect, IL.                                       triage. Task force of the American College of Critical Care
+                                                                       Medicine, Society of Critical Care Medicine. Crit Care Med
+12 University of Houston Law Center, Houston, TX.
+                                                                       1999; 27:633–638
+13 Wake Forest University School of Medicine, Advocate              6. Nates JL, Nunnally M, Kleinpell R, et al: ICU admission, dis-
+   Health, Charlotte Campus, Charoltte, NC.                            charge, and triage guidelines: A framework to enhance clinical
+14 Department of Emergency Medicine, Stanford University               operations, development of institutional policies, and further
+   School of Medicine, Stanford, CA.                                   research. Crit Care Med 2016; 44:1553–1602
+15 Department of Medical Ethics and Health Policy, University       7. Covidence: Covidence Systematic Review Software. Available
+   of Pennsylvania, Philadelphia, PA.                                  at: www.covidence.org. Accessed October 25, 2024
+
+
+628     www.ccmjournal.org                                                                         March 2026 • Volume 54 • Number 3
+     Copyright © 2026 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 11 ---
+                                                                                                                                  Special Article
+
+ 8. Higgins JP, Thomas J, Chandler J, et al: Cochrane Handbook          25. Rathi NK, Haque SA, Morales F, et al; LACCTIN and ONCCC-
+    for Systematic Reviews of Interventions. John Wiley & Sons,             R-NET groups: Variability in triage practices for critically ill cancer
+    2019. Available at: https://onlinelibrary.wiley.com/doi/                patients: A randomized controlled trial. J Crit Care 2019; 53:18–24
+    book/10.1002/9781119536604. Accessed December 23,                   26. Theerawit P: Mortality rate reduction in critically ill patients
+    2025                                                                    after application of intensive care unit admission guideline.
+ 9. Clarity: Tool to Assess Risk of Bias in Case Control Studies.           Chest 2009; 136:14S
+    Available at: https://www.clarityresearch.ca/assess-risk-           27. Wasserfallen JB, Pinget C, Berger A, et al: Impact of clinical
+    of-bias-in-case-control-studies. Accessed April 1, 2025                 practice guidelines on priorisation for intensive care beds al-
+10. The Cochrane Collaboration: Review Manager: Version 5.4.                location in high-risk acute coronary syndrome patients: Does
+    Available at: https://training.cochrane.org/online-learning/            age play a role? Swiss Med Wkly 2006; 136:655–658
+    core-software/revman. Accessed October 25, 2024                     28. Zimmerman JE, Wagner DP, Knaus WA, et al: The use of risk predic-
+11. Schünemann H, Brożek J, Guyatt G, et al: GRADE Handbook.                tions to identify candidates for intermediate care units. Implications
+    2013. Available at: https://gdt.gradepro.org/app/handbook/              for intensive care utilization and cost. Chest 1995; 108:490–499
+    handbook.html. Accessed October 29, 2024                            29. Duke GJ, Green JV: Outcome of critically ill patients undergo-
+12. GRADEpro GDT: GRADEpro Guideline Development Tool                       ing interhospital transfer. Med J Aust 2001; 174:122–125
+    [Software]. Available at: gradepro.org. Accessed October 25,        30. Guillon A, Laurent E, Godillon L, et al: Inter-regional transfers
+    2024                                                                    for pandemic surges were associated with reduced mortality
+13. Sprung CL, Danis M, Baily MA, et al: Consensus statement on             rates. Intensive Care Med 2021; 47:798–800
+    the triage of critically ill patients. JAMA 1994; 271:1200–1203     31. Mitarai T, Gordon AJ, Nudelman MJR, et al: Association of an
+14. Blanch L, Abillama FF, Amin P, et al; Council of the World              emergency critical care program with survival and early down-
+    Federation of Societies of Intensive and Critical Care Medicine:        grade among critically ill medical patients in the emergency
+    Triage decisions for ICU admission: Report from the task force          department. Crit Care Med 2023; 51:731–741
+    of the World Federation of Societies of Intensive and Critical      32. Ahrens T, Yancey V, Kollef M: Improving family communica-
+    Care Medicine. J Crit Care 2016; 36:301–305                             tions at the end of life: Implications for length of stay in the
+15. Guidet B, Leblanc G, Simon T, et al; ICE-CUB 2 Study Network:           intensive care unit and resource use. Am J Crit Care 2003;
+    Effect of systematic intensive care unit triage on long-term            12:317–323; discussion 324
+    mortality among critically ill elderly patients in France: A ran-   33. Daly BJ, Douglas SL, O’Toole E, et al: Effectiveness trial of
+    domized clinical trial. JAMA 2017; 318:1450–1459                        an intensive communication structure for families of long-stay
+16. Valley TS, Sjoding MW, Ryan AM, et al: Association of intensive         ICU patients. Chest 2010; 138:1340–1348
+    care unit admission with mortality among older patients with        34. Hsu-Kim C, Friedman T, Gracely E, et al: Integrating palliative
+    pneumonia. JAMA 2015; 314:1272–1279                                     care into critical care: A quality improvement study. J Intensive
+17. Anesi GL, Liu VX, Chowdhury M, et al: Association of ICU ad-            Care Med 2015; 30:358–364
+    mission and outcomes in sepsis and acute respiratory failure.       35. Lilly CM, Sonna LA, Haley KJ, et al: Intensive communication:
+    Am J Respir Crit Care Med 2022; 205:520–528                             Four-year follow-up from a clinical practice study. Crit Care
+18. Shmueli A, Sprung CL, Kaplan EH: Optimizing admissions to an            Med 2003; 31:S394–S399
+    intensive care unit. Health Care Manag Sci 2003; 6:131–136          36. Mosenthal AC, Murphy PA, Barker LK, et al: Changing the cul-
+19. Sprung CL, Baras M, Iapichino G, et al: The Eldicus prospective,        ture around end-of-life care in the trauma intensive care unit.
+    observational study of triage decision making in European in-           J Trauma 2008; 64:1587–1593
+    tensive care units: Part I—European Intensive Care Admission        37. Norton SA, Hogan LA, Holloway RG, et al: Proactive pallia-
+    Triage Scores. Crit Care Med 2012; 40:125–131                           tive care in the medical intensive care unit: Effects on length
+20. Downar J, Smith MJ, Godkin D, et al: A framework for crit-              of stay for selected high-risk patients. Crit Care Med 2007;
+    ical care triage during a major surge in critical illness. Can J        35:1530–1535
+    Anaesth 2022; 69:774–781                                            38. Ma J, Chi S, Buettner B, et al: Early palliative care consultation
+21. Guest T, Tantam G, Donlin N, et al: An observational cohort             in the medical ICU: A cluster randomized crossover trial. Crit
+    study of triage for critical care provision during pandemic in-         Care Med 2019; 47:1707–1715
+    fluenza: “Clipboard physicians” or ‘evidenced based medicine’?      39. Campbell ML, Guzman JA: A proactive approach to improve
+    Anaesthesia 2009; 64:1199–1206                                          end-of-life care in a medical intensive care unit for patients
+22. Koch C, Edinger F, Fischer T, et al: Comparison of qSOFA                with terminal dementia. Crit Care Med 2004; 32:1839–1843
+    score, SOFA score, and SIRS criteria for the prediction of in-      40. Campbell ML, Guzman JA: Impact of a proactive approach
+    fection and mortality among surgical intermediate and inten-            to improve end-of-life care in a medical ICU. Chest 2003;
+    sive care patients. World J Emerg Surg 2020; 15:63                      123:266–271
+23. Michielsen H, De Laet I, Van Bastelaere J, et al: A retrospec-      41. Curtis JR, Treece PD, Nielsen EL, et al: Integrating palliative
+    tive evaluation of three ethical triage tools for the allocation        and critical care: Evaluation of a quality-improvement interven-
+    of ICU resources during the first wave of the COVID-19 pan-             tion. Am J Respir Crit Care Med 2008; 178:269–275
+    demic. J Crit Care 2022; 67:200–206                                 42. Curtis JR, Nielsen EL, Treece PD, et al: Effect of a quality-
+24. Pommier JD, Martino F, Delamare F, et al: Catastrophic COVID-           improvement intervention on end-of-life care in the intensive
+    19 delta variant surge in French West Indies: Report of an ICU          care unit: A randomized trial. Am J Respir Crit Care Med 2011;
+    triage policy. Crit Care Med 2023; 51:57–68                             183:348–355
+
+
+Critical Care Medicine                                                                                      www.ccmjournal.org     629
+          Copyright © 2026 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+

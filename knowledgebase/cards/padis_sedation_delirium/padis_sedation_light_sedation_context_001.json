@@ -1,0 +1,69 @@
+{
+  "related_risk_types": [
+    "respiratory_failure_risk"
+  ],
+  "allowed_use": [
+    "risk explanation",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "automatic diagnosis",
+    "treatment order",
+    "drug dose recommendation",
+    "automatic treatment decision"
+  ],
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "card_id": "padis_sedation_light_sedation_context_001",
+  "source_id": "padis_update_2025_001",
+  "source_title": "Focused Update to ICU PADIS Guidelines",
+  "domain": "padis_sedation_delirium",
+  "subdomain": "sedation",
+  "population": "adult",
+  "card_type": "guideline_context",
+  "topic": "Sedation and delirium-priority context",
+  "clinical_context": "Use when summarizing sedation status or explaining why sedation choices need clinician oversight.",
+  "key_points": [
+    "The PADIS update issued a conditional recommendation favoring dexmedetomidine over propofol in selected mechanically ventilated adults when light sedation or delirium reduction are highest priorities.",
+    "This card must not be used to order sedatives, choose a sedative, or dose medication."
+  ],
+  "trigger_signals": [
+    "mechanical ventilation",
+    "sedation",
+    "delirium risk",
+    "light sedation priority"
+  ],
+  "direct_risk_source": false,
+  "used_by_agents": [
+    "BedsideMonitorAgent",
+    "InterventionTrackerAgent",
+    "PatientMemoryAgent",
+    "ClinicalSummaryAgent"
+  ],
+  "retrieval_keywords": [
+    "sedation",
+    "dexmedetomidine",
+    "propofol",
+    "delirium",
+    "mechanical ventilation"
+  ],
+  "professional_summary_template": "Sedation context: patient is mechanically ventilated; sedation and delirium issues require clinician interpretation.",
+  "allowed_terms": [
+    "sedation status",
+    "delirium context",
+    "mechanical ventilation"
+  ],
+  "avoid_terms": [
+    "preferred drug order",
+    "dose",
+    "guaranteed delirium prevention"
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 7,
+    "section_title": "Results / Recommendation 2",
+    "quote": "where light sedation and/or a reduction in delirium are of highest priorities"
+  }
+}

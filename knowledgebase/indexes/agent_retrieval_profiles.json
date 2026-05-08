@@ -1,0 +1,116 @@
+{
+  "BedsideMonitorAgent": {
+    "allowed_domains": [
+      "clinical_deterioration",
+      "padis_sedation_delirium",
+      "computational_concepts"
+    ],
+    "preferred_card_types": [
+      "guideline_context",
+      "escalation_principle",
+      "risk_background"
+    ],
+    "forbidden_domains": [
+      "end_of_life_ethics",
+      "icu_design_context"
+    ],
+    "default_top_k": 5
+  },
+  "RiskSentinelAgent": {
+    "allowed_domains": [
+      "clinical_deterioration",
+      "medication_safety",
+      "computational_concepts",
+      "triage_resource_allocation"
+    ],
+    "preferred_card_types": [
+      "risk_background",
+      "escalation_principle",
+      "scoring_context",
+      "medication_safety_context"
+    ],
+    "forbidden_domains": [
+      "icu_design_context"
+    ],
+    "default_top_k": 8
+  },
+  "InterventionTrackerAgent": {
+    "allowed_domains": [
+      "medication_safety",
+      "clinical_deterioration",
+      "padis_sedation_delirium",
+      "computational_concepts"
+    ],
+    "preferred_card_types": [
+      "medication_safety_context",
+      "guideline_context",
+      "escalation_principle"
+    ],
+    "default_top_k": 6
+  },
+  "PatientMemoryAgent": {
+    "allowed_domains": [
+      "clinical_deterioration",
+      "padis_sedation_delirium",
+      "family_communication",
+      "end_of_life_ethics",
+      "triage_resource_allocation"
+    ],
+    "preferred_card_types": [
+      "guideline_context",
+      "communication_principle",
+      "ethical_policy"
+    ],
+    "default_top_k": 6
+  },
+  "ClinicalSummaryAgent": {
+    "allowed_domains": [
+      "clinical_deterioration",
+      "medication_safety",
+      "padis_sedation_delirium",
+      "triage_resource_allocation",
+      "end_of_life_ethics",
+      "computational_concepts"
+    ],
+    "preferred_card_types": [
+      "guideline_context",
+      "risk_background",
+      "scoring_context",
+      "medication_safety_context"
+    ],
+    "default_top_k": 8
+  },
+  "WardCoordinatorAgent": {
+    "allowed_domains": [
+      "triage_resource_allocation",
+      "clinical_deterioration",
+      "end_of_life_ethics",
+      "computational_concepts"
+    ],
+    "preferred_card_types": [
+      "escalation_principle",
+      "ethical_policy",
+      "icu_operations_context",
+      "scoring_context"
+    ],
+    "default_top_k": 8
+  },
+  "CompassionAgent": {
+    "allowed_domains": [
+      "family_communication",
+      "padis_sedation_delirium",
+      "end_of_life_ethics"
+    ],
+    "preferred_card_types": [
+      "communication_principle",
+      "ethical_policy",
+      "guideline_context"
+    ],
+    "forbidden_domains": [
+      "medication_safety",
+      "icu_design_context"
+    ],
+    "default_top_k": 6,
+    "requires_clinician_approval": true
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "related_risk_types": [
+    "persistent_shock_risk",
+    "respiratory_failure_risk"
+  ],
+  "allowed_use": [
+    "risk explanation",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "automatic diagnosis",
+    "treatment order",
+    "drug dose recommendation",
+    "automatic treatment decision"
+  ],
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "card_id": "clinical_deterioration_timely_vitals_001",
+  "source_id": "clinical_deterioration_rapid_response_2024_001",
+  "source_title": "SCCM Guidelines on Recognizing and Responding to Clinical Deterioration Outside the ICU",
+  "domain": "clinical_deterioration",
+  "subdomain": "vital_sign_surveillance",
+  "population": "mixed",
+  "card_type": "escalation_principle",
+  "topic": "Timely and accurate vital signs for deterioration recognition",
+  "clinical_context": "Use when bedside data show persistent abnormal vital signs or a worsening trajectory that needs human review.",
+  "key_points": [
+    "The guideline treats timely, accurate vital sign acquisition as a good practice statement for recognizing deterioration.",
+    "Traditional vital signs include temperature, heart rate, respiratory rate, blood pressure, oxygen saturation, and often mental status.",
+    "This is general escalation context and not a disease-specific shock, respiratory failure, or AKI guideline."
+  ],
+  "trigger_signals": [
+    "persistent hypotension",
+    "worsening oxygenation",
+    "tachypnea",
+    "abnormal heart rate",
+    "mental status change"
+  ],
+  "direct_risk_source": false,
+  "risk_use_note": "Supports recognition and escalation language, not disease-specific diagnosis or treatment.",
+  "used_by_agents": [
+    "BedsideMonitorAgent",
+    "RiskSentinelAgent",
+    "ClinicalSummaryAgent"
+  ],
+  "retrieval_keywords": [
+    "vital signs",
+    "deterioration",
+    "hypotension",
+    "oxygen saturation",
+    "tachypnea",
+    "worsening trend"
+  ],
+  "time_window_hint": "Use with sustained or repeated abnormalities over the configured bedside analysis window.",
+  "allowed_summary_language": [
+    "Vital signs show a concerning pattern that may warrant clinician review."
+  ],
+  "evidence_location": {
+    "page_start": 1,
+    "page_end": 3,
+    "section_title": "Results / Recognizing clinical deterioration",
+    "quote": "ensure that all vital sign acquisition is timely and accurate"
+  }
+}

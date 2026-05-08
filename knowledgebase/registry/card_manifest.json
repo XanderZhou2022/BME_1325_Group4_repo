@@ -1,0 +1,151 @@
+{
+  "schema_version": "icu_agent.card_manifest.v1",
+  "generated_at": "2026-05-08",
+  "card_count": 18,
+  "cards": [
+    {
+      "card_id": "clinical_deterioration_rapid_response_activation_001",
+      "source_id": "clinical_deterioration_rapid_response_2024_001",
+      "domain": "clinical_deterioration",
+      "card_type": "escalation_principle",
+      "path": "/Users/zhou/Desktop/Research/stimu2026/ICU_agent/BME_1325_Group4_repo/knowledgebase/cards/clinical_deterioration/clinical_deterioration_rapid_response_activation_001.json",
+      "human_review_required": true
+    },
+    {
+      "card_id": "clinical_deterioration_timely_vitals_001",
+      "source_id": "clinical_deterioration_rapid_response_2024_001",
+      "domain": "clinical_deterioration",
+      "card_type": "escalation_principle",
+      "path": "/Users/zhou/Desktop/Research/stimu2026/ICU_agent/BME_1325_Group4_repo/knowledgebase/cards/clinical_deterioration/clinical_deterioration_timely_vitals_001.json",
+      "human_review_required": true
+    },
+    {
+      "card_id": "clinical_deterioration_worsening_trend_001",
+      "source_id": "clinical_deterioration_rapid_response_2024_001",
+      "domain": "clinical_deterioration",
+      "card_type": "risk_background",
+      "path": "/Users/zhou/Desktop/Research/stimu2026/ICU_agent/BME_1325_Group4_repo/knowledgebase/cards/clinical_deterioration/clinical_deterioration_worsening_trend_001.json",
+      "human_review_required": true
+    },
+    {
+      "card_id": "apache_ii_overview_001",
+      "source_id": "msd_critical_illness_scoring_001",
+      "domain": "computational_concepts",
+      "card_type": "scoring_context",
+      "path": "/Users/zhou/Desktop/Research/stimu2026/ICU_agent/BME_1325_Group4_repo/knowledgebase/cards/computational_concepts/apache_ii_overview_001.json",
+      "human_review_required": true
+    },
+    {
+      "card_id": "end_of_life_goals_of_care_context_001",
+      "source_id": "adult_eol_icu_2025_001",
+      "domain": "end_of_life_ethics",
+      "card_type": "ethical_policy",
+      "path": "/Users/zhou/Desktop/Research/stimu2026/ICU_agent/BME_1325_Group4_repo/knowledgebase/cards/end_of_life_ethics/end_of_life_goals_of_care_context_001.json",
+      "human_review_required": true
+    },
+    {
+      "card_id": "end_of_life_potentially_inappropriate_treatment_001",
+      "source_id": "potentially_inappropriate_treatments_001",
+      "domain": "end_of_life_ethics",
+      "card_type": "ethical_policy",
+      "path": "/Users/zhou/Desktop/Research/stimu2026/ICU_agent/BME_1325_Group4_repo/knowledgebase/cards/end_of_life_ethics/end_of_life_potentially_inappropriate_treatment_001.json",
+      "human_review_required": true
+    },
+    {
+      "card_id": "family_communication_patient_family_concerns_001",
+      "source_id": "clinical_deterioration_rapid_response_2024_001",
+      "domain": "family_communication",
+      "card_type": "communication_principle",
+      "path": "/Users/zhou/Desktop/Research/stimu2026/ICU_agent/BME_1325_Group4_repo/knowledgebase/cards/family_communication/family_communication_patient_family_concerns_001.json",
+      "human_review_required": true
+    },
+    {
+      "card_id": "family_communication_sedation_cannot_communicate_001",
+      "source_id": "padis_update_2025_001",
+      "domain": "family_communication",
+      "card_type": "communication_principle",
+      "path": "/Users/zhou/Desktop/Research/stimu2026/ICU_agent/BME_1325_Group4_repo/knowledgebase/cards/family_communication/family_communication_sedation_cannot_communicate_001.json",
+      "human_review_required": true
+    },
+    {
+      "card_id": "general_icu_operations_summary_human_review_001",
+      "source_id": "adult_icu_admission_triage_001",
+      "domain": "general_icu_operations",
+      "card_type": "icu_operations_context",
+      "path": "/Users/zhou/Desktop/Research/stimu2026/ICU_agent/BME_1325_Group4_repo/knowledgebase/cards/general_icu_operations/general_icu_operations_summary_human_review_001.json",
+      "human_review_required": true
+    },
+    {
+      "card_id": "icu_design_natural_light_visibility_001",
+      "source_id": "adult_icu_design_2024_001",
+      "domain": "icu_design_context",
+      "card_type": "design_context",
+      "path": "/Users/zhou/Desktop/Research/stimu2026/ICU_agent/BME_1325_Group4_repo/knowledgebase/cards/icu_design_context/icu_design_natural_light_visibility_001.json",
+      "human_review_required": true
+    },
+    {
+      "card_id": "medication_safety_high_risk_medication_001",
+      "source_id": "medication_safety_icu_001",
+      "domain": "medication_safety",
+      "card_type": "medication_safety_context",
+      "path": "/Users/zhou/Desktop/Research/stimu2026/ICU_agent/BME_1325_Group4_repo/knowledgebase/cards/medication_safety/medication_safety_high_risk_medication_001.json",
+      "human_review_required": true
+    },
+    {
+      "card_id": "medication_safety_renal_function_review_001",
+      "source_id": "medication_safety_icu_001",
+      "domain": "medication_safety",
+      "card_type": "medication_safety_context",
+      "path": "/Users/zhou/Desktop/Research/stimu2026/ICU_agent/BME_1325_Group4_repo/knowledgebase/cards/medication_safety/medication_safety_renal_function_review_001.json",
+      "human_review_required": true
+    },
+    {
+      "card_id": "medication_safety_surveillance_001",
+      "source_id": "medication_safety_icu_001",
+      "domain": "medication_safety",
+      "card_type": "medication_safety_context",
+      "path": "/Users/zhou/Desktop/Research/stimu2026/ICU_agent/BME_1325_Group4_repo/knowledgebase/cards/medication_safety/medication_safety_surveillance_001.json",
+      "human_review_required": true
+    },
+    {
+      "card_id": "padis_delirium_antipsychotic_uncertainty_001",
+      "source_id": "padis_update_2025_001",
+      "domain": "padis_sedation_delirium",
+      "card_type": "guideline_context",
+      "path": "/Users/zhou/Desktop/Research/stimu2026/ICU_agent/BME_1325_Group4_repo/knowledgebase/cards/padis_sedation_delirium/padis_delirium_antipsychotic_uncertainty_001.json",
+      "human_review_required": true
+    },
+    {
+      "card_id": "padis_sedation_light_sedation_context_001",
+      "source_id": "padis_update_2025_001",
+      "domain": "padis_sedation_delirium",
+      "card_type": "guideline_context",
+      "path": "/Users/zhou/Desktop/Research/stimu2026/ICU_agent/BME_1325_Group4_repo/knowledgebase/cards/padis_sedation_delirium/padis_sedation_light_sedation_context_001.json",
+      "human_review_required": true
+    },
+    {
+      "card_id": "triage_resource_allocation_admission_priority_001",
+      "source_id": "adult_icu_admission_triage_001",
+      "domain": "triage_resource_allocation",
+      "card_type": "icu_operations_context",
+      "path": "/Users/zhou/Desktop/Research/stimu2026/ICU_agent/BME_1325_Group4_repo/knowledgebase/cards/triage_resource_allocation/triage_resource_allocation_admission_priority_001.json",
+      "human_review_required": true
+    },
+    {
+      "card_id": "triage_resource_allocation_crisis_shortage_001",
+      "source_id": "crisis_resource_allocation_2026_001",
+      "domain": "triage_resource_allocation",
+      "card_type": "ethical_policy",
+      "path": "/Users/zhou/Desktop/Research/stimu2026/ICU_agent/BME_1325_Group4_repo/knowledgebase/cards/triage_resource_allocation/triage_resource_allocation_crisis_shortage_001.json",
+      "human_review_required": true
+    },
+    {
+      "card_id": "triage_resource_allocation_discharge_readiness_001",
+      "source_id": "adult_icu_admission_triage_001",
+      "domain": "triage_resource_allocation",
+      "card_type": "icu_operations_context",
+      "path": "/Users/zhou/Desktop/Research/stimu2026/ICU_agent/BME_1325_Group4_repo/knowledgebase/cards/triage_resource_allocation/triage_resource_allocation_discharge_readiness_001.json",
+      "human_review_required": true
+    }
+  ]
+}

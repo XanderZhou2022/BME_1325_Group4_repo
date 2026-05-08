@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "icu_agent.guideline_card.schema.json",
+  "type": "object",
+  "required": [
+    "card_id",
+    "source_id",
+    "source_title",
+    "domain",
+    "subdomain",
+    "population",
+    "card_type",
+    "topic",
+    "clinical_context",
+    "key_points",
+    "trigger_signals",
+    "related_risk_types",
+    "used_by_agents",
+    "allowed_use",
+    "forbidden_use",
+    "retrieval_keywords",
+    "evidence_location",
+    "confidence",
+    "human_review_required",
+    "last_updated"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "card_id": {"type": "string"},
+    "source_id": {"type": "string"},
+    "source_title": {"type": "string"},
+    "domain": {"enum": ["clinical_deterioration", "triage_resource_allocation", "padis_sedation_delirium", "medication_safety", "end_of_life_ethics", "family_communication", "icu_design_context", "computational_concepts", "general_icu_operations"]},
+    "subdomain": {"type": "string"},
+    "population": {"enum": ["adult", "pediatric", "mixed", "general"]},
+    "card_type": {"enum": ["guideline_context", "risk_background", "escalation_principle", "communication_principle", "ethical_policy", "medication_safety_context", "scoring_context", "icu_operations_context", "design_context"]},
+    "topic": {"type": "string"},
+    "clinical_context": {"type": "string"},
+    "key_points": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "trigger_signals": {"type": "array", "items": {"type": "string"}},
+    "related_risk_types": {"type": "array", "items": {"enum": ["persistent_shock_risk", "respiratory_failure_risk", "aki_risk"]}},
+    "used_by_agents": {"type": "array", "items": {"type": "string"}},
+    "allowed_use": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "forbidden_use": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "retrieval_keywords": {"type": "array", "items": {"type": "string"}},
+    "evidence_location": {
+      "type": "object",
+      "required": ["page_start", "page_end", "section_title", "quote"],
+      "additionalProperties": true,
+      "properties": {
+        "page_start": {"type": "integer", "minimum": 1},
+        "page_end": {"type": "integer", "minimum": 1},
+        "section_title": {"type": "string"},
+        "quote": {"type": "string"}
+      }
+    },
+    "confidence": {"enum": ["high", "medium", "low"]},
+    "human_review_required": {"const": true},
+    "last_updated": {"type": "string"}
+  }
+}

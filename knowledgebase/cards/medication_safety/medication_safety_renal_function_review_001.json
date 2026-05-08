@@ -1,0 +1,70 @@
+{
+  "related_risk_types": [
+    "aki_risk"
+  ],
+  "allowed_use": [
+    "risk explanation",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "automatic diagnosis",
+    "treatment order",
+    "drug dose recommendation",
+    "automatic treatment decision"
+  ],
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "card_id": "medication_safety_renal_function_review_001",
+  "source_id": "medication_safety_icu_001",
+  "source_title": "Clinical Practice Guideline: Safe Medication Use in the ICU",
+  "domain": "medication_safety",
+  "subdomain": "renal_function",
+  "population": "mixed",
+  "card_type": "medication_safety_context",
+  "topic": "Renal function as a medication safety review signal",
+  "clinical_context": "Use when AKI risk or worsening renal function may affect medication safety review.",
+  "key_points": [
+    "The guideline discusses medication errors related to allergies and excessive dosing based on renal function in the context of decision support.",
+    "Use this as a review prompt only; it must not recommend dose changes."
+  ],
+  "trigger_signals": [
+    "decreased urine output",
+    "rising creatinine",
+    "renal dysfunction",
+    "renally cleared medication"
+  ],
+  "direct_risk_source": false,
+  "used_by_agents": [
+    "InterventionTrackerAgent",
+    "RiskSentinelAgent",
+    "ClinicalSummaryAgent"
+  ],
+  "retrieval_keywords": [
+    "renal function",
+    "AKI",
+    "urine output",
+    "creatinine",
+    "medication review",
+    "CDSS"
+  ],
+  "intervention_types": [
+    "medication review",
+    "clinical decision support alert"
+  ],
+  "observation_targets": [
+    "renal function trend",
+    "urine output",
+    "medication safety event"
+  ],
+  "response_language": [
+    "Renal function changes may justify pharmacist or clinician medication safety review."
+  ],
+  "evidence_location": {
+    "page_start": 11,
+    "page_end": 12,
+    "section_title": "Medication-use process / CDSS",
+    "quote": "MEs related to renal"
+  }
+}

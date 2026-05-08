@@ -1,0 +1,67 @@
+{
+  "related_risk_types": [
+    "persistent_shock_risk",
+    "respiratory_failure_risk",
+    "aki_risk"
+  ],
+  "allowed_use": [
+    "risk explanation",
+    "clinical summary",
+    "human review escalation wording"
+  ],
+  "forbidden_use": [
+    "automatic diagnosis",
+    "treatment order",
+    "drug dose recommendation",
+    "automatic treatment decision"
+  ],
+  "confidence": "high",
+  "human_review_required": true,
+  "last_updated": "2026-05-08",
+  "card_id": "triage_resource_allocation_admission_priority_001",
+  "source_id": "adult_icu_admission_triage_001",
+  "source_title": "ICU Admission, Discharge, and Triage Guidelines",
+  "domain": "triage_resource_allocation",
+  "subdomain": "icu_admission",
+  "population": "adult",
+  "card_type": "icu_operations_context",
+  "topic": "ICU admission priority framework",
+  "clinical_context": "Use for WardCoordinator sorting prompts when ICU-level monitoring or intervention may be needed.",
+  "key_points": [
+    "The guideline suggests guiding ICU admissions by prioritization models, diagnosis, objective parameters, potential to benefit, and prognosis.",
+    "Prioritization supports human review and resource coordination; it must not decide admission automatically."
+  ],
+  "trigger_signals": [
+    "ICU bed request",
+    "high risk for decline",
+    "need for intensive monitoring",
+    "resource limitation"
+  ],
+  "used_by_agents": [
+    "WardCoordinatorAgent",
+    "ClinicalSummaryAgent",
+    "RiskSentinelAgent"
+  ],
+  "retrieval_keywords": [
+    "ICU admission",
+    "priority",
+    "triage",
+    "resource allocation",
+    "high risk for decline"
+  ],
+  "priority_factors": [
+    "need for life support",
+    "intensive monitoring need",
+    "potential to benefit",
+    "available resources",
+    "patient preferences"
+  ],
+  "resource_context": "Supports prioritization prompts when ICU demand exceeds immediate capacity.",
+  "fairness_or_ethics_note": "Use explicit criteria and human oversight; avoid automated denial or admission decisions.",
+  "evidence_location": {
+    "page_start": 4,
+    "page_end": 9,
+    "section_title": "Criteria for Admission to the ICU",
+    "quote": "guiding ICU admissions on the basis"
+  }
+}

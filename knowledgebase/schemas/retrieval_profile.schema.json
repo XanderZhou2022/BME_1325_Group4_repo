@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "icu_agent.retrieval_profile.schema.json",
+  "type": "object",
+  "additionalProperties": {
+    "type": "object",
+    "required": ["allowed_domains", "preferred_card_types", "default_top_k"],
+    "additionalProperties": true,
+    "properties": {
+      "allowed_domains": {"type": "array", "items": {"type": "string"}},
+      "preferred_card_types": {"type": "array", "items": {"type": "string"}},
+      "forbidden_domains": {"type": "array", "items": {"type": "string"}},
+      "default_top_k": {"type": "integer", "minimum": 1},
+      "requires_clinician_approval": {"type": "boolean"}
+    }
+  }
+}

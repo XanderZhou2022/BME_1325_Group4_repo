@@ -1,0 +1,1102 @@
+
+--- Page 1 ---
+Society of Critical Care Medicine Guidelines
+on Recognizing and Responding to Clinical
+Deterioration Outside the ICU: 2023
+                                                                                         Kimia Honarmand, MD, MSc1,2
+RATIONALE: Clinical deterioration of patients hospitalized outside the ICU is            Randy S. Wax, MD, MEd, FRCPC,
+a source of potentially reversible morbidity and mortality. To address this, some          FCCM3,4
+acute care hospitals have implemented systems aimed at detecting and respond-            Daleen Penoyer, PhD, RN, CCRP,
+ing to such patients.                                                                       FCNS, FCCM5
+OBJECTIVES: To provide evidence-based recommendations for hospital clini-                Geoffery Lighthall, MD, PhD6,7
+cians and administrators to optimize recognition and response to clinical deterio-       Valerie Danesh, PhD, RN, FCCM8
+ration in non-ICU patients.                                                              Bram Rochwerg, MD, MSc1,2,9
+PANEL DESIGN: The 25-member panel included representatives from medi-                    Michael L. Cheatham, MD, FCCM10
+cine, nursing, respiratory therapy, pharmacy, patient/family partners, and clinician-    Daniel P. Davis, MD11
+methodologists with expertise in developing evidence-based Clinical Practice             Michael DeVita, MD, FRCP, FCCM12
+Guidelines.
+                                                                                         James Downar, MDCM, MHSc,
+METHODS: We generated actionable questions using the Population,                            FRCPC13
+Intervention, Control, and Outcomes (PICO) format and performed a system-                Dana Edelson, MD, MS14
+atic review of the literature to identify and synthesize the best available evidence.    Alison Fox-Robichaud, MSc, MD,
+We used the Grading of Recommendations Assessment, Development, and                          FRCPC15
+Evaluation Approach to determine certainty in the evidence and to formulate rec-         Shigeki Fujitani, MD, PhD, FCCM16
+ommendations and good practice statements (GPSs).
+                                                                                         Raeann M. Fuller, MSN, RN, CCRN-K17
+RESULTS: The panel issued 10 statements on recognizing and responding to                 Helen Haskell18
+non-ICU patients with critical illness. Healthcare personnel and institutions should     Matthew Inada-Kim, MD19
+ensure that all vital sign acquisition is timely and accurate (GPS). We make no
+                                                                                         Daryl Jones, MD, PhD20
+recommendation on the use of continuous vital sign monitoring among unsel-
+ected patients. We suggest focused education for bedside clinicians in signs             Anand Kumar, MD, FCCM21
+of clinical deterioration, and we also suggest that patient/family/care partners’        Keith M. Olsen, PharmD, FCCM22
+concerns be included in decisions to obtain additional opinions and help (both           Daniel D. Rowley, MSc, RRT-ACCS23
+conditional recommendations). We recommend hospital-wide deployment of a                 John Welch, RN, BSc, MSc24
+rapid response team or medical emergency team (RRT/MET) with explicit ac-                Marie R. Baldisseri, MD, MPH, FCCM25
+tivation criteria (strong recommendation). We make no recommendation about
+                                                                                         John Kellett, MD26
+RRT/MET professional composition or inclusion of palliative care members on
+                                                                                         Heidi Knowles, MD27
+the responding team but suggest that the skill set of responders should include
+eliciting patients’ goals of care (conditional recommendation). Finally, quality im-     Jonathan K. Shipley, AGACNP-DNP28
+provement processes should be part of a rapid response system.                           Philipp Kolb29,30
+
+CONCLUSIONS: The panel provided guidance to inform clinicians and admin-                 Sophie P. Wax31
+istrators on effective processes to improve the care of patients at-risk for devel-      Jonathan D. Hecht, MSN, APRN,
+oping critical illness outside the ICU.                                                     CCRN32
+                                                                                         Frank Sebat, MS,MD, FCCM33
+KEYWORDS: clinical deterioration; guidelines; Grading of Recommendations
+Assessment, Development, and Evaluation; medical emergency teams; rapid
+response system
+                                                                                         Copyright © 2024 by the Society of
+
+
+
+
+C
+                                                                                         Critical Care Medicine and Wolters
+        ritical illness in hospitalized patients is increasingly managed in ICUs         Kluwer Health, Inc. All Rights
+        to enable access to specific expertise, frequent clinical assessments, and       Reserved.
+        technological support to manage life-threatening injuries and/or illness         DOI: 10.1097/CCM.0000000000006072
+
+
+314     www.ccmjournal.org                                                                February 2024 • Volume 52 • Number 2
+      Copyright © 2023 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 2 ---
+                                                                                                              Special Articles
+
+(1). When the onset of critical illness occurs outside of       (PICOs) questions related to the early recognition
+the ICU, early identification and prompt response to            and response to clinical deterioration outside the ICU
+deterioration confer the greatest chance of success, yet        (Supplemental Digital Content 3, http://links.lww.
+may be hampered by an environment where the staff-              com/CCM/H434). The panel also generated a list of
+ing ratios and resource base are configured for lower           outcomes which they then prioritized based on per-
+levels of acuity. Various schemes for patient screening         ceived patient-importance (Supplemental Digital
+and clinician response—typified by rapid response sys-          Content 4, http://links.lww.com/CCM/H434).
+tems (RRSs)—have been used, yet there is uncertainty
+over which components of such interventions provide             Systematic Review
+measurable benefits to patients. This Clinical Practice
+Guideline (CPG) provides evidence-based recom-                  A professional librarian performed a system-
+mendations and expert guidance for practitioners and            atic search of the literature to identify studies that
+decision-makers regarding processes for: 1) early rec-          were potentially relevant to the PICO questions
+ognition of non-ICU patients at-risk for critical illness,      (Supplemental Digital Content 5, http://links.lww.
+and 2) prompt mobilization of appropriate resources             com/CCM/H434). A team of reviewers (V.C.D., P.K.,
+to improve their care.                                          S.W., J.D.H.) led by the clinician-methodologists
+                                                                (B.R., K.H.) screened and selected relevant articles,
+                                                                followed by data extraction and risk of bias assess-
+METHODOLOGY
+                                                                ment, according to standard systematic review meth-
+Panel Membership                                                odology (Supplemental Digital Content 6, http://
+                                                                links.lww.com/CCM/H434). Where possible, we per-
+Society of Critical Care Medicine (SCCM) appointed
+                                                                formed meta-analysis of data using random effects
+chairs (F.S., R.W.) and vice-chairs (D.P., G.L.) who con-
+                                                                models and inverse variance weighting (dataparty.
+vened a panel of 25 experts in acute illness and RRS in-
+                                                                ca). Where data were insufficient for meta-analysis,
+cluding a patient/family representative (Supplemental
+                                                                we summarized evidence narratively.
+Digital Content 1, http://links.lww.com/CCM/H434).
+The Guidelines in Intensive Care Development and
+Evaluation (GUIDE) group, represented by two                    GRADE Assessment
+clinician-methodologists (K.H., B.R.), provided                 We performed assessment of the certainty in the evi-
+methodological leadership based on the Grading of               dence for each outcome using GRADE methodology
+Recommendations, Assessment, Development, and                   (2) and generated evidence profiles using GRADEPro
+Evaluation (GRADE) methodology (2). SCCM pro-                   Guideline Development Tool (www.gradepro.org;
+vided logistic and material support.                            Supplemental Digital Content 7, http://links.lww.
+                                                                com/CCM/H434).
+Conflicts of Interest Management
+Panel members disclosed all potential financial                 Formulating Recommendations
+and intellectual conflicts of interest according to
+                                                                In a series of web-based meetings, the panel used the
+the American College of Critical Care Medicine
+                                                                GRADE Evidence-to-Decision framework (3) to gen-
+(ACCM)/SCCM Standard Operating Procedures,
+                                                                erate recommendations. Table 1 presents the GRADE
+which were reviewed and managed by SCCM
+                                                                classification of recommendation strength and their
+(Supplemental Digital Content 2, http://links.lww.
+                                                                respective implications.
+com/CCM/H434).
+                                                                   For questions addressing interventions in which the
+                                                                benefits unequivocally outweighed harms and met the
+Question Development and Outcome
+                                                                appropriate criteria, the panel generated good prac-
+Prioritization
+                                                                tice statements (GPSs). According to GRADE, these
+In a series of meetings, panel members established              statements are considered equivalent to strong recom-
+the scope of the guideline and formulated action-               mendations but are clearly differentiated within the
+able population, intervention, comparator, outcomes             manuscript and intentionally worded differently from
+
+Critical Care Medicine                                                                       www.ccmjournal.org     315
+        Copyright © 2023 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 3 ---
+Honarmand et al
+
+
+TABLE 1.
+Grading of Recommendations, Assessment, Development, and Evaluation Classification of
+Strengths of Recommendations and Their Implications
+                         Strong Recommendation “We                               Conditional Recommendation
+                                recommend…”                                             “We suggest…”
+
+                                                                              Trade-offs are less certain, either
+                        Desirable effects of intervention                because of low-quality evidence or because
+Implications          clearly outweigh undesirable effects,             evidence suggests desirable and undesirable
+for…                            or clearly do not.                              effects are closely balanced.
+
+… patients        Most individuals in this situation would want the The majority of individuals in this situation would want
+                   recommended course of action and only a            the suggested course of action, but many would not
+                   small proportion would not
+… clinicians      Most individuals should receive the recom-       Different choices are likely to be appropriate for differ-
+                   mended course of action. Adherence to this         ent patients, and therapy should be tailored to the
+                   recommendation according to the guideline          individual patient’s circumstances. Those circum-
+                   could be used as a quality criterion or perfor-    stances may include the patient or family’s values
+                   mance indicator. Formal decision aids are not      and preferences
+                   likely to be needed to help individuals make
+                   decisions consistent with their values and
+                   preferences
+… policymakers    The recommendation can be adapted as               Policymaking will require substantial debates and
+                    policy in most situations including for use as     involvement of many stakeholders. Policies are also
+                    performance indicators                             more likely to vary between regions. Performance
+                                                                       indicators would have to focus on the fact that
+                                                                       adequate deliberation about the management
+                                                                       options has taken place
+
+
+GRADEd PICOs (Supplemental Digital Content 8,                   PART A. EARLY RECOGNITION OF
+http://links.lww.com/CCM/H434) (4).                             CLINICAL DETERIORATION
+                                                                This section covers recommendations related to the
+Voting Process
+                                                                early recognition of clinical deterioration among
+Panel members reviewed and approved all recommen-               patients hospitalized outside the ICU.
+dations and rationales by a formal web-based vote.
+We defined consensus as 80% agreement among at                  VITAL SIGN MEASUREMENT AND
+least 75% of panel members (Supplemental Digital                DOCUMENTATION
+Content 9, http://links.lww.com/CCM/H434).
+                                                                Good Practice Statement. Ward staff caring for hos-
+                                                                pitalized patients should strive to acquire a complete
+UPDATING THE RECOMMENDATIONS                                    and accurate set of vital signs when ordered and when
+As new evidence emerges in the literature, the guide-           there is additional cause for concern, and to escalate
+line panel is committed to ensuring that the current            the reporting of significant abnormalities to the appro-
+recommendations are affirmed, updated, and ex-                  priate clinicians in an urgent manner.
+panded at regular intervals based on directives from               Rationale. Clinical deterioration represents a loss
+the ACCM.                                                       of homeostatic functions in the face of an illness and
+                                                                leads to measurable changes from baseline conditions,
+                                                                with severity reflected by the degree of changes in vital
+RECOMMENDATIONS                                                 signs. Vital signs are the simplest, cheapest, and most
+The panel generated 10 statements which are summa-              widely accepted signs of clinical change, and should be
+rized in Table 2.                                               obtained at intervals appropriate for a patient’s level
+
+316     www.ccmjournal.org                                                                   February 2024 • Volume 52 • Number 2
+      Copyright © 2023 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 4 ---
+                                                                                                                 Special Articles
+
+
+TABLE 2.
+Summary of Recommendations
+                                                                                                 Recommendation Strength,
+ Recommendation                                                                                     Quality of Evidence
+
+ Recognizing clinical deterioration
+  1.  Ward staff caring for hospitalized patients should strive to acquire a complete and    Good practice statement
+        accurate set of vital signs when ordered and when there is additional cause for
+        concern, and to escalate the reporting of significant abnormalities to the appropriate
+        clinicians in an urgent manner
+  2.  We make no recommendation regarding the routine use of continuous vital sign            No recommendation
+        monitoring to recognize early clinical deterioration in unselected non-ICU patients
+  3.  We suggest focused education of direct-care non-ICU hospital clinicians on recog-       Conditional recommendation,
+        nizing early clinical deterioration                                                       low certainty evidence
+  4A. Patients, families, and care partners of hospitalized patients are able to recognize    Good practice statement
+        subtle differences in clinical status that may signify deterioration and should be
+        empowered to alert appropriate personnel including the rapid response system
+  4B. We suggest that patient, family, and care partner concerns be incorporated into         Conditional recommendation,
+        hospital early warning systems                                                            low-certainty evidence
+ Responding to clinical deterioration
+  5. We recommend hospital-wide deployment of rapid response systems (i.e., RRT/              Strong recommendation, mod-
+       MET) for non-ICU patients that include explicit activation criteria for obtaining help     erate certainty evidence
+       from a designated response team
+  6.  We make no recommendations regarding 1) whether an RRT/MET should be led by No recommendation
+        a “prescribing clinician” vs. a “non-prescribing clinician”; and 2) whether an RRT/
+        MET should be led by a physician as compared to other healthcare providers
+  7A. We make no recommendation about involvement of palliative care-trained personnel No recommendation
+        as part of an RRT/MET
+  7B. We suggest ensuring that responding clinicians have expertise on eliciting patients’ Conditional recommendation,
+        goals of care and establishing treatment plans that best reflect their wishes and      low-certainty evidence
+        prognoses
+  8.  A process for quality improvement should be part of a Rapid Response System             Good practice statement
+MET = medical emergency team, RRT = rapid response team.
+
+of illness and when unexpected abnormalities arise.                 appropriate personnel in a timely manner. However,
+Traditional vital signs include temperature, heart rate,            numerous studies demonstrate incomplete and/or
+respiratory rate, blood pressure, and oxygen satura-                incorrect vital sign measurement is common in hos-
+tion, with supplemental signs, such as pain and mental              pitalized patients (7, 8) leading to failure to detect or
+status often included. Vital signs are the most wide-               recognize key signs of deterioration. We also noted
+spread triggers for summoning additional help and                   the importance of education (9), audits (7), and feed-
+evaluation, and are also the core component of mul-                 back to encourage improvement (10, 11) and com-
+tiparameter early warning systems. Some advocate                    pliance (9) with proper measurement techniques,
+measuring end-tidal carbon dioxide for respiratory                  accurate documentation, and prompt response to
+status (5) for patients using patient-controlled anal-              significant physiologic abnormalities.
+gesia, certain laboratory values (e.g., lactate), and cap-
+illary refill time for peripheral perfusion (6).
+                                                                    Routine Continuous Vital Sign Monitoring in
+    The panel agreed that if full advantage is to be
+                                                                    Unselected Non-ICU Patients
+gained from obtaining vital signs, they need to be
+acquired in the most accurate manner possible,                      Recommendation. We make no recommendation
+and with significant abnormalities reported to the                  regarding the routine use of continuous vital sign
+
+Critical Care Medicine                                                                            www.ccmjournal.org     317
+        Copyright © 2023 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 5 ---
+Honarmand et al
+
+monitoring to recognize early clinical deterioration in       analgesia infusions, active cardiac disease), but
+unselected non-ICU patients.                                  judged the evidence for default use in all (unselected)
+   Rationale.                                                 hospitalized patients to be insufficient.
+   Evidence Summary. Fourteen studies (3 random-
+ized controlled trials [RCTs] [12–14], 11 observational
+                                                              Focused Education on Recognition of Early
+[15–25]) reported inhospital clinical outcomes associ-
+                                                              Clinical Deterioration
+ated with continuous vital sign monitoring compared
+with intermittent monitoring (Supplemental Digital            Recommendation. We suggest focused education of
+Content 10A, http://links.lww.com/CCM/H434).                  direct-care non-ICU hospital clinicians on recognizing
+   The intervention may be associated with decreased          early clinical deterioration (conditional recommenda-
+ICU length of stay (two observational studies [21, 24],       tion, low-certainty evidence).
+low certainty). Evidence suggests uncertain effects              Rationale.
+of this intervention on mortality (two RCTs [12, 14],            Evidence Summary. Twenty-one studies (1 cluster
+seven observational studies [15, 17, 18, 20, 23–25];          RCT [28], 20 before-after studies [29–48]) reported
+very low certainty), cardiac arrests (two RCTs [12, 13]       outcomes following the implementation of focused ed-
+and six observational studies [17, 19–22, 24]; very low       ucation programs; most were bundled with other inter-
+and low certainty, respectively), unplanned transfers to      ventions when implementing an RRT/MET. Education
+ICU (three RCTs [12-14] and eight observational stud-         varied in format (i.e., in-person vs. online), structure
+ies [17–21, 23–25]; very low and low certainty, respec-       (i.e., didactic vs. interactive sessions), and target au-
+tively), time to recognition of clinical deterioration        dience (i.e., general ward nurses vs. physicians). See
+(two observational studies [16, 19]; very low certainty),     Supplemental Digital Content 10B (http://links.lww.
+implementation of appropriate treatment (i.e., time to        com/CCM/H434) for the GRADE evidence profile.
+antibiotics in sepsis; one RCT [14]; very low certainty)         The effect of focused education independent of other
+and changes in goals of care/ resuscitation status (two       interventions on mortality, non-ICU cardiac arrests,
+observational studies [17, 20]; very low certainty).          hospital length of stay, and transfers to higher levels
+   Evidence to Recommendation. There was low cer-             of care was uncertain (very low certainty for all out-
+tainty in the evidence for the desirable effects of the       comes). There was a possible reduction in ICU length
+intervention. Although we found no evidence of un-            of stay (low certainty) (36, 40, 44), increased compli-
+desirable effects, the panel acknowledged possible dis-       ance with early warning systems (low certainty), and
+rupted patient sleep and increased staff workload with        possibly decreased time from RRT/MET activation to
+frequent false alarms are of concern, but inadequately        physician review (very low certainty).
+evaluated. The panel speculated that continuous vital            Evidence to Recommendation. The desirable effects
+sign monitoring may create a false sense of security          of focused education may include improved pairing
+that may substitute for other forms of meaningful pa-         between patients needing RRT/MET services and re-
+tient contact including bedside assessments.                  ceipt of such services, with possible reductions of
+   No studies reported the resource requirements              morbidity, mortality, resource use, and costs. Despite
+associated with the intervention in unselected                the low to very low-certainty evidence for benefit, the
+patients, although monitoring technology and per-             panel acknowledged that in GPSs, education was often
+sonnel are required with varying costs. As such, cost-        part of an implementation or quality improvement
+effectiveness is unknown. Concerns were discussed             (QI) package, of which the value of individual com-
+about the potential impact of the intervention on             ponents is difficult to assess on their own. Thus, the
+health inequity regarding racial or ethnicity-related         clinical benefit of focused education may be underesti-
+differences in the accuracy of some monitoring                mated in this analysis.
+devices (26, 27). The panel agreed that the interven-            Undesirable patient effects of focused education
+tion is probably feasible in some jurisdictions, but          were not identified. The panel considered factors, such
+not in low-resource settings. The panel agreed that           as information/cognitive overload among healthcare
+continuous vital sign monitoring provides benefit in          providers and cost of the intervention. Depending on
+some patients and settings (i.e., patient-controlled          its effectiveness, costs may or may not be offset. The
+
+318     www.ccmjournal.org                                                                February 2024 • Volume 52 • Number 2
+      Copyright © 2023 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 6 ---
+                                                                                                              Special Articles
+
+panel agreed the intervention would be acceptable               may be associated with decreased rates of mortality
+to healthcare providers although feasibility will vary          (one study [53]) and unsuccessful resuscitations (one
+depending on the complexity.                                    study [53]), but no change in the rate of non-ICU car-
+   Special considerations. The panel agreed that educa-         diac arrests (three studies [51–53]; low certainty for all
+tion that is directed toward a specific behavior, such as       outcomes). Effects on unplanned transfers to ICU (two
+calling for help in specific situations, instituting proto-     studies [51, 53]) and number of RRT/MET activations
+cols when needed, and performing key actions in spe-            (four studies [50, 51, 53, 54]) were unclear (very low
+cific situations is unlikely to lead to meaningful clinical     certainty for both).
+benefit without incorporation into a structured RRS                The proportion of RRT/MET calls resulting in
+(see infographic) with some form of audits and feed-            transfer to a higher level of care was increased in staff
+back (see Recommendation 5).                                    activations compared with family activations in three
+   The panel identified areas of future research, in-           studies (50–52), while the fourth study reported that
+cluding identifying:                                            all family activations led to transfer to a higher level of
+• Course content: types of knowledge required based on the      care (55).
+  type of institution/clinical setting;                            Evidence to Recommendation. The panel judged the
+• Course duration, frequency, and format;                       overall certainty in the evidence to be low but agreed
+• Evaluation of cost-effectiveness;                             that there are other potential benefits for patient/
+• Duration of the learning effects and need for reinforcement   family/care partner activation that are challenging to
+  over time.
+                                                                evaluate in quantitative studies (i.e., timely attention to
+                                                                patient/family/care partner concerns and opportuni-
+Patient, Family, and Care Partner RRT/MET                       ties for improved communication and care).
+Activation as a Formal Part of an Early Warning                    Despite concerns about increased RRT/MET per-
+System                                                          sonnel workload, patient/family/care partner RRT/
+                                                                MET activations, where they exist, are uncommon
+Good Practice Statement. Patients, families, and care
+                                                                and mostly occur when there is a communication
+partners of hospitalized patients are able to recognize
+                                                                breakdown between the primary team and these
+subtle differences in clinical status that may signify de-
+                                                                stakeholders. The panel agreed that such activations
+terioration and should be empowered to alert appro-
+                                                                are justified by more timely interventions or resolu-
+priate personnel including the GPS.
+                                                                tion of these stakeholders’ concerns. As such, it was
+   Recommendation. We suggest that patient, family,
+                                                                judged the balance of effects probably favors the
+and care partner concerns be incorporated into hos-
+                                                                intervention.
+pital early warning systems (conditional recommenda-
+                                                                   No studies were found reporting resource require-
+tion, low-certainty evidence).
+                                                                ments associated with this intervention. The panel
+   Rationale.
+                                                                speculated that additional costs may come from estab-
+   Evidence Summary. A recent SCCM CPG provides
+                                                                lishing dedicated contact mechanisms and educational
+recommendations regarding family-centered care in
+                                                                initiatives for patient/family/care partner RRT/MET
+the ICU (49). Here, we considered patient/family/care
+                                                                activation Availability and presence of family members
+partner activation of RRT/MET to include a hospital-
+                                                                and care partners at the bedside provide greater oppor-
+led, formalized pathway for patients, family members,
+                                                                tunities for patient advocacy. The panel had concerns
+and care partners to trigger and communicate with
+                                                                about the impact of this intervention on health ineq-
+the RRT/MET directly, without requiring involve-
+                                                                uity affecting non-dominant cultures, ethnic origins,
+ment by their primary medical team.
+                                                                or primary languages who may have variable access to
+   We identified five before-after studies that reported
+                                                                this intervention. Remedies such as provision of trans-
+clinical outcomes after the implementation of patient/
+                                                                lation tools in other languages may somewhat alleviate
+family/care partner RRT/MET activations among
+                                                                these concerns.
+hospitalized adults (two studies) and children (three
+                                                                   The panel judged that the intervention would be
+studies) (50–54) (Supplemental Digital Content 10C,
+                                                                highly acceptable to patients, family members, and
+http://links.lww.com/CCM/H434). This intervention
+                                                                care partners. Some clinicians may have concerns
+
+Critical Care Medicine                                                                       www.ccmjournal.org     319
+        Copyright © 2023 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 7 ---
+Honarmand et al
+
+about the potential risk to relationships between             on clinical outcomes (for details, see Supplemental
+ward clinicians and patients, family members, and             Digital Content 10D, http://links.lww.com/CCM/
+care partners. Training patients, family members,             H434). Important heterogeneity existed across study
+and care partners about the purpose of the RRT/MET            designs and interventions, with many implement-
+and training clinicians around timely communication           ing activation criteria and RRT/MET simultaneously;
+with these stakeholders may improve acceptability of          thus, evaluating the impact of each in isolation was not
+this intervention.                                            possible.
+   The panel unanimously agreed that patients, fami-             Among RCTs, pooled results demonstrated a reduc-
+lies, and care partners should be empowered to com-           tion in mortality (three RCTs; respiratory rate 0.74; 95%
+municate any concerns with the healthcare team and            CI, 0.66–0.83; moderate certainty) and non-ICU car-
+that it is important that clinicians should take measures     diac arrests (two RCTs; mean difference –0.43; 95% CI,
+to ensure that such concerns are heard and addressed          –0.88 to 0.02; moderate certainty). Both findings were
+in a timely manner. The panel agreed that hospitals           supported by most observational studies. There was
+should create means for these stakeholders to escalate        no effect on health-related quality of life or discharge
+their concerns over patient deterioration and that this       to assisted living facilities (low certainty). Effects on
+met the criteria for a GPS.                                   transfers to a higher level of care and changes in goals
+   The panel judged that data supporting the incor-           of care were unclear (very low certainty).
+poration of patient/family/care partner concerns as a            Evidence to Recommendation. Desirable effects of
+formal component of a hospital’s early warning system         activation criteria and a designated RRT/MET include
+was less concrete, with panel members holding differ-         a possible reduction in mortality among hospitalized
+ent perspectives on the topic, leading to a conditional       patients (moderate certainty from RCTs and sup-
+recommendation pending further research.                      ported by most observational studies). More recent
+                                                              interventional trials have confirmed that deployment
+                                                              of an early warning risk score leads to decreased mor-
+PART B. RESPONDING TO CLINICAL
+                                                              tality (159). The literature did not identify any undesir-
+DETERIORATION
+                                                              able effects of this intervention. The panel considered
+This section covers recommendations related to the re-        possible overutilization and reliance on the RRT/MET
+sponse to clinical deterioration among patients hospi-        and deskilling among non-ICU staff. However, these
+talized outside the ICU.                                      effects are speculative and not reported in the litera-
+                                                              ture. Overall, the panel deemed the balance of effects to
+                                                              favor activation criteria with RRT/MET interventions.
+Explicit Activation Criteria and Rapid Response
+                                                                 Resource requirements will vary based on juris-
+Team (RRT)/Medical Emergency Team (MET)
+                                                              dictional differences in activation criteria and RRT/
+Recommendation. We recommend hospital-wide                    MET composition. The panel deemed that cost-­
+deployment of GPSs (i.e., RRT/MET) for non-ICU                effectiveness probably favors the intervention. The
+patients that include explicit activation criteria for        panel judged that the intervention would be highly
+obtaining help from a designated response team (strong        acceptable to patients. Although the primary care
+recommendation, moderate certainty evidence).                 team should be part of RRT/MET activation, there
+   Rationale.                                                 may be a perceived infringement on their autonomy
+   Evidence Summary. This recommendation addresses            although potential patient benefit likely supersedes
+the 1) identification of acute patient deterioration          such concerns. The panel judged the intervention
+requiring additional help, and 2) the deployment of a         is probably feasible in most settings, including in
+designated rapid response team/medical emergency              smaller healthcare settings.
+team (RRT/MET) with expertise in addressing clinical             Special Considerations. The panel acknowledged the
+deterioration. We identified 6 relevant RCTs (28, 56–         difficulty of evaluating the impact of separate, yet inter-
+60) and 112 before-after studies (9, 17–20, 31, 33, 34,       dependent, components within this complex system.
+36, 37, 39, 42, 44, 48, 61–158) that evaluated the impact     This analysis was not possible given the heterogeneity
+of activation criteria and/or RRT/MET interventions           in study designs, the types of explicit activation criteria
+
+320     www.ccmjournal.org                                                                February 2024 • Volume 52 • Number 2
+      Copyright © 2023 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 8 ---
+                                                                                                                     Special Articles
+
+that were implemented, composition and structure                      studies) (137, 162), cardiac arrests (three studies) (145, 149,
+of the RRT/MET, and reported outcomes. The panel                      150), hospital and ICU lengths of stay (one study) (149),
+                                                                      unplanned ICU transfers (three studies) (137, 162, 163),
+strongly supported future research evaluating the im-
+                                                                      changes in patients’ resuscitation status (one study) (162),
+pact of various types of activation criteria, such as                 and RRT/MET activations (one study) (163) (very low cer-
+those that are simple bedside parameters that are un-                 tainty for all outcomes).
+derstood and acted upon by the patient’s nurse or other
+clinicians vs. algorithmic electronic medical record                  Evidence to Recommendation. The panel consid-
+analysis that predicts acute decline and summons help.             ered possible unevaluated effects of RRT/MET com-
+   Most evidence supporting RRTs comes from their                  positions, including that prescribing clinicians may be
+operation in non-ICU inpatient wards. Response to                  more likely to initiate goals of care conversations where
+emergency departments (EDs) and other specialty                    appropriate (see Recommendation 7B) and implement
+areas within a hospital will depend on local needs and             orders/interventions earlier. The panel speculated that
+arrangements including consideration of support for                ward clinician thresholds for requesting help may be
+admitted patients boarded in the ED.                               higher when calling a physician-led RRT/MET.
+                                                                      No studies reported resource requirements, but the
+                                                                   panel judged that physician-led teams may be moder-
+Rapid Response Team Leadership/                                    ately more resource-intensive and that hospitals in some
+Composition
+                                                                   areas (e.g., rural and low-income settings), may have lim-
+Recommendation. We make no recommendations re-                     ited physician support to implement this intervention.
+garding 1) whether an RRT/MET should be led by a                   Emergency physician and staff support in the response
+“prescribing clinician” versus a “non-prescribing clini-           to deteriorating patients outside the ED, for example,
+cian,” and 2) whether an RRT/MET should be led by a                may create conflicts with areas of primary responsibility
+physician as compared to other healthcare providers.               and highlight the need to carefully consider issues such
+   Rationale.                                                      as staffing policies when personnel are limited (164).
+   Background. RRT/METs vary in their composi-                        The panel judged acceptability and feasibility will
+tion and approach to activations: 1) an RRT uses a                 vary by setting. For patients, the panel agreed that
+“ramp-up” approach in which the initial response is                timeliness of the initial response to RRT/MET activa-
+most often led by a critical care-trained nurses (i.e.,            tions would be more valuable than the professional
+“non-prescribing clinicians”), who may then summon                 composition of the team.
+other clinicians as needed, and 2) a MET uses a “ramp-                Special considerations. The panel identified two areas
+down” approach characterized by an initial presence of             for future research:
+a prescribing clinician (i.e., physicians, nurse practitio-        • The utility of protocolized care to guide RRT/MET
+ners, or advanced care practitioners), which can be de-              interventions;
+escalated as clinically indicated (160).                           • Virtual consultations (e.g., telehealth) to offset the need for
+   Evidence Summary. The panel considered two dif-                   on-site physicians, particularly at smaller centers.
+ferent comparisons:
+1. RRT/MET led by a “prescribing” versus “non-                     Palliative Care Personnel as Part of the RRT/
+   prescribing” clinician. Due to high risk of bias, inconsist-    MET and Education/Guidance for Clinicians in
+   ency, and imprecision across two included observational         Eliciting Patients’ Goals of Care
+   studies (Supplemental Digital Content 10E, http://links.
+   lww.com/CCM/H434), there were uncertain effects on mor-         Recommendations.
+   tality (one study) (161), hospital length of stay (one study)      Recommendation 7A. We make no recommendation
+   (161), unplanned ICU transfers (two studies) (93, 161), and     about involvement of palliative care-trained personnel
+   RRT/MET activations (one study) (93) (very low certainty        as part of an RRT/MET.
+   for all outcomes).                                                 Recommendation 7B. We suggest ensuring that
+2. The presence of a physician versus critical care nurse dur-
+                                                                   responding clinicians have expertise on eliciting
+   ing the initial team-response. Due to inconsistency and
+   high risk of bias across three included observation studies     patients’ goals of care and establishing treatment plans
+   (Supplemental Digital Content 10E, http://links.lww.com/        that best reflect their wishes and prognoses (condi-
+   CCM/H434), there were uncertain effects on mortality (two       tional recommendation, low-certainty evidence).
+
+Critical Care Medicine                                                                            www.ccmjournal.org     321
+        Copyright © 2023 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 9 ---
+Honarmand et al
+
+  Rationale.                                                       may be infrequent, their impact on subsequent patient
+  Evidence Summary. This question was addressed in                 care is unknown. On balance, the panel judged that
+two parts:                                                         the improved patient communication and choice out-
+1. Palliative care personnel as part of the RRT/MET: no rele-      weighed potential undesirable effects and clear docu-
+   vant studies.                                                   mentation of goals of care discussions in the medical
+2. Education/guidance for clinicians regarding discussions         record is an essential element in this process.
+   about patients’ goals of care. We identified three relevant        The costs of this intervention are unknown but pro-
+   studies (Supplemental Digital Content 10F, http://links.        viding treatments that are not consistent with patients’
+   lww.com/CCM/H434):
+                                                                   wishes likely increases costs. We identified no evidence of
+   •		 One RCT in which the intervention consisted of an
+       RRT/MET physician communicating scripted guidance           the impact of this intervention on health equity, although
+       regarding goals of care discussions to patients’ ward       studies have found that recent immigrants (171) and
+       physician (165).                                            some ethnic minorities (172) are more likely to receive
+   •		 A before-after study implemented a two-pronged educa-       aggressive interventions and die in an ICU than other
+       tional program for non-ICU staff (166).                     groups. To enhance health equity, clinicians should 1)
+   •		 Another before-after study implemented a hospital-wide
+                                                                   not approach goals of care discussions with a prespecified
+       preprinted order set to facilitate discussion about goals
+       of care by clinical staff (167).                            outcome in mind, 2) provide all patients with the oppor-
+   The heterogenous interventions were associated                  tunity to discuss their values and goals, regardless of race,
+with increased reevaluation and documentation of                   ethnicity, and cultural background, and 3) adapt discus-
+patients’ goals of care preferences and change in resus-           sions to diverse languages and cultures. The panel judged
+citation status (one RCT [165], two before-after studies           that the intervention would be acceptable and feasible.
+[166, 167]; moderate certainty). There were no effects
+                                                                   RRS Quality Improvement
+on palliative care consultations (one RCT [167] and
+one before-after study [153]; low certainty) or func-              Good Practice Statement. A process for QI should be
+tional status at discharge (one before-after study [166];          part of a GPS.
+low certainty), and uncertain effects on discharge to                 Rationale. The most comprehensive programs that
+residential setting (one before-after study [166]; very            evaluated and treated deteriorating patients outside
+low certainty) and lengths of stay (one RCT [165], two             the ICU were GPSs. We identified 23 observational
+before-after studies [166, 167], very low certainty).              studies evaluating the effect of various QI initiatives
+   Evidence to Recommendation. The literature shows                on patient outcomes (9, 38, 40, 41, 44, 61, 64, 99, 142,
+that patients who receive emergency team calls have                173–185). The studies employed heterogenous inter-
+a higher mortality than other ward patients (168, 169)             ventions, including RRS implementation education
+such that the time of a call represents a critical juncture        (40, 44, 61, 64, 99, 142, 176, 178, 180–184), clinician
+in care where it is important to understand a patient’s            oversight with audit and feedback (40, 61, 177, 179,
+values as well the disease at hand in formulating an ap-           184), and teamwork/communication strategies (38,
+propriate care plan. We, therefore, consider it impor-             44, 87, 176, 184).
+tant that an emergency response team contain some                     The panel agreed that QI is an integral part of an
+members who are comfortable with discussing disease                effective RRS, but that high variability exists in the
+severity and goals of care and establishing treatment              types of QI strategies implemented and reported in
+plans that best reflect a patient’s wishes and progno-             the literature. The panel emphasized that each center
+ses. Where needed, additional training in this skill was           should establish QI that is tailored to local context,
+considered by the panel to be important (170). The                 including patient volumes, and resources. The struc-
+panel judged that the intervention improves commu-                 ture of QI strategies may vary across centers in format
+nication and documentation around goals of care and                and approach. For example, case-based reviews (e.g.,
+may reduce administration of therapies inconsistent                review of RRT/MET activations, RRT/MET activa-
+with patients’ preferences and prognoses. Undesirable              tion delays, morbidity and mortality rounds with
+effects may include disagreement between ward clini-               case reviews) may be preferred in smaller institu-
+cians and RRT/MET staff regarding timing and content               tions, whereas the addition trend analysis of volume-
+of goals of care discussions. Although such conflicts              adjusted rates (e.g., RRT/MET activation delays,
+
+322     www.ccmjournal.org                                                                    February 2024 • Volume 52 • Number 2
+       Copyright © 2023 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 10 ---
+                                                                                                                   Special Articles
+
+non-ICU cardiac arrests) may be more salient in                    Dearness (Director of Library Services) and Ms.
+larger centers. Refinement of RRS processes should                 Melanie Chiarot (Library Technician) for their
+be informed by periodic audits to address barriers to              contributions to the systematic review process.
+early recognition and prompt response to clinical de-              The American College of Critical Care Medicine
+terioration and team communication processes. The                  (ACCM), which honors individuals for their achieve-
+panel also determined that the ideal QI program be                 ments and contributions to multidisciplinary critical
+guided by the goal of capturing all events that qual-              care medicine, is the consultative body of the SCCM,
+ified for and those that received an RRT/MET re-                   which possesses recognized expertise in the practice
+sponse into a database to monitor circumstances and                of critical care. The ACCM has developed adminis-
+outcomes surrounding these events. Such databases                  trative guidelines and clinical practice parameters
+may include patient identifiers, dates, times, loca-               for the critical care practitioner. New guidelines and
+tions, reasons for RRT/MET calls, interventions, and               practice parameters are continually developed, and
+outcomes among those with RRT/MET activations                      current ones are systematically reviewed and revised.
+as well as adverse events among patients who would                 Librarian services, systematic review, and analysis for
+have qualified for an activation but did not receive               these guidelines were provided contractually through
+one. (i.e., missed events resulting in clinical deterio-           the Guidelines in Intensive Care Development and
+ration). Whenever possible, patient and family per-                Evaluation Group, McMaster University, Canada.
+spectives should be incorporated into the QI process               Methodologists served as expert panel members spe-
+to further ensure patient and family-centered care.                cializing in this area.
+
+RESEARCH AGENDA                                                     1 Division of Critical Care, Department of Medicine, Mackenzie
+                                                                      Health, Vaughan, ON, Canada.
+Important questions remain across multiple domains                  2 Department of Health Research Methods, Evidence, and
+relevant to recognizing critical illness outside of the               Impact, McMaster University, Hamilton, ON, Canada.
+ICU, including, but not limited to:                                 3 Department of Critical Care Medicine, Faculty of Health
+                                                                      Sciences, Queen’s University, Kingston, ON, Canada.
+•	What physiologic parameters could improve the recog-
+   nition of at-risk patients and be included in the bedside        4 Department of Critical Care, Lakeridge Health, Oshawa,
+                                                                      ON, Canada.
+   examination, RRT/MET activation criteria, and Early
+   Warning Scores?                                                  5 Center for Nursing Research and Advanced Nursing
+• Is electronic health record-enabled RRT/MET activation              Practice, Orlando Health, Orlando, FL.
+   superior to clinician-initiated RRT/MET activation?              6 Department of Anesthesia, Pain, and Perioperative Medicine,
+• Does the professional composition of an RRT/MET team                Stanford University School of Medicine, Palo Alto, CA.
+   affect patient outcomes?                                         7 Veterans Affairs Medical Center, Palo Alto, CA.
+• Does the use of specific treatment protocols for specific         8 Center for Applied Health Research, Baylor Scott and White
+   conditions (shock, respiratory failure, etc.) improve patient      Health, Dallas, TX.
+   outcomes?                                                        9 Department of Medicine, Faculty of Health Sciences,
+• How can patient- and family-important outcome measures              McMaster University, Hamilton, ON, Canada.
+   be incorporated in studies evaluating RRS effectiveness?        10 Division of Surgical Education, Orlando Regional Medical
+• Are there key interventions/ resuscitation goals to be met          Center, Orlando, FL.
+   that need to take place within a specific time period to im-    11 Emergency Medical Services, Logan Health, Kalispell, MT.
+   prove outcomes?
+                                                                   12 Columbia Vagelos College of Physicians and Surgeons,
+                                                                      Department of Medicine Harlem Hospital Medical Center,
+                                                                      New York City, NY.
+ACKNOWLEDGMENTS
+                                                                   13 Division of Critical Care, Department of Medicine, University
+The panel acknowledges the Society of Critical Care                   Health Network, Toronto, ON, Canada.
+Medicine (SCCM) administrative staff, Ms. Adair                    14 Division of Internal Medicine, Department of Medicine,
+                                                                      University of Chicago Medical Center, Chicago, IL.
+Andrews, Ms. Julie Higham, and Ms. Hariyali Patel
+                                                                   15 Division of Critical Care, Department of Internal Medicine,
+for their support of this guideline. We also thank
+                                                                      Thrombosis and Atherosclerosis Research Institute, Faculty
+St. Joseph’s Healthcare Hamilton’s Library Services,                  of Health Sciences, McMaster University, Hamilton, ON,
+Centre for Education and Innovation, Ms. Karin                        Canada.
+
+
+Critical Care Medicine                                                                           www.ccmjournal.org     323
+        Copyright © 2023 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 11 ---
+Honarmand et al
+
+16 Division of Critical Care, Department of Emergency                for Hill Rom. Dr. Welch disclosed that he is an advisor in a
+   Medicine, Saint Marianna University, Kawasaki, Japan.             one-off Becton, Dickinson and Co. Adult and Specialist Critical
+17 Division of Trauma and Critical Care, Department of               Care Advisory Board. Dr. Kellett disclosed that he is the founder
+   Emergency Medicine, Advocate Condell Medical Center,              and major shareholder of Tapa Healthcare DAC. The remaining
+   Libertyville, IL.                                                 authors have disclosed that they do not have any potential con-
+                                                                     flicts of interest.
+18 Mothers Against Medical Error, Columbia, SC.
+                                                                     American College of Emergency Physicians, The Society of
+19 Department of Acute Medicine, Hampshire Hospitals
+                                                                     Hospital Medicine, The International Society of Rapid Response
+   NHS Foundation Trust and University of Southampton,
+                                                                     Systems.
+   Southampton, United Kingdom.
+                                                                     For information regarding this article, E-mail: fsebat@aol.com
+20 Division of Surgery, Department of Medicine, University of
+   Melbourne, Melbourne, VIC, Australia.
+21 Division of Critical Care, Department of Internal Medicine,
+   University of Manitoba, Winnipeg, MB, Canada.                     REFERENCES
+22 University of Nebraska Medical Center, Nebraska Medical            1. Nates JL, Nunnally M, Kleinpell R, et al: ICU admission, dis-
+   Center, Omaha, NE.                                                    charge, and triage guidelines: A framework to enhance clinical
+23 Respiratory Therapy Services, University of Virginia Medical          operations, development of institutional policies, and further
+   Center, Charlottesville, VA.                                          research. Crit Care Med 2016; 44:1553–1602
+24 Critical Care Unit, University College London Hospitals            2. Guyatt GH, Oxman AD, Schunemann HJ, et al: GRADE
+   NHS Foundation Trust, London, United Kingdom.                         guidelines: A new series of articles in the Journal of Clinical
+25 Department of Critical Care, University of Pittsburgh Medical         Epidemiology. J Clin Epidemiol 2011; 64:380–382
+   Center, Pittsburgh, PA.                                            3. Andrews J, Guyatt G, Oxman AD, et al: GRADE guidelines: 14.
+26 Department of Emergency Medicine, University of Southern              Going from evidence to recommendations: The significance
+   Denmark, Odense, Denmark.                                             and presentation of recommendations. J Clin Epidemiol 2013;
+                                                                         66:719–725
+27 Department of Emergency Medicine, John Peter Smith
+                                                                      4. Guyatt GH, Schunemann HJ, Djulbegovic B, et al: Guideline
+   Health Network, Fort Worth, TX.
+                                                                         panels should not GRADE good practice statements. J Clin
+28 Division of Critical Care, Vanderbilt University Medical              Epidemiol 2015; 68:597–600
+   Center, Nashville, TN.
+                                                                      5. Stites M, Surprise J, McNiel J, et al: Continuous capnography
+29 Michael G. DeGroote School of Medicine, McMaster                      reduces the incidence of opioid-induced respiratory rescue
+   University, Hamilton, ON, Canada.                                     by hospital rapid resuscitation team. J Patient Saf 2021;
+30 Department of Family Medicine, Dalhousie University,                  17:e557–e561
+   Halifax, ON, Canada.                                               6. Sebat C, Vandegrift MA, Oldroyd S, et al: Capillary refill time
+31 Faculty of Health Sciences, Queen’s University, Kingston,             as part of an early warning score for rapid response team ac-
+   ON, Canada.                                                           tivation is an independent predictor of outcomes. Resuscitation
+                                                                         2020; 153:105–110
+32 School of Nursing, The University of Texas at Austin, Austin,
+   TX.                                                                7. Badawy J, Nguyen OK, Clark C, et al: Is everyone really breath-
+                                                                         ing 20 times a minute? Assessing epidemiology and variation
+33 Division of Internal Medicine, Mercy Medical Center,
+                                                                         in recorded respiratory rate in hospitalised adults. BMJ Qual
+   Redding, CA.
+                                                                         Saf 2017; 26:832–836
+Supplemental digital content is available for this article. Direct    8. Considine J, Trotter C, Currey J: Nurses’ documentation of
+URL citations appear in the printed text and are provided in the         physiological observations in three acute care settings. J Clin
+HTML and PDF versions of this article on the journal’s website           Nurs 2016; 25:134–143
+(http://journals.lww.com/ccmjournal).
+                                                                      9. Sebat F, Vandegrift MA, Childers S, et al: A novel bedside-
+Funding for these guidelines was provided solely by the Society          focused ward surveillance and response system. Jt Comm J
+of Critical Care Medicine. Panel members disclosed all poten-            Qual Patient Saf 2018; 44:94–100
+tial financial and intellectual conflicts of interest according to
+                                                                     10. Zadravecz FJ, Tien L, Robertson-Dick BJ, et al: Comparison
+the American College of Critical Care Medicine/Society of
+                                                                         of mental-status scales for predicting mortality on the general
+Critical Care Medicine Standard Operating Procedures. Refer
+                                                                         wards. J Hosp Med 2015; 10:658–663
+to Supplemental Digital Contents 1 and 2 (http://links.
+lww.com/CCM/H434) for details. Dr. Penoyer received fund-            11. Suzuki R, Takada T, Takeshima T, et al: Usefulness of a mobile
+ing from Ivenix, Inc, Avanos, ICU Medical, and BD. Dr. Davis             phone application for respiratory rate measurement in adult
+disclosed he is a consultant for Zoll and Healthstream and is            patients. Jpn J Nurs Sci 2022; 19:e12481
+Chief Executive Officer of Medical X Technologies. Dr. Edelson       12. Watkinson PJ, Barber VS, Price JD, et al: A randomised con-
+disclosed that she is president and co-founder of AgileMD and            trolled trial of the effect of continuous electronic physiological
+received equity interest, she is an employee of the National             monitoring on the adverse event rate in high risk medical and
+Institutes of Health, and received a research grant from BARDA           surgical patients. Anaesthesia 2006; 61:1031–1039
+(ARCD.P0535US). Dr. Rowley received funding from Draeger,            13. Paul JE, Chong MA, Buckley N, et al: Vital sign monitoring with
+STIMIT, and Vyaire. Dr. DeVita disclosed that he is a consultant         continuous pulse oximetry and wireless clinical notification
+
+
+324     www.ccmjournal.org                                                                          February 2024 • Volume 52 • Number 2
+       Copyright © 2023 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 12 ---
+                                                                                                                             Special Articles
+
+    after surgery (the VIGILANCE pilot study)—a randomized con-               care unit arrests and overall hospital mortality. J Hosp Med
+    trolled pilot trial. Pilot Feasibility Stud 2019; 5:36                    2015; 10:352–357
+14. Downey C, Randell R, Brown J, et al: Continuous versus inter-         30. Chatwood AK, Osborne M: The impact of an integrated resus-
+    mittent vital signs monitoring in patients admitted to surgical           citation and critical care training programme on cardiac arrest
+    wards: A cluster-randomised, controlled trial. Colorectal Dis             rates and survival after cardiac arrest. Resuscitation 2010;
+    2018; 20(Supplement 4):60                                                 81:S96
+15. Xie L, Garg T, Svec D, et al: Reducing telemetry use is safe: A       31. Buist MD, Moore GE, Bernard SA, et al: Effects of a medical
+    retrospective analysis of rapid response team and code events             emergency team on reduction of incidence of and mortality
+    after a successful intervention to reduce telemetry use. Am J             from unexpected cardiac arrests in hospital: Preliminary study.
+    Med Qual 2019; 34:398–401                                                 BMJ 2002; 324:387–390
+16. Barwise A, Thongprayoon C, Herasevich V, et al: The associ-           32. Bradley P, DePolo M, Tipton J, et al: Improving sepsis survival
+    ation between monitoring and RRT activation. Crit Care Med                using mews for early recognition and immediate response to
+    2015; 43(12 SUPPL. 1):51                                                  patient decline. Crit Care Med 2019; 47(1 Supplement 1):788
+17. Subbe CP, Duller B, Bellomo R: Effect of an automated noti-           33. Bunkenborg G, Samuelson K, Poulsen I, et al: Lower incidence
+    fication system for deteriorating ward patients on clinical out-          of unexpected in-hospital death after interprofessional imple-
+    comes. Crit Care 2017; 21:52                                              mentation of a bedside track-and-trigger system. Resuscitation
+18. Scott Evans R, Kuttler KG, Simpson KJ, et al: Automated de-               2014; 85:424–430
+    tection of physiologic deterioration in hospitalized patients. J      34. Campello G, Granja C, Carvalho F, et al: Immediate and long-
+    Am Med Inform Assoc 2015; 22:350–360                                      term impact of medical emergency teams on cardiac arrest
+19. Heller AR, Mees ST, Lauterwald B, et al: Detection of dete-               prevalence and mortality: A plea for periodic basic life-support
+    riorating patients on surgical wards outside the ICU by an                training programs. Crit Care Med 2009; 37:3054–3061
+    automated MEWS-based early warning system with paging                 35. Fuhrmann L, Perner A, Klausen TW, et al: The effect of multi-
+    functionality. Ann Surg 2020; 271:100–105                                 professional education on the recognition and outcome
+20. Bellomo R, Ackerman M, Bailey M, et al; Vital Signs to Identify,          of patients at risk on general wards. Resuscitation 2009;
+    Target, and Assess Level of Care Study (VITAL Care Study)                 80:1357–1360
+    Investigators: A controlled trial of electronic automated advi-       36. Guirgis FW, Jones L, Esma R, et al: Managing sepsis: Electronic
+    sory vital signs monitoring in general hospital wards. Crit Care          recognition, rapid response teams, and standardized care save
+    Med 2012; 40:2349–2361                                                    lives. J Crit Care 2017; 40:296–302
+21. Zimlichman E, Terrence J, Argaman D, et al: Effect of contact-        37. Heal M, Silvest-Guerrero S, Kohtz C: Design and development
+    less continuous patient monitoring in a medical-surgical unit             of a proactive rapid response team. Computers Inform Nurs
+    on intensive care unit transfers: A controlled clinical trial. Am J       2017; 35:77–83
+    Respir Crit Care Med 2012; 185:A3793                                  38. Jones D, Bates S, Warrillow S, et al: Effect of an education
+22. Long C, Murray K, Sparkes C: The use of electronic patient                programme on the utilization of a medical emergency team in
+    observations tracking and targeted critical care outreach to              a teaching hospital. Intern Med J 2006; 36:231–236
+    reduce inhospital cardiac arrests. J Intensive Care Soc 2016;         39. Jones D, Opdam H, Egi M, et al: Long-term effect of a med-
+    17(4 Supplement 1):133                                                    ical emergency team on mortality in a teaching hospital.
+23. Weller RS, Foard KL, Harwood TN: Evaluation of a wireless,                Resuscitation 2007; 74:235–241
+    portable, wearable multi-parameter vital signs monitor in hos-        40. Joshi KS, Campbell VK, Gooch RJ, et al: Adult deterioration
+    pitalized neurological and neurosurgical patients. J Clin Monit           detection system (Q-ADDS) based rapid response system
+    Comput 2018; 32:945–951                                                   (RRS) reduces severity of illness and length of stay of ICU
+24. Brown H, Terrence J, Vasquez P, et al: Continuous monitoring              admissions from the ward in a regional hospital. Intensive Care
+    in an inpatient medical-surgical unit: A controlled clinical trial.       Med Exp 2015; 3(Supplement 1):A141
+    Am J Med 2014; 127:226–232                                            41. Leech C, Cosgrove J, Laws P: MEWS (Modified Early Warning
+25. Verrillo SC, Cvach M, Hudson KW, et al: Using continuous vital            Score) chart completion as a marker for quality in the early
+    sign monitoring to detect early deterioration in adult postoper-          recognition of acutely ill patients. The experience of a UK
+    ative inpatients. J Nurs Care Qual 2019; 34:107–113                       University Teaching Hospital NHS Trust. J Intensive Care Soc
+26. Wiles MD, El-Nayal A, Elton G, et al: The effect of patient eth-          2014; 15(1 SUPPL. 1):S32
+    nicity on the accuracy of peripheral pulse oximetry in patients       42. Lighthall GK, Parast LM, Rapoport L, et al: Introduction
+    with COVID-19 pneumonitis: A single-centre, retrospective                 of a rapid response system at a United States Veterans
+    analysis. Anaesthesia 2022; 77:143–152                                    Affairs hospital reduced cardiac arrests. Anesth Analg 2010;
+27. Knight MJ, Subbe CP, Inada-Kim M: Racial discrepancies in ox-             111:679–686
+    imetry: Where do we stand? Anaesthesia 2022; 77:129–131               43. Merriel A, van der Nelson H, Merriel S, et al: Identifying dete-
+28. Hillman K, Chen J, Cretikos M, et al; MERIT study investi-                riorating patients through multidisciplinary team training. Am J
+    gators: Introduction of the medical emergency team (MET)                  Med Qual 2016; 31:589–595
+    system: A cluster-randomised controlled trial. Lancet 2005;           44. Mullany DV, Ziegenfuss M, Goleby MA, et al: Improved hospital
+    365:2091–2097                                                             mortality with a low MET dose: The importance of a modified
+29. Davis DP, Aguilar SA, Graham PG, et al: A novel configuration             early warning score and communication tool. Anaesth Intensive
+    of a traditional rapid response team decreases non-intensive              Care 2016; 44:734–741
+
+
+Critical Care Medicine                                                                                    www.ccmjournal.org     325
+        Copyright © 2023 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 13 ---
+Honarmand et al
+
+45. Peebles RC, Nicholson IK, Schlieff J, et al: Nurses’ just-in-time      63. Al-Omari A, Al Mutair A, Aljamaan F: Outcomes of rapid re-
+    training for clinical deterioration: Development, implementa-              sponse team implementation in tertiary private hospitals: A
+    tion and evaluation. Nurse Educ Today 2020; 84:104265                      prospective cohort study. Int J Emerg Med 2019; 12:31
+46. Raines K, Sevilla Berrios RA, Guttendorf J: Sepsis education           64. Al-Qahtani S, Al-Dorzi HM, Tamim HM, et al: Impact of an
+    initiative targeting qSOFA screening for non-ICU patients to               intensivist-led multidisciplinary extended rapid response team
+    improve sepsis recognition and time to treatment. J Nurs Care              on hospital-wide cardiopulmonary arrests and mortality. Crit
+    Qual 2019; 34:318–324                                                      Care Med 2013; 41:506–517
+47. Sebat F, Vandegrift M, Amato V, et al: Effect on patient out-          65. Al-Rajhi A, Mardini L, Jayaraman D: The impact of implemen-
+    comes of rapid response system focused on the afferent arm.                tation of an ICU consult service on hospital-wide outcomes
+    Am J Respir Crit Care Med 2014; 189:A4463                                  and ICU-specific outcomes. J Intensive Care Med 2016;
+48. Mitchell IA, McKay H, Van Leuvan C, et al: A prospective con-              31:478–484
+    trolled trial of the effect of a multi-faceted intervention on early   66. Albert BL, Huesman L: Development of a modified early warn-
+    recognition and intervention in deteriorating hospital patients.           ing score using the electronic medical record. Dimens Crit
+    Resuscitation 2010; 81:658–666                                             Care Nurs 2011; 30:283–292
+49. Davidson JE, Aslakson RA, Long AC, et al: Guidelines for family-       67. Aneman A, Frost SA, Parr MJ, et al: Characteristics and out-
+    centered care in the neonatal, pediatric, and adult ICU. Crit              comes of patients admitted to ICU following activation of the
+    Care Med 2017; 45:103–128                                                  medical emergency team: Impact of introducing a two-tier re-
+50. Zix J, Giaccone M, Wheeler D, et al: Family activated rapid                sponse system. Crit Care Med 2015; 43:765–773
+    response team: What we know five years later. Crit Care Med            68. Angel M, Ghneim M, Song J, et al: The effects of a rapid re-
+    2012; 40(12 SUPPL. 1):1–328                                                sponse team on decreasing cardiac arrest rates and improv-
+51. McCawley BA, Gannotta RJ, Champagne MT, et al: Calling a                   ing outcomes for cardiac arrests outside critical care areas.
+    “condition H.”. Nurs Manage 2013; 44:30–35                                 Medsurg Nurs 2016; 25:153–158
+52. Brady PW, Zix J, Brilli R, et al: Developing and evaluating the        69. Ball C: Critical care outreach services—do they make a differ-
+    success of a family activated medical emergency team: A                    ence? Intensive Crit Care Nurs 2002; 18:257–260
+    quality improvement report. BMJ Qual Saf 2015; 24:203–211              70. Bedoya AD, Clement ME, Phelan M, et al: Minimal impact of
+53. Gerdik C, Vallish RO, Miles K, et al: Successful implementation            implemented early warning score and best practice alert for
+    of a family and patient activated rapid response team in an adult          patient deterioration. Crit Care Med 2019; 47:49–55
+    level 1 trauma center. Resuscitation 2010; 81:1676–1681                71. Beitler JR, Link N, Bails DB, et al: Reduction in hospital-wide
+54. Hueckel RM, Mericle JM, Frush K, et al: Implementation of                  mortality after implementation of a rapid response team: A
+    condition help: Family teaching and evaluation of family under-            long-term cohort study. Crit Care 2011; 15:R269
+    standing. J Nurs Care Qual 2012; 27:176–181                            72. Bellomo R, Goldsmith D, Uchino S, et al: Prospective con-
+55. Ray EM, Smith R, Massie S, et al: Family alert: Implementing               trolled trial of effect of medical emergency team on post-
+    direct family activation of a pediatric rapid response team. Jt            operative morbidity and mortality rates. Crit Care Med 2004;
+    Comm J Qual Patient Saf 2009; 35:575–580                                   32:916–921
+56. Ludikhuize J, Borgert M, Binnekade J, et al: Standardized              73. Bellomo R, Goldsmith D, Uchino S, et al: A prospective before-
+    measurement of the modified early warning score results                    and-after trial of a medical emergency team. Med J Aust 2003;
+    in enhanced implementation of a rapid response system: A                   179:283–287
+    quasi-experimental study. Resuscitation 2014; 85:676–682               74. Benson L, Hasenau S, O’Connor N, et al: The impact of a nurse
+57. Haegdorens F, Van Bogaert P, Roelant E, et al: The introduc-               practitioner rapid response team on systemic inflammatory re-
+    tion of a rapid response system in acute hospitals: A prag-                sponse syndrome outcomes. Dimens Crit Care Nurs 2014;
+    matic stepped wedge cluster randomised controlled trial.                   33:108–115
+    Resuscitation 2018; 129:127–134                                        75. Bergamasco e Paula R, Tanita MT, Festti J, et al: Analysis of re-
+58. YekeFallah L, Eskandari Z, Shahrokhi A, et al: Effect of rapid             admission rates to the intensive care unit after implementation
+    response nursing team on outcome of patient care. Trauma                   of a rapid response team in a university hospital. Med Intensiva
+    Monthly 2018; 23:e14488                                                    2017; 41:411–417
+59. Priestley G, Watson W, Rashidian A, et al: Introducing critical        76. Blotsky A, Mardini L, Jayaraman D: Impact of a local low-cost
+    care outreach: A ward-randomised trial of phased introduction              ward-based response system in a Canadian tertiary care hos-
+    in a general hospital. Intensive Care Med 2004; 30:1398–1404               pital. Crit Care Res Pract 2016; 2016:1518760
+60. Jeddian A, Hemming K, Lindenmeyer A, et al: Evaluation of              77. Bristow PJ, Hillman KM, Chey T, et al: Rates of in-hospital
+    a critical care outreach service in a middle-income country: A             arrests, deaths and intensive care admissions: The effect of a
+    stepped wedge cluster randomized trial and nested qualitative              medical emergency team. Med J Aust 2000; 173:236–240
+    study. J Crit Care 2016; 36:212–217                                    78. Chan PS, Khalid A, Longmore LS, et al: Hospital-wide code
+61. Adelstein BA, Piza MA, Nayyar V, et al: Rapid response sys-                rates and mortality before and after implementation of a rapid
+    tems: A prospective study of response times. J Crit Care 2011;             response team. JAMA 2008; 300:2506–2513
+    26:635.e11–635.e18                                                     79. Chaudhury P, Gadre S, Schneider E, et al: Impact of multi-
+62. Aitken LM, Chaboyer W, Vaux A, et al: Effect of a 2-tier rapid             disciplinary pulmonary embolism response team availa-
+    response system on patient outcome and staff satisfaction.                 bility on management and outcomes. Am J Cardiol 2019;
+    Aust Crit Care 2015; 28:107–14; quiz 115                                   124:1465–1469
+
+
+326     www.ccmjournal.org                                                                                February 2024 • Volume 52 • Number 2
+        Copyright © 2023 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 14 ---
+                                                                                                                             Special Articles
+
+80. Chen J, Lixin O, Hillman K, et al: The impact of implement-            96. Howell MD, Ngo L, Folcarelli P, et al: Sustained effectiveness
+    ing a rapid response system: A comparison of cardiopulmo-                  of a primary-team-based rapid response system. Crit Care
+    nary arrests and mortality among four teaching hospitals in                Med 2012; 40:2562–2568
+    Australia. Resuscitation 2014; 85:1275–1281                            97. Jen WY, Kristanto W, Teo L, et al: Assessing the impact of
+81. Chen J, Ou L, Flabouris A, et al: Impact of a standardized rapid           a pulmonary embolism response team and treatment pro-
+    response system on outcomes in a large healthcare jurisdic-                tocol on patients presenting with acute pulmonary embolism.
+    tion. Resuscitation 2016; 107:47–56                                        Heart Lung Circ 2019; 29:345–353
+82. Chen J, Ou L, Hillman KM, et al: Cardiopulmonary arrest and            98. Jones D, Bellomo R, Bates S, et al: Long term effect of a
+    mortality trends, and their association with rapid response                medical emergency team on cardiac arrests in a teaching
+    system expansion. Med J Aust 2014; 201:167–170                             hospital. Crit Care 2005; 9:R808–R815
+83. Chittawatanarat K, Ditsatham C, Chandacham K, et al: Effects           99. Jones D, Bhasale A, Bailey M, et al: Effect of a national
+    of rapid response trauma team in thoracic injuries in northern             standard for deteriorating patients on intensive care admis-
+    trauma center level I. J Med Assoc Thai 2013; 96:1319–1325                 sions due to cardiac arrest in Australia. Crit Care Med 2018;
+84. Choi S, Shin Y, Lee J, et al: Effects of a medical emergency               46:586–593
+    team follow-up programme on patients discharged from the              100. Jones D, Egi M, Bellomo R, et al: Effect of the medical emer-
+    medical intensive care unit to the general ward: A single-                 gency team on long-term mortality following major surgery.
+    centre experience. J Eval Clin Pract 2016; 22:356–362                      Crit Care 2007; 11:R12
+85. Considine J, Rawet J, Currey J: The effect of a staged, emer-         101. Jones D, George C, Hart GK, et al: Introduction of medical
+    gency department specific rapid response system on re-                     emergency teams in Australia and New Zealand: A multi-
+    porting of clinical deterioration. Australas Emerg Nurs J 2015;            centre study. Crit Care 2008; 12:R46
+    18:218–226                                                            102. Joshi K, Campbell V, Landy M, et al: The effect of rapid re-
+86. Dacey MJ, Mirza ER, Wilcox V, et al: The effect of a rapid re-             sponse system revision on standard and specific intensive
+    sponse team on major clinical outcome measures in a commu-                 care unit outcomes in a regional hospital. Anaesth Intensive
+    nity hospital. Crit Care Med 2007; 35:2076–2082                            Care 2017; 45:369–374
+87. Danesh V, Neff DF, Unruh L, et al: Can proactive rapid re-            103. Jung B, Daurat A, de Jong A, et al: Rapid response team and
+    sponse team rounding improve surveillance and reduce un-                   hospital mortality in hospitalized patients. Intensive Care Med
+    planned escalations in care? A controlled before and after                 2016; 42:494–504
+    study. Int J Nurs Stud 2019; 91:128–133                               104. Kansal A, Havill K: The effects of introduction of new obser-
+88. De Meester K, Haegdorens F, Monsieurs KG, et al: Six-day                   vation charts and calling criteria on call characteristics and
+    postoperative impact of a standardized nurse observation and               outcome of hospitalised patients. Crit Care Resusc 2012;
+    escalation protocol: A preintervention and postintervention                14:38–43
+    study. J Crit Care 2013; 28:1068–1074                                 105. Karpman C, Keegan MT, Jensen JB, et al: The impact of rapid
+89. DeVita MA, Braithwaite RS, Mahidhara R, et al; Medical                     response team on outcome of patients transferred from the
+    Emergency Response Improvement Team (MERIT): Use                           ward to the ICU: A single-center study. Crit Care Med 2013;
+    of medical emergency team responses to reduce hospital                     41:2284–2291
+    cardiopulmonary arrests. Qual Safety Health Care 2004;                106. Karvellas CJ, De Souza IAO, Gibney RTN, et al: Association
+    13:251–254                                                                 between implementation of an intensivist-led medical emer-
+90. Frost SA, Chapman A, Aneman A, et al: Hospital outcomes                    gency team and mortality. BMJ Qual Saf 2012; 21:152–159
+    associated with introduction of a two-tiered response to the          107. Kawaguchi R, Nakada TA, Oshima T, et al: Reduction of un-
+    deteriorating patient. Crit Care Resusc 2015; 17:77–82                     expected serious adverse events after introducing medical
+91. Goncales PD, Polessi JA, Bass LM, et al: Reduced frequency                 emergency team. Acute Med Surg 2015; 2:244–249
+    of cardiopulmonary arrests by rapid response teams. Einstein          108. Kenward G, Castle N, Hodgetts T, et al: Evaluation of a
+    (Sao Paulo, Brazil) 2012; 10:442–448                                       medical emergency team one year after implementation.
+92. Gurav SK, Zirpe KG, Wadia RS, et al: Impact of “stroke code”-              Resuscitation 2004; 61:257–263
+    rapid response team: An attempt to improve intravenous                109. Kim Y, Lee DS, Min H, et al: Effectiveness analysis of a part-
+    thrombolysis rate and to shorten door-to-needle time in acute              time rapid response system during operation versus nonop-
+    ischemic stroke. Indian J Crit Care Med 2018; 22:243–248                   eration. Crit Care Med 2017; 45:e592–e599
+93. Hatlem T, Jones C, Woodard EK: Reducing mortality and                 110. Klumpner TT, Kountanis JA, Langen ES, et al: Use of a novel
+    avoiding preventable ICU utilization: Analysis of a success-               electronic maternal surveillance system to generate auto-
+    ful rapid response program using APR DRGs. J Healthc Qual                  mated alerts on the labor and delivery unit. BMC Anesthesiol
+    2011; 33:7–16                                                              2018; 18:78
+94. Hayani O, Al-Beihany A, Zarychanski R, et al: Impact of crit-         111. Kollef MH, Heard K, Chen Y, et al: Mortality and length of
+    ical care outreach on hematopoietic stem cell transplant                   stay trends following implementation of a rapid response
+    recipients: A cohort study. Bone Marrow Transplant 2011;                   system and real-time automated clinical deterioration alerts.
+    46:1138–1144                                                               Am J Med Qual 2017; 32:12–18
+95. Hillel AT, Pandian V, Mark LJ, et al: A novel role for otolaryngol-   112. Konrad D, Jaderling G, Bell M, et al: Reducing in-hospital car-
+    ogists in the multidisciplinary difficult airway response team.            diac arrests and hospital mortality by introducing a medical
+    Laryngoscope 2015; 125:640–644                                             emergency team. Intensive Care Med 2010; 36:100–106
+
+
+Critical Care Medicine                                                                                    www.ccmjournal.org     327
+        Copyright © 2023 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 15 ---
+Honarmand et al
+
+113. Laurens N, Dwyer T: The impact of medical emergency teams              motivation for a nationwide survey. Korean J Crit Care Med
+     on ICU admission rates, cardiopulmonary arrests and mor-               2017; 32:231–239
+     tality in a regional hospital. Resuscitation 2011; 82:707–712   129.   Pullinger R, Wilson S, Way R, et al: Implementing an elec-
+114. Lee HY, Lee J, Lee S-M, et al: Effect of a rapid response              tronic observation and early warning score chart in the
+     system on code rates and in-hospital mortality in medical              emergency department: A feasibility study. Eur J Emerg Med
+     wards. Acute Crit Care 2019; 34:246–254                                2017; 24:e11–e16
+115. Lee SH, Leem AY, Nho Y, et al: A pilot study of the effec-      130.   Rosovsky R, Chang Y, Rosenfield K, et al: Changes in treat-
+     tiveness of medical emergency system implementation                    ment and outcomes after creation of a pulmonary embo-
+     at a single center in Korea. Korean J Crit Care Med 2017;              lism response team (PERT), a 10-year analysis. J Thromb
+     32:133–141                                                             Thrombolysis 2019; 47:31–40
+116. Lim SY, Park SY, Park HK, et al: Early impact of medical        131.   Rothschild JM, Gandara E, Woolf S, et al: Single-parameter
+     emergency team implementation in a country with limited                early warning criteria to predict life-threatening adverse
+     medical resources: A before-and-after study. J Crit Care               events. J Patient Saf 2010; 6:97–101
+     2011; 26:373–378                                                132.   Rothschild JM, Woolf S, Finn KM, et al: A controlled trial of
+117. Ludikhuize J, Brunsveld-Reinders AH, Dijkgraaf MGW, et                 a rapid response system in an academic medical center. Jt
+     al; Cost and Outcomes of Medical Emergency Teams Study                 Comm J Qual Patient Saf/ Jt Comm Res 2008; 34:417–365
+     Group: Outcomes associated with the nationwide introduc-        133.   Sabahi M, Fanaei SA, Ziaee SA, et al: Efficacy of a rapid re-
+     tion of rapid response systems in The Netherlands. Crit Care           sponse team on reducing the incidence and mortality of un-
+     Med 2015; 43:2544–2551                                                 expected cardiac arrests. Trauma Monthly 2012; 17:270–274
+118. Ludikhuize J, de Jonge E, Goossens A: Measuring adher-          134.   Salvatierra G, Bindler RC, Corbett C, et al: Rapid response
+     ence among nurses one year after training in applying the              team implementation and in-hospital mortality. Crit Care Med
+     modified early warning score and situation-background-                 2014; 42:2001–2006
+     assessment-recommendation instruments. Resuscitation            135.   Santamaria J, Tobin A, Holmes J: Changing cardiac arrest
+     2011; 82:1428–1433                                                     and hospital mortality rates through a medical emergency
+119. Ludikhuize J, Dijkgraaf MGW, Arbous MS, et al: Unexpected              team takes time and constant review. Crit Care Med 2010;
+     versus all-cause mortality as the endpoint for investigat-             38:445–450
+     ing the effects of a rapid response system in hospitalized      136.   Sarani B, Palilonis E, Sonnad S, et al: Clinical emergencies
+     patients. Crit Care 2016; 20:168                                       and outcomes in patients admitted to a surgical versus med-
+120. Massey D, Aitken LM, Chaboyer W: The impact of a nurse                 ical service. Resuscitation 2011; 82:415–418
+     led rapid response system on adverse, major adverse events      137.   Scherr K, Wilson DM, Wagner J, et al: Evaluating a new rapid
+     and activation of the medical emergency team. Intensive Crit           response team: NP-led versus intensivist-led comparisons.
+     Care Nurs 2015; 31:83–90                                               AACN Adv Crit Care 2012; 23:32–42
+121. McGillicuddy DC, O’Connell FJ, Shapiro NI, et al: Emergency     138.   Sebat F, Musthafa AA, Johnson D, et al: Effect of a rapid
+     department abnormal vital sign “triggers” program improves             response system for patients in shock on time to treat-
+     time to therapy. Acad Emerg Med 2011; 18:483–487                       ment and mortality during 5 years. Crit Care Med 2007;
+122. Medina-Rivera B, Campos-Santiago Z, Palacios AT, et al: The            35:2568–2575
+     effect of the medical emergency team on unexpected cardiac      139.   Segon A, Ahmad S, Segon Y, et al: Effect of a rapid response
+     arrest and death at the VA Caribbean Healthcare System: A              team on patient outcomes in a community-based teaching
+     retrospective study. Crit Care Shock 2010; 13:98–105                   hospital. J Grad Med Educ 2014; 6:61–64
+123. Moriarty JP, Schiebel NE, Johnson MG, et al: Evaluating         140.   Shah SK, CardenasVJ Jr, Kuo YF, et al: Rapid response team
+     implementation of a rapid response team: Considering al-               in an academic institution: Does it make a difference? Chest
+     ternative outcome measures. Int J Qual Health Care 2014;               2011; 139:1361–1367
+     26:49–57                                                        141.   Shields LE, Wiesner S, Klein C, et al: Use of maternal early
+124. Moroseos T, Bidwell K, Rui L, et al: Rapid response team               warning trigger tool reduces maternal morbidity. Am J Obstet
+     implementation on a burn surgery/acute care ward. J Burn               Gynecol 2016; 214:527
+     Care Res 2014; 35:21–27                                         142.   Shin TG, Jo IJ, Song HG, et al: Improving survival rate of
+125. Noyes AM, Gluck JA, Madison D, et al: Reduction of cardiac             patients with in-hospital cardiac arrest: Five years of expe-
+     arrests: The experience of a novel service centric medical             rience in a single center in Korea. J Korean Med Sci 2012;
+     emergency team. Conn Med 2015; 79:13–18                                27:146–152
+126. Offner PJ, Heit J, Roberts R: Implementation of a rapid         143.   Simmes F, Schoonhoven L, Mintjes J, et al: Effects of a rapid
+     response team decreases cardiac arrest outside of the in-              response system on quality of life: A prospective cohort study
+     tensive care unit. J Trauma 2007; 62:1223–7; discussion                in surgical patients before and after implementing a rapid re-
+     1227                                                                   sponse system. Health Qual Life Outcomes 2013; 11:74
+127. Oh TK, Kim S, Lee DS, et al: A rapid response system            144.   Skupski DW, Brady D, Lowenwirt IP, et al: Improvement in
+     reduces the incidence of in-hospital postoperative cardiopul-          outcomes of major obstetric hemorrhage through systematic
+     monary arrest: A retrospective study. Can J Anesth 2018;               change. Obstet Gynecol 2017; 130:770–777
+     65:1303–1313                                                    145.   Skupski DW, Lowenwirt IP, Weinbaum FI, et al: Improving
+128. Park Y, Ahn J-J, Kang BJ, et al: Rapid response systems                hospital systems for the care of women with major obstetric
+     reduce in-hospital cardiopulmonary arrest: A pilot study and           hemorrhage. Obstet Gynecol 2006; 107:977–983
+
+328     www.ccmjournal.org                                                                          February 2024 • Volume 52 • Number 2
+       Copyright © 2023 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 16 ---
+                                                                                                                           Special Articles
+
+146. Snyder CW, Patel RD, Roberson EP, et al: Unplanned intuba-         161. Chassan C: Impact on outcomes and costs of acute care
+     tion after surgery: Risk factors, prognosis, and medical emer-          nurse practitioner vs. nurse led rapid response teams. Crit
+     gency team effects. Am Surg 2009; 75:834–838                            Care Med 2013; 41(12 SUPPL. 1):A151
+147. Stewart J, Carman M, Spegman A, et al: Evaluation of the           162. Gupta S, Balachandran M, Bolton G, et al: Comparison of
+     effect of the modified early warning system on the nurse-led            clinical outcomes between nurse practitioner and registrar-
+     activation of the rapid response system. J Nurs Care Qual               led medical emergency teams: A propensity-matched anal-
+     2014; 29:223–229                                                        ysis. Crit Care 2021; 25:117
+148. Story DA, Shelton A, Jones D, et al; Austin Health Post-           163. Rubis D, Popovich M: Comparison of outcomes with a nurse
+     Operative Surveillance Team Investigators (POST): Audit of              practitioner-led versus a physician-led rapid response team.
+     co-management and critical care outreach for high risk post-            Crit Care Med 2013; 41(12 SUPPL. 1):A125
+     operative patients (The POST audit). Anaesth Intensive Care        164. ACEP: Available at: https://www.acep.org/patient-care/pol-
+     2013; 41:793–798                                                        icy-statements/emergency-physicians-patient-care-respon-
+149. Street M, Phillips NM, Mohebbi M, et al: Effect of a newly              sibilities-outside-of-the-emergency-department/. Accessed
+     designed observation, response and discharge chart in the               March 30, 2023
+     post anaesthesia care unit on patient outcomes: A quasi-           165. Picker D, Dans M, Heard K, et al: A randomized trial of palli-
+     expermental study in Australia. BMJ Open 2017; 7:e015149                ative care discussions linked to an automated early warning
+150. The Concord Medical Emergency Team 2 Study Investigators:               system alert. Crit Care Med 2017; 45:234–240
+     Outcomes following changing from a two-tiered to a three-          166. Johnson CE, Chong JC, Wilkinson A, et al: Goals of patient
+     tiered hospital rapid response system. Aust Health Rev 2019;            care system change with video-based education increases
+     43:178–187                                                              rates of advance cardiopulmonary resuscitation decision-
+151. Sutherasan Y, Theerawit P, Suporn A, et al: The impact of               making and discussions in hospitalised rehabilitation
+     introducing the early warning scoring system and protocol on            patients. Intern Med J 2017; 47:798–806
+     clinical outcomes in tertiary referral university hospital. Ther   167. Tam B, Salib M, Fox-Robichaud A: The effect of rapid re-
+     Clin Risk Manage 2018; 14:2089–2095                                     sponse teams on end-of-life care: A retrospective chart re-
+152. Tobin AE, Santamaria JD: Medical emergency teams are                    view. Can Respir J 2014; 21:302–306
+     associated with reduced mortality across a major metropol-         168. Tran A, Fernando SM, McIsaac DI, et al: Predictors of mor-
+     itan health network after two years service: A retrospective            tality and cost among surgical patients requiring rapid re-
+     study using government administrative data. Crit Care 2012;             sponse team activation. Can J Surg 2020; 63:E598–E605
+     16:R210                                                            169. ANZICS-CORE MET dose Investigators: Mortality of rapid
+153. Umscheid CA, Betesh J, VanZandbergen C, et al:                          response team patients in Australia: A multicentre study. Crit
+     Development, implementation, and impact of an automated                 Care Resusc 2013; 15:273–278
+     early warning and response system for sepsis. J Hosp Med           170. Trankle SA, Shanmugam S, Lewis E, et al: Are we making
+     2015; 10:26–31                                                          progress on communication with people who are near the
+154. Vazquez R, Gheorghe C, Grigoriyan A, et al: Enhanced end-               end of life in the Australian health system? A thematic anal-
+     of-life care associated with deploying a rapid response team:           ysis. Health Commun 2020; 35:158–167
+     A pilot study. J Hosp Med 2009; 4:449–452                          171. Yarnell CJ, Fu L, Manuel D, et al: Association between immi-
+155. Wright C, Elbadawi A, Chen YL, et al: The impact of a pul-              grant status and end-of-life care in Ontario, Canada. JAMA
+     monary embolism response team on the efficiency of patient              2017; 318:1479–1488
+     care in the emergency department. J Thromb Thrombolysis            172. Yarnell CJ, Fu L, Bonares MJ, et al: Association between
+     2019; 48:331–335                                                        Chinese or South Asian ethnicity and end-of-life care in
+156. Xenos ES, Davis GA, He Q, et al: The implementation of a                Ontario, Canada. CMAJ 2020; 192:E266–E274
+     pulmonary embolism response team in the management of              173. Buist M, Harrison J, Abaloz E, et al: Six year audit of cardiac
+     intermediate- or high-risk pulmonary embolism. J Vasc Surg              arrests and medical emergency team calls in an Australian
+     2019; 7:493–500                                                         outer metropolitan teaching hospital. BMJ (Clin Res Ed)
+157. Young RS, Gobel BH, Schumacher M, et al: Use of the modi-               2007; 335:1210–1212
+     fied early warning score and serum lactate to prevent cardio-      174. Lovett PB, Massone RJ, Holmes MN, et al: Rapid response
+     pulmonary arrest in hematology-oncology patients: A quality             team activations within 24 hours of admission from the
+     improvement study. Am J Med Qual 2014; 29:530–537                       emergency department: An innovative approach for perfor-
+158. Downar J, Barua R, Rodin D, et al: Changes in end of life               mance improvement. Acad Emerg Med 2014; 21:667–672
+     care 5 years after the introduction of a rapid response            175. Davis DP, Graham PG, Husa RD, et al: A performance
+     team: A multicentre retrospective study. Resuscitation 2013;            improvement-based resuscitation programme reduces arrest
+     84:1339–1344                                                            incidence and increases survival from in-hospital cardiac
+159. Winslow CJ, Edelson DP, Churpek MM, et al: The impact of                arrest. Resuscitation 2015; 92:63–69
+     a machine learning early warning score on hospital mortality:      176. Rao BS, Lowe GO, Hughes AJ: Reduced emergency calls
+     A multicenter clinical intervention trial. Crit Care Med 2022;          and improved weekend discharge after introduction of a new
+     50:1339–1347                                                            electronic handover system. Med J Aust 2012; 197:569–573
+160. DeVita MA, Bellomo R, Hillman K, et al: Findings of the first      177. Proffitt R: Use of a clinical nurse specialist to decrease
+     consensus conference on medical emergency teams. Crit                   code calls: Evaluation and outcome. Crit Care Med 2011;
+     Care Med 2006; 34:2463–2478                                             39(SUPPL. 12):122
+
+Critical Care Medicine                                                                                  www.ccmjournal.org     329
+        Copyright © 2023 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
+
+
+--- Page 17 ---
+Honarmand et al
+
+178. Casamento AJ, Dunlop C, Jones DA, et al: Improving the          182. Spiers L, Singh Mohal J, Pearson-Stuttard J, et al:
+     documentation of medical emergency team reviews. Crit                Recognition of the deteriorating patient. BMJ Qual Improv
+     Care Resusc 2008; 10:29                                              Rep 2015; 4:u206777.w2734
+179. Elliott D, Allen E, McKinley S, et al: User compliance with     183. Turkington P, Power M, Hunt C, et al: There is another way:
+     documenting on a track and trigger-based observation and             Empowering frontline staff caring for acutely unwell adults.
+     response chart: A two-phase multi-site audit study. J Adv            Int J Qual Health Care 2014; 26:71–78
+     Nurs 2017; 73:2892–2902                                         184. Martin C, Jones D, Wolfe R: State-wide reduction in in-
+180. Hall JA, Stockton LA, Tanner SB, et al: The “nursing cheat           hospital cardiac complications in association with the intro-
+     sheet,” a guide to aid nursing in management of patient care.        duction of a national standard for recognising deteriorating
+     Proc (Baylor Univ Med Center) 2019; 32:215–217                       patients. Resuscitation 2017; 121:172–178
+181. Jones DA, Mitra B, Barbetti J, et al: Increasing the use of     185. Moore MS, Howard SK, Lighthall G: Using the rapid response
+     an existing medical emergency team in a teaching hospital.           system to provide better oversight of patient care processes.
+     Anaesth Intensive Care 2006; 34:731–735                              Jt Comm J Qual Patient Saf 2007; 33:695–8, 645
+
+
+
+
+330     www.ccmjournal.org                                                                        February 2024 • Volume 52 • Number 2
+       Copyright © 2023 by the Society of Critical Care Medicine and Wolters Kluwer Health, Inc. All Rights Reserved.
+
