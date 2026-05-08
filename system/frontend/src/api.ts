@@ -3,16 +3,43 @@ import type { Admission, JsonObj, TablePreview } from "./types";
 const runtimeHost = typeof window !== "undefined" ? window.location.hostname : "127.0.0.1";
 const API_BASE = import.meta.env.VITE_API_BASE ?? `http://${runtimeHost}:8000/api/v1`;
 
+function unwrapContract<T>(raw: unknown): T {
+  if (raw !== null && typeof raw === "object" && "ok" in raw && "data" in raw) {
+    const env = raw as { ok: boolean; data: T; error: { code: string; message: string; details?: unknown } | null };
+    if (!env.ok) {
+      const e = env.error;
+      const msg = e ? `${e.code}: ${e.message}` : "request failed";
+      throw new Error(msg);
+    }
+    return env.data;
+  }
+  return raw as T;
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
     headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
     ...init,
   });
+  const text = await res.text();
+  let raw: unknown;
+  try {
+    raw = text ? JSON.parse(text) : null;
+  } catch {
+    if (!res.ok) throw new Error(`${res.status} ${res.statusText}: ${text}`);
+    throw new Error("Invalid JSON response");
+  }
   if (!res.ok) {
-    const text = await res.text();
+    const fromContract =
+      raw !== null && typeof raw === "object" && "error" in raw
+        ? (raw as { error?: { code?: string; message?: string } }).error
+        : undefined;
+    if (fromContract?.message) {
+      throw new Error(`${fromContract.code ?? res.status}: ${fromContract.message}`);
+    }
     throw new Error(`${res.status} ${res.statusText}: ${text}`);
   }
-  return (await res.json()) as T;
+  return unwrapContract<T>(raw);
 }
 
 export const api = {

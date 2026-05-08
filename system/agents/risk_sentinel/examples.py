@@ -2,7 +2,7 @@ from .schemas import RiskAssessmentRequest
 
 # Mock temporal state from Patient Memory Agent
 SAMPLE_TEMPORAL_STATE = {
-    "admission_id": "adm1",
+    "admission_id": "ICU-ADM-0001",
     "window_hours": 6,
     "current_vitals": {
         "heart_rate": 115,
@@ -24,7 +24,7 @@ SAMPLE_TEMPORAL_STATE = {
 }
 
 SAMPLE_REQUEST = RiskAssessmentRequest(
-    admission_id="adm1",
+    admission_id="ICU-ADM-0001",
     temporal_state=SAMPLE_TEMPORAL_STATE,
     age=68,
     chronic_health_status="severe_organ_insufficiency",

@@ -20,7 +20,7 @@ from agents.patient_memory.service import _build_three_layer_memory  # noqa: E40
 
 def test_build_three_layer_memory_with_important_events() -> None:
     summary = TemporalStateSummary(
-        admission_id="adm1",
+        admission_id="ICU-ADM-0001",
         window_hours=24,
         current_vitals={"mean_arterial_pressure": 62.0},
         trend_vectors={"mean_arterial_pressure": "worsening"},
@@ -28,7 +28,7 @@ def test_build_three_layer_memory_with_important_events() -> None:
         latest_interventions=[
             InterventionEvent(
                 id="int1",
-                admission_id="adm1",
+                admission_id="ICU-ADM-0001",
                 timestamp=datetime.now(timezone.utc),
                 intervention_type="fluid_bolus",
             )

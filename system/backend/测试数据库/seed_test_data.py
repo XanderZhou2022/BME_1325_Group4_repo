@@ -9,6 +9,12 @@ import psycopg
 
 DB_DSN = os.getenv("ICU_PG_DSN", "dbname=icu_agent user=zhou host=localhost port=5432")
 
+# Contract v1.0 style IDs (deterministic for demos & tests)
+P1, P2, P3 = "P-aaaaaaaa", "P-bbbbbbbb", "P-cccccccc"
+E1, E2, E3 = "E-20260508100000-aaaa", "E-20260508100100-bbbb", "E-20260508100200-cccc"
+B1, B2, B3, B4 = "B-ICU01-01", "B-ICU01-02", "B-ICU01-03", "B-ICU01-04"
+ADM1, ADM2, ADM3 = "ICU-ADM-0001", "ICU-ADM-0002", "ICU-ADM-0003"
+
 
 def j(obj: object) -> str:
     return json.dumps(obj, ensure_ascii=False)
@@ -18,87 +24,168 @@ def main() -> None:
     now = datetime.now(timezone.utc).replace(microsecond=0)
 
     patients = [
-        ("p1", "P001", "Zhang San", "male", 68, "1958-03-12", {"comorbidities": ["hypertension", "diabetes"], "allergies": ["penicillin"]}),
-        ("p2", "P002", "Li Si", "female", 57, "1969-08-20", {"comorbidities": ["copd"], "allergies": []}),
-        ("p3", "P003", "Wang Wu", "male", 72, "1954-01-09", {"comorbidities": ["ckd", "coronary_artery_disease"], "allergies": []}),
+        (
+            P1,
+            "P001",
+            "Zhang San",
+            "male",
+            68,
+            "1958-03-12",
+            "13800000001",
+            ["penicillin"],
+            ["hypertension", "diabetes"],
+            "O+",
+            {"comorbidities": ["hypertension", "diabetes"], "allergies": ["penicillin"]},
+        ),
+        (
+            P2,
+            "P002",
+            "Li Si",
+            "female",
+            57,
+            "1969-08-20",
+            "13900000002",
+            [],
+            ["copd"],
+            "A+",
+            {"comorbidities": ["copd"], "allergies": []},
+        ),
+        (
+            P3,
+            "P003",
+            "Wang Wu",
+            "male",
+            72,
+            "1954-01-09",
+            "13700000003",
+            [],
+            ["ckd", "coronary_artery_disease"],
+            "B+",
+            {"comorbidities": ["ckd", "coronary_artery_disease"], "allergies": []},
+        ),
     ]
 
     beds = [
-        ("b1", "ICU-01", "Room-A", "standard", "occupied", None),
-        ("b2", "ICU-02", "Room-A", "standard", "occupied", None),
-        ("b3", "ICU-03", "Room-B", "isolation", "occupied", "contact isolation"),
-        ("b4", "ICU-04", "Room-B", "standard", "empty", None),
+        (B1, "ICU-01", "R-ICU-01", "standard", "occupied", None),
+        (B2, "ICU-02", "R-ICU-01", "standard", "occupied", None),
+        (B3, "ICU-03", "R-ICU-02", "isolation", "occupied", "contact isolation"),
+        (B4, "ICU-04", "R-ICU-02", "standard", "empty", None),
     ]
 
     admissions = [
-        ("adm1", "p1", "b1", "ADM-001", now - timedelta(hours=26), None, "active", "septic shock", "ED transfer due to persistent hypotension", "critical", "ICU Team A", "sepsis_progressive"),
-        ("adm2", "p2", "b2", "ADM-002", now - timedelta(hours=18), None, "active", "acute hypoxemic respiratory failure", "ward deterioration with increasing oxygen demand", "unstable", "ICU Team A", "resp_failure_worsening"),
-        ("adm3", "p3", "b3", "ADM-003", now - timedelta(hours=40), None, "active", "post-op hemodynamic instability", "post-op monitoring with poor fluid response", "critical", "ICU Team B", "fluid_nonresponsive"),
+        (
+            ADM1,
+            E1,
+            P1,
+            B1,
+            "ADM-001",
+            now - timedelta(hours=26),
+            None,
+            "active",
+            "ADMITTED",
+            "septic shock",
+            "ED transfer due to persistent hypotension",
+            "critical",
+            "ICU Team A",
+            "sepsis_progressive",
+        ),
+        (
+            ADM2,
+            E2,
+            P2,
+            B2,
+            "ADM-002",
+            now - timedelta(hours=18),
+            None,
+            "active",
+            "ADMITTED",
+            "acute hypoxemic respiratory failure",
+            "ward deterioration with increasing oxygen demand",
+            "unstable",
+            "ICU Team A",
+            "resp_failure_worsening",
+        ),
+        (
+            ADM3,
+            E3,
+            P3,
+            B3,
+            "ADM-003",
+            now - timedelta(hours=40),
+            None,
+            "active",
+            "ADMITTED",
+            "post-op hemodynamic instability",
+            "post-op monitoring with poor fluid response",
+            "critical",
+            "ICU Team B",
+            "fluid_nonresponsive",
+        ),
     ]
 
     vital_sign_events = [
-        ("vital1", "adm1", now - timedelta(hours=3), 122, 61, 92, 52, 28, 38.6, 90, 0.60, 63, 280, 7.29, 12),
-        ("vital2", "adm1", now - timedelta(hours=1, minutes=30), 128, 58, 88, 48, 30, 38.9, 88, 0.65, 60, 320, 7.26, 11),
-        ("vital3", "adm2", now - timedelta(hours=2, minutes=40), 108, 73, 112, 64, 26, 37.8, 91, 0.50, 68, None, 7.34, 14),
-        ("vital4", "adm2", now - timedelta(hours=1), 116, 69, 106, 60, 32, 38.1, 87, 0.70, 59, 350, 7.31, 13),
-        ("vital5", "adm3", now - timedelta(hours=4), 118, 65, 96, 56, 24, 37.2, 93, 0.40, 72, None, 7.36, 15),
-        ("vital6", "adm3", now - timedelta(hours=1, minutes=20), 121, 62, 94, 54, 25, 37.5, 92, 0.45, 70, None, 7.34, 14),
+        ("VS-20260508-10001", ADM1, now - timedelta(hours=3), 122, 61, 92, 52, 28, 38.6, 90, 0.60, 63, 280, 7.29, 12),
+        ("VS-20260508-10002", ADM1, now - timedelta(hours=1, minutes=30), 128, 58, 88, 48, 30, 38.9, 88, 0.65, 60, 320, 7.26, 11),
+        ("VS-20260508-10003", ADM2, now - timedelta(hours=2, minutes=40), 108, 73, 112, 64, 26, 37.8, 91, 0.50, 68, None, 7.34, 14),
+        ("VS-20260508-10004", ADM2, now - timedelta(hours=1), 116, 69, 106, 60, 32, 38.1, 87, 0.70, 59, 350, 7.31, 13),
+        ("VS-20260508-10005", ADM3, now - timedelta(hours=4), 118, 65, 96, 56, 24, 37.2, 93, 0.40, 72, None, 7.36, 15),
+        ("VS-20260508-10006", ADM3, now - timedelta(hours=1, minutes=20), 121, 62, 94, 54, 25, 37.5, 92, 0.45, 70, None, 7.34, 14),
     ]
 
     lab_events = [
-        ("lab1", "adm1", now - timedelta(hours=2, minutes=50), "lactate", 4.6, "mmol/L", "high"),
-        ("lab2", "adm1", now - timedelta(hours=1, minutes=20), "wbc", 19.2, "10^9/L", "high"),
-        ("lab3", "adm2", now - timedelta(hours=2), "pao2", 59, "mmHg", "low"),
-        ("lab4", "adm2", now - timedelta(minutes=55), "lactate", 2.8, "mmol/L", "high"),
-        ("lab5", "adm3", now - timedelta(hours=3), "creatinine", 2.2, "mg/dL", "high"),
-        ("lab6", "adm3", now - timedelta(hours=1), "lactate", 3.9, "mmol/L", "high"),
+        ("LAB-20260508-10001", ADM1, now - timedelta(hours=2, minutes=50), "lactate", 4.6, "mmol/L", "high"),
+        ("LAB-20260508-10002", ADM1, now - timedelta(hours=1, minutes=20), "wbc", 19.2, "10^9/L", "high"),
+        ("LAB-20260508-10003", ADM2, now - timedelta(hours=2), "pao2", 59, "mmHg", "low"),
+        ("LAB-20260508-10004", ADM2, now - timedelta(minutes=55), "lactate", 2.8, "mmol/L", "high"),
+        ("LAB-20260508-10005", ADM3, now - timedelta(hours=3), "creatinine", 2.2, "mg/dL", "high"),
+        ("LAB-20260508-10006", ADM3, now - timedelta(hours=1), "lactate", 3.9, "mmol/L", "high"),
     ]
 
     intervention_events = [
-        ("intv1", "adm1", now - timedelta(hours=2), "fluid", "500ml saline bolus", 500, "ml"),
-        ("intv2", "adm1", now - timedelta(hours=1), "vasopressor", "norepinephrine up-titrated to 0.12 mcg/kg/min", 0.12, "mcg/kg/min"),
-        ("intv3", "adm2", now - timedelta(hours=1, minutes=10), "ventilator_change", "PEEP increased from 8 to 12", 12, "cmH2O"),
-        ("intv4", "adm3", now - timedelta(hours=2, minutes=30), "fluid", "500ml balanced crystalloid", 500, "ml"),
-        ("intv5", "adm3", now - timedelta(minutes=50), "vasopressor", "norepinephrine started due to MAP drift", 0.06, "mcg/kg/min"),
+        ("INT-20260508-10001", ADM1, now - timedelta(hours=2), "fluid", "500ml saline bolus", 500, "ml"),
+        ("INT-20260508-10002", ADM1, now - timedelta(hours=1), "vasopressor", "norepinephrine up-titrated to 0.12 mcg/kg/min", 0.12, "mcg/kg/min"),
+        ("INT-20260508-10003", ADM2, now - timedelta(hours=1, minutes=10), "ventilator_change", "PEEP increased from 8 to 12", 12, "cmH2O"),
+        ("INT-20260508-10004", ADM3, now - timedelta(hours=2, minutes=30), "fluid", "500ml balanced crystalloid", 500, "ml"),
+        ("INT-20260508-10005", ADM3, now - timedelta(minutes=50), "vasopressor", "norepinephrine started due to MAP drift", 0.06, "mcg/kg/min"),
     ]
 
     risk_assessments = [
-        ("risk1", "adm1", now - timedelta(minutes=35), "shock", 0.92, "critical", [{"metric": "MAP", "trend": "down", "value": 58}, {"metric": "lactate", "value": 4.6}], "last_2h", "review fluid response and source control"),
-        ("risk2", "adm2", now - timedelta(minutes=30), "respiratory_failure", 0.88, "critical", [{"metric": "SpO2", "value": 87}, {"metric": "PaO2", "value": 59}], "last_3h", "reassess ventilator settings and gas exchange"),
-        ("risk3", "adm3", now - timedelta(minutes=25), "persistent_hypoperfusion", 0.81, "warning", [{"metric": "MAP", "value": 62}, {"metric": "lactate", "value": 3.9}], "last_4h", "monitor post-fluid hemodynamic response"),
+        ("risk1", ADM1, now - timedelta(minutes=35), "shock", 0.92, "critical", [{"metric": "MAP", "trend": "down", "value": 58}, {"metric": "lactate", "value": 4.6}], "last_2h", "review fluid response and source control"),
+        ("risk2", ADM2, now - timedelta(minutes=30), "respiratory_failure", 0.88, "critical", [{"metric": "SpO2", "value": 87}, {"metric": "PaO2", "value": 59}], "last_3h", "reassess ventilator settings and gas exchange"),
+        ("risk3", ADM3, now - timedelta(minutes=25), "persistent_hypoperfusion", 0.81, "warning", [{"metric": "MAP", "value": 62}, {"metric": "lactate", "value": 3.9}], "last_4h", "monitor post-fluid hemodynamic response"),
     ]
 
     alerts = [
-        ("alert1", "adm1", "p1", "b1", "shock_risk", "critical", "open", "risk_sentinel", [{"risk_id": "risk1"}], now - timedelta(minutes=35), now - timedelta(minutes=10)),
-        ("alert2", "adm2", "p2", "b2", "resp_failure_risk", "critical", "open", "risk_sentinel", [{"risk_id": "risk2"}], now - timedelta(minutes=30), now - timedelta(minutes=8)),
-        ("alert3", "adm3", "p3", "b3", "poor_fluid_response", "warning", "acknowledged", "risk_sentinel", [{"risk_id": "risk3"}], now - timedelta(minutes=25), now - timedelta(minutes=5)),
+        ("alert1", ADM1, P1, B1, "shock_risk", "critical", "open", "risk_sentinel", [{"risk_id": "risk1"}], now - timedelta(minutes=35), now - timedelta(minutes=10)),
+        ("alert2", ADM2, P2, B2, "resp_failure_risk", "critical", "open", "risk_sentinel", [{"risk_id": "risk2"}], now - timedelta(minutes=30), now - timedelta(minutes=8)),
+        ("alert3", ADM3, P3, B3, "poor_fluid_response", "warning", "acknowledged", "risk_sentinel", [{"risk_id": "risk3"}], now - timedelta(minutes=25), now - timedelta(minutes=5)),
     ]
 
     state_current = [
-        ("adm1", "p1", "b1", {"heart_rate": 128, "mean_arterial_pressure": 58, "spo2": 88}, ["septic_shock", "hypotension"], [{"risk_type": "shock", "severity": "critical"}], [{"intervention": "fluid_bolus", "response": "partial"}], "critical"),
-        ("adm2", "p2", "b2", {"heart_rate": 116, "mean_arterial_pressure": 69, "spo2": 87}, ["oxygenation_worsening"], [{"risk_type": "respiratory_failure", "severity": "critical"}], [{"intervention": "peep_increase", "response": "pending"}], "critical"),
-        ("adm3", "p3", "b3", {"heart_rate": 121, "mean_arterial_pressure": 62, "spo2": 92}, ["postop_hypoperfusion"], [{"risk_type": "persistent_hypoperfusion", "severity": "warning"}], [{"intervention": "fluid_bolus", "response": "non_responsive"}], "unstable"),
+        (ADM1, P1, B1, {"heart_rate": 128, "mean_arterial_pressure": 58, "spo2": 88}, ["septic_shock", "hypotension"], [{"risk_type": "shock", "severity": "critical"}], [{"intervention": "fluid_bolus", "response": "partial"}], "critical"),
+        (ADM2, P2, B2, {"heart_rate": 116, "mean_arterial_pressure": 69, "spo2": 87}, ["oxygenation_worsening"], [{"risk_type": "respiratory_failure", "severity": "critical"}], [{"intervention": "peep_increase", "response": "pending"}], "critical"),
+        (ADM3, P3, B3, {"heart_rate": 121, "mean_arterial_pressure": 62, "spo2": 92}, ["postop_hypoperfusion"], [{"risk_type": "persistent_hypoperfusion", "severity": "warning"}], [{"intervention": "fluid_bolus", "response": "non_responsive"}], "unstable"),
     ]
 
     snapshots = [
-        ("snap1", "adm1", now - timedelta(hours=1), {"phase": "deteriorating", "map_trend": "down", "lactate": 4.6}),
-        ("snap2", "adm2", now - timedelta(hours=1), {"phase": "resp_worsening", "spo2": 87, "fio2": 0.70}),
-        ("snap3", "adm3", now - timedelta(hours=1), {"phase": "postop_monitoring", "fluid_response": "poor"}),
+        ("snap1", ADM1, now - timedelta(hours=1), {"phase": "deteriorating", "map_trend": "down", "lactate": 4.6}),
+        ("snap2", ADM2, now - timedelta(hours=1), {"phase": "resp_worsening", "spo2": 87, "fio2": 0.70}),
+        ("snap3", ADM3, now - timedelta(hours=1), {"phase": "postop_monitoring", "fluid_response": "poor"}),
     ]
 
     audit_logs = [
-        ("log1", now - timedelta(minutes=35), "agent", "risk_sentinel", "run_agent", "risk", "risk1", {"admission_id": "adm1"}, {"severity": "critical"}),
-        ("log2", now - timedelta(minutes=30), "agent", "risk_sentinel", "run_agent", "risk", "risk2", {"admission_id": "adm2"}, {"severity": "critical"}),
-        ("log3", now - timedelta(minutes=25), "agent", "risk_sentinel", "run_agent", "risk", "risk3", {"admission_id": "adm3"}, {"severity": "warning"}),
+        ("log1", now - timedelta(minutes=35), "agent", "risk_sentinel", "run_agent", "risk", "risk1", {"admission_id": ADM1}, {"severity": "critical"}),
+        ("log2", now - timedelta(minutes=30), "agent", "risk_sentinel", "run_agent", "risk", "risk2", {"admission_id": ADM2}, {"severity": "critical"}),
+        ("log3", now - timedelta(minutes=25), "agent", "risk_sentinel", "run_agent", "risk", "risk3", {"admission_id": ADM3}, {"severity": "warning"}),
         ("log4", now - timedelta(minutes=9), "system", "alert_router", "update_state", "alert", "alert2", {"status": "open"}, {"queue": "high_priority"}),
     ]
 
     agent_outputs = [
         (
             "out_bedside_adm1",
-            "adm1",
-            "p1",
-            "b1",
+            ADM1,
+            P1,
+            B1,
             "bedside_monitor",
             "v1",
             "bedside_analysis",
@@ -111,9 +198,9 @@ def main() -> None:
         ),
         (
             "out_intervention_adm1",
-            "adm1",
-            "p1",
-            "b1",
+            ADM1,
+            P1,
+            B1,
             "intervention_tracker",
             "v1",
             "intervention_evaluation",
@@ -126,12 +213,15 @@ def main() -> None:
         ),
     ]
 
+    evt_bed = "evt_01ABCDEFGHIJKLMNOPQRSTUV01"
+    evt_int = "evt_01ABCDEFGHIJKLMNOPQRSTUV02"
+
     agent_events = [
         (
-            "aevt_bedside_adm1",
-            "adm1",
-            "p1",
-            "b1",
+            evt_bed,
+            ADM1,
+            P1,
+            B1,
             "bedside_monitor",
             "bedside_analysis_ready",
             "v1",
@@ -140,10 +230,10 @@ def main() -> None:
             {"agent_name": "bedside_monitor"},
         ),
         (
-            "aevt_intervention_adm1",
-            "adm1",
-            "p1",
-            "b1",
+            evt_int,
+            ADM1,
+            P1,
+            B1,
             "intervention_tracker",
             "intervention_evaluation_ready",
             "v1",
@@ -160,55 +250,69 @@ def main() -> None:
     ]
 
     orchestrator_runs = [
-        ("run_seed_1", now - timedelta(minutes=20), now - timedelta(minutes=19), ["adm1"], [{"step_name": "risk_sentinel", "status": "ok"}]),
+        ("run_seed_1", now - timedelta(minutes=20), now - timedelta(minutes=19), [ADM1], [{"step_name": "risk_sentinel", "status": "ok"}]),
     ]
 
     agent_consumption_cursor = [
-        ("risk_sentinel", "adm1", "aevt_intervention_adm1", now - timedelta(minutes=31)),
+        ("risk_sentinel", ADM1, evt_int, now - timedelta(minutes=31)),
     ]
 
+    # §4.3 envelope-style IDs: evt_ + exactly 26 [0-9A-Z] characters
+    _ev = lambda n: "evt_" + str(n).zfill(26)
     event_rows = [
-        ("evt1", "adm1", "p1", "b1", "vital_sign", "monitor", now - timedelta(hours=1, minutes=30), "critical", {"vital_id": "vital2"}),
-        ("evt2", "adm1", "p1", "b1", "lab", "lab", now - timedelta(hours=1, minutes=20), "high", {"lab_id": "lab2"}),
-        ("evt3", "adm1", "p1", "b1", "intervention", "nurse", now - timedelta(hours=1), "high", {"intervention_id": "intv2"}),
-        ("evt4", "adm2", "p2", "b2", "vital_sign", "monitor", now - timedelta(hours=1), "critical", {"vital_id": "vital4"}),
-        ("evt5", "adm2", "p2", "b2", "intervention", "nurse", now - timedelta(hours=1, minutes=10), "high", {"intervention_id": "intv3"}),
-        ("evt6", "adm3", "p3", "b3", "intervention", "nurse", now - timedelta(minutes=50), "normal", {"intervention_id": "intv5"}),
-        ("evt7", "adm3", "p3", "b3", "agent_output", "agent", now - timedelta(minutes=25), "high", {"risk_id": "risk3", "type": "risk_assessment"}),
+        (_ev(10000000000000000000000001), ADM1, P1, B1, "vital_sign", "monitor", now - timedelta(hours=1, minutes=30), "critical", {"vital_id": "VS-20260508-10002"}),
+        (_ev(10000000000000000000000002), ADM1, P1, B1, "lab", "lab", now - timedelta(hours=1, minutes=20), "high", {"lab_id": "LAB-20260508-10002"}),
+        (_ev(10000000000000000000000003), ADM1, P1, B1, "intervention", "nurse", now - timedelta(hours=1), "high", {"intervention_id": "INT-20260508-10002"}),
+        (_ev(10000000000000000000000004), ADM2, P2, B2, "vital_sign", "monitor", now - timedelta(hours=1), "critical", {"vital_id": "VS-20260508-10004"}),
+        (_ev(10000000000000000000000005), ADM2, P2, B2, "intervention", "nurse", now - timedelta(hours=1, minutes=10), "high", {"intervention_id": "INT-20260508-10003"}),
+        (_ev(10000000000000000000000006), ADM3, P3, B3, "intervention", "nurse", now - timedelta(minutes=50), "normal", {"intervention_id": "INT-20260508-10005"}),
+        (_ev(10000000000000000000000007), ADM3, P3, B3, "agent_output", "agent", now - timedelta(minutes=25), "high", {"risk_id": "risk3", "type": "risk_assessment"}),
     ]
 
     with psycopg.connect(DB_DSN) as conn:
         with conn.cursor() as cur:
-            # keep reruns deterministic for this seed set
+            # Deterministic reseed: clear data tables (destructive by design).
             cur.execute(
                 """
-                DELETE FROM audit_logs WHERE id LIKE 'log%';
-                DELETE FROM alerts WHERE alert_id LIKE 'alert%';
-                DELETE FROM risk_assessments WHERE id LIKE 'risk%';
-                DELETE FROM patient_state_snapshots WHERE id LIKE 'snap%';
-                DELETE FROM patient_state_current WHERE admission_id IN ('adm1', 'adm2', 'adm3');
-                DELETE FROM intervention_events WHERE id LIKE 'intv%';
-                DELETE FROM lab_events WHERE id LIKE 'lab%';
-                DELETE FROM vital_sign_events WHERE id LIKE 'vital%';
-                DELETE FROM events WHERE event_id LIKE 'evt%';
-                DELETE FROM agent_consumption_cursor WHERE admission_id IN ('adm1', 'adm2', 'adm3');
-                DELETE FROM agent_events WHERE event_id LIKE 'aevt_%';
-                DELETE FROM agent_outputs WHERE output_id LIKE 'out_%';
-                DELETE FROM agent_registry WHERE agent_name IN ('bedside_monitor', 'intervention_tracker', 'risk_sentinel');
-                DELETE FROM orchestrator_runs WHERE run_id LIKE 'run_seed_%';
-                DELETE FROM admissions WHERE admission_id IN ('adm1', 'adm2', 'adm3');
-                DELETE FROM beds WHERE bed_id IN ('b1', 'b2', 'b3', 'b4');
-                DELETE FROM patients WHERE patient_id IN ('p1', 'p2', 'p3');
+                TRUNCATE TABLE
+                  intervention_pending,
+                  agent_consumption_cursor,
+                  agent_events,
+                  agent_outputs,
+                  clinical_summaries,
+                  ward_priority_events,
+                  ward_priority_snapshots,
+                  patient_memory_events,
+                  patient_memory,
+                  patient_state_current,
+                  patient_state_snapshots,
+                  alerts,
+                  risk_assessments,
+                  events,
+                  intervention_events,
+                  lab_events,
+                  vital_sign_events,
+                  audit_logs,
+                  orchestrator_runs,
+                  admissions,
+                  beds,
+                  patients
+                RESTART IDENTITY CASCADE
                 """
             )
+            cur.execute("DELETE FROM agent_registry")
 
             cur.executemany(
                 """
                 INSERT INTO patients (
-                    patient_id, patient_code, name, gender, age, date_of_birth, baseline_profile
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s::jsonb)
+                    patient_id, patient_code, name, gender, age, date_of_birth,
+                    contact, allergies, chronic_conditions, blood_type, baseline_profile
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s::jsonb, %s::jsonb, %s, %s::jsonb)
                 """,
-                [(a, b, c, d, e, f, j(g)) for (a, b, c, d, e, f, g) in patients],
+                [
+                    (a, b, c, d, e, f, g, j(h), j(i), k, j(l))
+                    for (a, b, c, d, e, f, g, h, i, k, l) in patients
+                ],
             )
             cur.executemany(
                 """
@@ -221,10 +325,10 @@ def main() -> None:
             cur.executemany(
                 """
                 INSERT INTO admissions (
-                    admission_id, patient_id, bed_id, admission_code, admit_time, discharge_time,
-                    status, primary_diagnosis, admission_reason, severity_on_admission,
+                    admission_id, encounter_id, patient_id, bed_id, admission_code, admit_time, discharge_time,
+                    status, encounter_status, primary_diagnosis, admission_reason, severity_on_admission,
                     attending_team, scenario_tag
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 admissions,
             )
@@ -386,4 +490,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

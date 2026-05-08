@@ -1,9 +1,14 @@
 ﻿from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException
+import re
+from datetime import datetime, timezone
+from typing import Any
+
+from fastapi import APIRouter, Depends, Header, HTTPException
 from psycopg import Connection
 from psycopg.rows import dict_row
 from psycopg.sql import SQL, Identifier
+from psycopg.types.json import Json
 
 from app.db import get_db
 from app.schemas import (
@@ -30,6 +35,8 @@ from app.schemas import (
     RiskAssessmentOut,
     VitalSignEventCreate,
     VitalSignEventOut,
+    TransferRequestBody,
+    TransferAcceptedData,
 )
 from app.services.event_pipeline import (
     write_intervention,
@@ -37,8 +44,21 @@ from app.services.event_pipeline import (
     write_vital_sign,
 )
 from app.orchestrator.event_dispatcher import dispatch_event_chain
+from app.services.hospital_bus import publish_contract_event
+from app.services.idempotency import get_cached_response, store_response
+from app.services.ids import new_icu_admission_id, new_transfer_id
 
 router = APIRouter(prefix="/api/v1")
+
+_ENCOUNTER_ID_RE = re.compile(r"^E-\d{14}-[0-9a-f]{4}$")
+_PATIENT_ID_RE = re.compile(r"^P-[0-9a-f]{8}$")
+
+
+def _raise_id_malformed(field: str) -> None:
+    raise HTTPException(
+        status_code=400,
+        detail={"code": "ID_MALFORMED", "message": f"invalid {field} format"},
+    )
 
 # === Agent-layer: bedside-level, rule-driven modules ===
 from agents.bedside_monitor.router import router as bedside_monitor_router
@@ -222,7 +242,8 @@ def get_patient(
         cur.execute(
             """
             SELECT patient_id, patient_code, name, gender, age,
-                   date_of_birth, baseline_profile, created_at, updated_at
+                   date_of_birth, contact, allergies, chronic_conditions, blood_type,
+                   baseline_profile, created_at, updated_at
             FROM patients
             WHERE patient_id = %s
             """,
@@ -265,8 +286,8 @@ def get_admission(
     with conn.cursor() as cur:
         cur.execute(
             """
-            SELECT admission_id, patient_id, bed_id, admission_code,
-                   admit_time, discharge_time, status, primary_diagnosis,
+            SELECT admission_id, encounter_id, patient_id, bed_id, admission_code,
+                   admit_time, discharge_time, status, encounter_status, primary_diagnosis,
                    admission_reason, severity_on_admission, attending_team,
                    scenario_tag, created_at, updated_at
             FROM admissions
@@ -555,27 +576,86 @@ def get_db_health(conn: Connection = Depends(get_db)) -> DbHealthOut:
 
 
 @router.post("/admissions", response_model=AdmissionOut)
-def create_admission(body: AdmissionCreate, conn: Connection = Depends(get_db)) -> AdmissionOut:
+def create_admission(
+    body: AdmissionCreate,
+    conn: Connection = Depends(get_db),
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+) -> AdmissionOut:
+    route_key = "POST /api/v1/admissions"
     conn.row_factory = dict_row
+    if idempotency_key:
+        cached = get_cached_response(conn, key=idempotency_key, route=route_key)
+        if cached:
+            return AdmissionOut(**cached)
+    if not _PATIENT_ID_RE.match(body.patient_id):
+        _raise_id_malformed("patient_id")
+    if not _ENCOUNTER_ID_RE.match(body.encounter_id):
+        _raise_id_malformed("encounter_id")
+
     with conn.transaction():
         with conn.cursor() as cur:
+            if body.patient_profile is None:
+                cur.execute("SELECT 1 FROM patients WHERE patient_id = %s", (body.patient_id,))
+                if not cur.fetchone():
+                    raise HTTPException(
+                        status_code=404,
+                        detail={
+                            "code": "ENCOUNTER_NOT_FOUND",
+                            "message": "patient not found; include patient_profile to create the patient first",
+                        },
+                    )
+            if body.patient_profile is not None:
+                pp = body.patient_profile
+                cur.execute(
+                    """
+                    INSERT INTO patients (
+                        patient_id, patient_code, name, gender, age, date_of_birth,
+                        contact, allergies, chronic_conditions, blood_type, baseline_profile
+                    ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s::jsonb,%s::jsonb,%s,%s::jsonb)
+                    ON CONFLICT (patient_id) DO UPDATE SET
+                        name = EXCLUDED.name,
+                        gender = EXCLUDED.gender,
+                        age = EXCLUDED.age,
+                        date_of_birth = COALESCE(EXCLUDED.date_of_birth, patients.date_of_birth),
+                        contact = COALESCE(EXCLUDED.contact, patients.contact),
+                        allergies = EXCLUDED.allergies,
+                        chronic_conditions = EXCLUDED.chronic_conditions,
+                        blood_type = COALESCE(EXCLUDED.blood_type, patients.blood_type),
+                        updated_at = NOW()
+                    """,
+                    (
+                        body.patient_id,
+                        body.patient_id,
+                        pp.name,
+                        pp.gender,
+                        pp.age,
+                        pp.date_of_birth,
+                        pp.contact,
+                        Json(pp.allergies),
+                        Json(pp.chronic_conditions),
+                        pp.blood_type,
+                        Json({}),
+                    ),
+                )
             cur.execute(
                 """
                 INSERT INTO admissions (
-                    admission_id, patient_id, bed_id, admission_code, admit_time, discharge_time,
-                    status, primary_diagnosis, admission_reason, severity_on_admission,
+                    admission_id, encounter_id, patient_id, bed_id, admission_code, admit_time, discharge_time,
+                    status, encounter_status, primary_diagnosis, admission_reason, severity_on_admission,
                     attending_team, scenario_tag
-                ) VALUES (%s,%s,%s,%s,%s,NULL,'active',%s,%s,%s,%s,%s)
-                RETURNING admission_id, patient_id, bed_id, admission_code, admit_time, discharge_time,
-                          status, primary_diagnosis, admission_reason, severity_on_admission,
+                ) VALUES (%s,%s,%s,%s,%s,%s,NULL,'active',%s,%s,%s,%s,%s,%s,%s)
+                RETURNING admission_id, encounter_id, patient_id, bed_id, admission_code, admit_time, discharge_time,
+                          status, encounter_status, primary_diagnosis, admission_reason, severity_on_admission,
                           attending_team, scenario_tag, created_at, updated_at
                 """,
                 (
                     body.admission_id,
+                    body.encounter_id,
                     body.patient_id,
                     body.bed_id,
                     body.admission_code,
                     body.admit_time,
+                    body.encounter_status,
                     body.primary_diagnosis,
                     body.admission_reason,
                     body.severity_on_admission,
@@ -592,7 +672,21 @@ def create_admission(body: AdmissionCreate, conn: Connection = Depends(get_db)) 
                 """,
                 (body.admission_id, '{"action":"create_admission"}', '{"status":"active"}'),
             )
-    return AdmissionOut(**row)
+    out = AdmissionOut(**row)
+    publish_contract_event(
+        event_type="patient.admitted",
+        patient_id=body.patient_id,
+        encounter_id=body.encounter_id,
+        data={
+            "admission_id": body.admission_id,
+            "bed_id": body.bed_id,
+            "source": "POST /admissions",
+        },
+        durable=True,
+    )
+    if idempotency_key:
+        store_response(conn, key=idempotency_key, route=route_key, inner_payload=out.model_dump(mode="json"))
+    return out
 
 
 @router.patch("/admissions/{admission_id}/status", response_model=AdmissionOut)
@@ -603,13 +697,21 @@ def update_admission_status(admission_id: str, body: AdmissionStatusUpdate, conn
             cur.execute(
                 """
                 UPDATE admissions
-                SET status = %s, discharge_time = COALESCE(%s, discharge_time), updated_at = NOW()
+                SET status = %s,
+                    discharge_time = COALESCE(%s, discharge_time),
+                    encounter_status = CASE
+                        WHEN %s::text = 'discharged' THEN 'DISCHARGED'::text
+                        WHEN %s::text = 'expired' THEN 'COMPLETED'::text
+                        WHEN %s::text = 'transferred' THEN 'TRANSFERRING'::text
+                        ELSE encounter_status
+                    END,
+                    updated_at = NOW()
                 WHERE admission_id = %s
-                RETURNING admission_id, patient_id, bed_id, admission_code, admit_time, discharge_time,
-                          status, primary_diagnosis, admission_reason, severity_on_admission,
+                RETURNING admission_id, encounter_id, patient_id, bed_id, admission_code, admit_time, discharge_time,
+                          status, encounter_status, primary_diagnosis, admission_reason, severity_on_admission,
                           attending_team, scenario_tag, created_at, updated_at
                 """,
-                (body.status, body.discharge_time, admission_id),
+                (body.status, body.discharge_time, body.status, body.status, body.status, admission_id),
             )
             row = cur.fetchone()
             if not row:
@@ -617,6 +719,162 @@ def update_admission_status(admission_id: str, body: AdmissionStatusUpdate, conn
             if body.status != 'active':
                 cur.execute("UPDATE beds SET status = 'empty', updated_at = NOW() WHERE bed_id = %s", (row['bed_id'],))
     return AdmissionOut(**row)
+
+
+@router.post("/encounters/{encounter_id}/transfer", response_model=TransferAcceptedData)
+def post_encounter_transfer(
+    encounter_id: str,
+    body: TransferRequestBody,
+    conn: Connection = Depends(get_db),
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+) -> TransferAcceptedData:
+    """§6.1 ICU receiver — allocates bed and creates admission."""
+    if encounter_id != encounter_id.strip():
+        _raise_id_malformed("encounter_id")
+    if not _ENCOUNTER_ID_RE.match(encounter_id):
+        _raise_id_malformed("encounter_id")
+    if not _PATIENT_ID_RE.match(body.patient_id):
+        _raise_id_malformed("patient_id")
+
+    route_key = f"POST /api/v1/encounters/{encounter_id}/transfer"
+    conn.row_factory = dict_row
+    if idempotency_key:
+        cached = get_cached_response(conn, key=idempotency_key, route=route_key)
+        if cached:
+            return TransferAcceptedData(**cached)
+
+    if body.to_group != "groupC.icu":
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "code": "STATE_TRANSITION_INVALID",
+                "message": "This ICU endpoint only accepts to_group=groupC.icu",
+            },
+        )
+
+    transfer_id = new_transfer_id()
+    admission_id = new_icu_admission_id()
+    admit_time = datetime.now(timezone.utc)
+
+    with conn.transaction():
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO patients (
+                    patient_id, patient_code, name, gender, age, date_of_birth,
+                    contact, allergies, chronic_conditions, blood_type, baseline_profile
+                ) VALUES (%s,%s,%s,%s,%s,NULL,NULL,%s::jsonb,%s::jsonb,NULL,%s::jsonb)
+                ON CONFLICT (patient_id) DO UPDATE SET
+                    name = EXCLUDED.name,
+                    gender = EXCLUDED.gender,
+                    age = EXCLUDED.age,
+                    updated_at = NOW()
+                """,
+                (
+                    body.patient_id,
+                    body.patient_id,
+                    body.patient_name,
+                    body.patient_gender,
+                    body.patient_age,
+                    Json([]),
+                    Json([]),
+                    Json({}),
+                ),
+            )
+            cur.execute(
+                "SELECT bed_id FROM beds WHERE status = 'empty' ORDER BY bed_id LIMIT 1 FOR UPDATE SKIP LOCKED"
+            )
+            bed_row = cur.fetchone()
+            if not bed_row:
+                out = TransferAcceptedData(
+                    transfer_id=transfer_id,
+                    status="rejected",
+                    assigned_bed=None,
+                    expected_eta_minutes=None,
+                )
+                if idempotency_key:
+                    store_response(conn, key=idempotency_key, route=route_key, inner_payload=out.model_dump(mode="json"))
+                return out
+
+            assigned_bed = bed_row["bed_id"]
+            cur.execute(
+                "UPDATE beds SET status = 'occupied', updated_at = NOW() WHERE bed_id = %s",
+                (assigned_bed,),
+            )
+            cur.execute(
+                """
+                INSERT INTO admissions (
+                    admission_id, encounter_id, patient_id, bed_id, admission_code, admit_time, discharge_time,
+                    status, encounter_status, primary_diagnosis, admission_reason, severity_on_admission,
+                    attending_team, scenario_tag
+                ) VALUES (%s,%s,%s,%s,%s,%s,NULL,'active','ADMITTED',%s,%s,%s,%s,%s)
+                RETURNING admission_id
+                """,
+                (
+                    admission_id,
+                    encounter_id,
+                    body.patient_id,
+                    assigned_bed,
+                    admission_id,
+                    admit_time,
+                    ", ".join(body.summary.active_diagnoses) or "pending diagnosis",
+                    body.reason,
+                    "critical" if body.ctas_level in ("L1", "L2") else "unstable",
+                    "Transfer intake",
+                    "transfer_in",
+                ),
+            )
+            cur.fetchone()
+            cur.execute(
+                """
+                INSERT INTO patient_state_current (
+                    admission_id, patient_id, bed_id, current_vitals, active_problems, active_risks,
+                    latest_interventions, care_phase
+                ) VALUES (%s,%s,%s,'{}'::jsonb,'[]'::jsonb,'[]'::jsonb,'[]'::jsonb,'critical')
+                ON CONFLICT (admission_id) DO NOTHING
+                """,
+                (admission_id, body.patient_id, assigned_bed),
+            )
+
+    zone = {"L1": "red", "L2": "red", "L3": "yellow", "L4": "green", "L5": "green"}[body.ctas_level]
+    xfer_payload: dict[str, Any] = {
+        "transfer_id": transfer_id,
+        "from_group": body.from_group,
+        "to_group": body.to_group,
+        "ctas_level": body.ctas_level,
+        "zone": zone,
+        "admission_id": admission_id,
+        "assigned_bed": assigned_bed,
+    }
+    publish_contract_event(
+        event_type="patient.transferred",
+        patient_id=body.patient_id,
+        encounter_id=encounter_id,
+        data=xfer_payload,
+        durable=True,
+    )
+    publish_contract_event(
+        event_type="patient.admitted",
+        patient_id=body.patient_id,
+        encounter_id=encounter_id,
+        data={
+            "admission_id": admission_id,
+            "bed_id": assigned_bed,
+            "transfer_id": transfer_id,
+            "source": "transfer",
+        },
+        durable=True,
+    )
+
+    out = TransferAcceptedData(
+        transfer_id=transfer_id,
+        status="accepted",
+        assigned_bed=assigned_bed,
+        expected_eta_minutes=5,
+    )
+    if idempotency_key:
+        store_response(conn, key=idempotency_key, route=route_key, inner_payload=out.model_dump(mode="json"))
+    return out
 
 
 @router.get("/ops/db/tables", response_model=list[str])

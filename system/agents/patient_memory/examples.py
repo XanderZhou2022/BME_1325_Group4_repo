@@ -4,12 +4,12 @@ from .schemas import MemoryRequest, VitalSignEvent, InterventionEvent, LabEvent
 now = datetime.utcnow()
 
 SAMPLE_REQUEST = MemoryRequest(
-    admission_id="adm1",
+    admission_id="ICU-ADM-0001",
     window_hours=6,
     vital_sign_events=[
         VitalSignEvent(
             id="v1",
-            admission_id="adm1",
+            admission_id="ICU-ADM-0001",
             timestamp=now - timedelta(minutes=30),
             heart_rate=115,
             mean_arterial_pressure=62,
@@ -19,7 +19,7 @@ SAMPLE_REQUEST = MemoryRequest(
         ),
         VitalSignEvent(
             id="v2",
-            admission_id="adm1",
+            admission_id="ICU-ADM-0001",
             timestamp=now - timedelta(minutes=90),
             heart_rate=105,
             mean_arterial_pressure=68,
@@ -31,7 +31,7 @@ SAMPLE_REQUEST = MemoryRequest(
     lab_events=[
         LabEvent(
             id="l1",
-            admission_id="adm1",
+            admission_id="ICU-ADM-0001",
             timestamp=now - timedelta(hours=4),
             lab_type="lactate",
             value=2.8,
@@ -41,7 +41,7 @@ SAMPLE_REQUEST = MemoryRequest(
     intervention_events=[
         InterventionEvent(
             id="i1",
-            admission_id="adm1",
+            admission_id="ICU-ADM-0001",
             timestamp=now - timedelta(hours=1),
             intervention_type="fluid",
             description="500ml NS",

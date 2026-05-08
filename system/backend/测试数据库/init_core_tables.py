@@ -13,9 +13,13 @@ DDL_STATEMENTS = [
         patient_id TEXT PRIMARY KEY,
         patient_code TEXT NOT NULL UNIQUE,
         name TEXT NOT NULL,
-        gender TEXT NOT NULL CHECK (gender IN ('male', 'female', 'other')),
+        gender TEXT NOT NULL CHECK (gender IN ('male', 'female', 'other', 'unknown')),
         age INTEGER NOT NULL CHECK (age >= 0),
         date_of_birth DATE,
+        contact TEXT,
+        allergies JSONB NOT NULL DEFAULT '[]'::jsonb,
+        chronic_conditions JSONB NOT NULL DEFAULT '[]'::jsonb,
+        blood_type TEXT,
         baseline_profile JSONB NOT NULL DEFAULT '{}'::jsonb,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -36,12 +40,17 @@ DDL_STATEMENTS = [
     """
     CREATE TABLE IF NOT EXISTS admissions (
         admission_id TEXT PRIMARY KEY,
+        encounter_id TEXT NOT NULL UNIQUE,
         patient_id TEXT NOT NULL REFERENCES patients(patient_id),
         bed_id TEXT NOT NULL REFERENCES beds(bed_id),
         admission_code TEXT NOT NULL UNIQUE,
         admit_time TIMESTAMPTZ NOT NULL,
         discharge_time TIMESTAMPTZ,
         status TEXT NOT NULL CHECK (status IN ('active', 'discharged', 'expired', 'transferred')),
+        encounter_status TEXT NOT NULL DEFAULT 'ADMITTED' CHECK (encounter_status IN (
+            'ARRIVED', 'REGISTERED', 'TRIAGED', 'IN_CONSULTATION', 'IN_EXAM', 'IN_TREATMENT',
+            'ADMITTED', 'DISCHARGED', 'COMPLETED', 'TRANSFERRING', 'CANCELLED', 'ERROR'
+        )),
         primary_diagnosis TEXT NOT NULL,
         admission_reason TEXT NOT NULL,
         severity_on_admission TEXT NOT NULL CHECK (severity_on_admission IN ('stable', 'unstable', 'critical')),
@@ -318,6 +327,34 @@ DDL_STATEMENTS = [
         output JSONB NOT NULL DEFAULT '{}'::jsonb
     );
     """,
+    """
+    CREATE TABLE IF NOT EXISTS idempotency_keys (
+        key TEXT PRIMARY KEY,
+        route TEXT NOT NULL,
+        response_json JSONB NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+    """,
+]
+
+
+# Backfill columns when upgrading an older database (safe no-ops if already present).
+ALTER_UPGRADE_STATEMENTS = [
+    """
+    ALTER TABLE patients ADD COLUMN IF NOT EXISTS contact TEXT;
+    ALTER TABLE patients ADD COLUMN IF NOT EXISTS allergies JSONB NOT NULL DEFAULT '[]'::jsonb;
+    ALTER TABLE patients ADD COLUMN IF NOT EXISTS chronic_conditions JSONB NOT NULL DEFAULT '[]'::jsonb;
+    ALTER TABLE patients ADD COLUMN IF NOT EXISTS blood_type TEXT;
+    """,
+    """
+    ALTER TABLE patients DROP CONSTRAINT IF EXISTS patients_gender_check;
+    ALTER TABLE patients ADD CONSTRAINT patients_gender_check
+      CHECK (gender IN ('male', 'female', 'other', 'unknown'));
+    """,
+    """
+    ALTER TABLE admissions ADD COLUMN IF NOT EXISTS encounter_id TEXT;
+    ALTER TABLE admissions ADD COLUMN IF NOT EXISTS encounter_status TEXT NOT NULL DEFAULT 'ADMITTED';
+    """,
 ]
 
 
@@ -326,6 +363,8 @@ def main() -> None:
         with conn.cursor() as cur:
             for ddl in DDL_STATEMENTS:
                 cur.execute(ddl)
+            for block in ALTER_UPGRADE_STATEMENTS:
+                cur.execute(block)
 
             cur.execute(
                 """

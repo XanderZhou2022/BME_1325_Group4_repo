@@ -287,7 +287,7 @@
 ```json
 {
   "step_name": "risk_sentinel",
-  "admission_id": "adm1",
+  "admission_id": "ICU-ADM-0001",
   "status": "ok|error|skipped",
   "started_at": "timestamp",
   "finished_at": "timestamp",

@@ -4,7 +4,7 @@ from datetime import date, datetime
 from decimal import Decimal
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 
 EventSource = Literal["monitor", "lab", "nurse", "agent"]
@@ -12,6 +12,22 @@ EventPriority = Literal["low", "normal", "high", "critical"]
 InterventionType = Literal["fluid", "vasopressor", "ventilator_change"]
 AbnormalFlag = Literal["normal", "high", "low"]
 CarePhase = Literal["stable", "unstable", "critical"]
+
+# Contract v1.0 §2 — global encounter-facing status (stored on admissions.encounter_status)
+GlobalEncounterStatus = Literal[
+    "ARRIVED",
+    "REGISTERED",
+    "TRIAGED",
+    "IN_CONSULTATION",
+    "IN_EXAM",
+    "IN_TREATMENT",
+    "ADMITTED",
+    "DISCHARGED",
+    "COMPLETED",
+    "TRANSFERRING",
+    "CANCELLED",
+    "ERROR",
+]
 
 
 # === Write-side schemas (events) ===
@@ -22,12 +38,15 @@ class VitalSignEventCreate(BaseModel):
     source: EventSource = "monitor"
     priority: EventPriority = "normal"
 
-    heart_rate: int | None = None
-    mean_arterial_pressure: Decimal | None = None
-    systolic_bp: Decimal | None = None
-    diastolic_bp: Decimal | None = None
-    respiratory_rate: int | None = None
-    temperature: Decimal | None = None
+    # Internal APACHE-style names; JSON may use contract VitalSigns names (§8 / appendix A.2)
+    heart_rate: int | None = Field(None, validation_alias=AliasChoices("heart_rate", "hr"))
+    mean_arterial_pressure: Decimal | None = Field(
+        None, validation_alias=AliasChoices("mean_arterial_pressure", "map")
+    )
+    systolic_bp: Decimal | None = Field(None, validation_alias=AliasChoices("systolic_bp", "sbp"))
+    diastolic_bp: Decimal | None = Field(None, validation_alias=AliasChoices("diastolic_bp", "dbp"))
+    respiratory_rate: int | None = Field(None, validation_alias=AliasChoices("respiratory_rate", "rr"))
+    temperature: Decimal | None = Field(None, validation_alias=AliasChoices("temperature", "temp"))
     spo2: Decimal | None = None
     fio2: Decimal | None = None
     pao2: Decimal | None = None
@@ -112,9 +131,13 @@ class PatientOut(BaseModel):
     patient_id: str
     patient_code: str
     name: str
-    gender: Literal["male", "female", "other"]
+    gender: Literal["male", "female", "other", "unknown"]
     age: int
     date_of_birth: date | None = None
+    contact: str | None = None
+    allergies: list[Any] = Field(default_factory=list)
+    chronic_conditions: list[Any] = Field(default_factory=list)
+    blood_type: str | None = None
     baseline_profile: dict[str, Any]
     created_at: datetime
     updated_at: datetime
@@ -133,12 +156,14 @@ class BedOut(BaseModel):
 
 class AdmissionOut(BaseModel):
     admission_id: str
+    encounter_id: str
     patient_id: str
     bed_id: str
     admission_code: str
     admit_time: datetime
     discharge_time: datetime | None = None
     status: Literal["active", "discharged", "expired", "transferred"]
+    encounter_status: GlobalEncounterStatus
     primary_diagnosis: str
     admission_reason: str
     severity_on_admission: Literal["stable", "unstable", "critical"]
@@ -255,8 +280,27 @@ class DbHealthOut(BaseModel):
     database: str
     server_time_utc: datetime | None = None
 
+class AdmissionStatusUpdate(BaseModel):
+    status: Literal["active", "discharged", "expired", "transferred"]
+    discharge_time: datetime | None = None
+
+
+class PatientProfileUpsert(BaseModel):
+    """Optional: create/refresh patient row before admission (contract §8.4)."""
+
+    name: str
+    gender: Literal["male", "female", "other", "unknown"] = "unknown"
+    age: int = 0
+    date_of_birth: date | None = None
+    contact: str | None = None
+    allergies: list[Any] = Field(default_factory=list)
+    chronic_conditions: list[Any] = Field(default_factory=list)
+    blood_type: str | None = None
+
+
 class AdmissionCreate(BaseModel):
     admission_id: str
+    encounter_id: str
     patient_id: str
     bed_id: str
     admission_code: str
@@ -266,11 +310,48 @@ class AdmissionCreate(BaseModel):
     severity_on_admission: Literal["stable", "unstable", "critical"]
     attending_team: str
     scenario_tag: str = "custom"
+    encounter_status: GlobalEncounterStatus = "ADMITTED"
+    patient_profile: PatientProfileUpsert | None = None
 
 
-class AdmissionStatusUpdate(BaseModel):
-    status: Literal["active", "discharged", "expired", "transferred"]
-    discharge_time: datetime | None = None
+class VitalBaselineIn(BaseModel):
+    hr: int | None = None
+    sbp: int | None = None
+    dbp: int | None = None
+    spo2: int | None = None
+    temp: float | None = None
+    rr: int | None = None
+
+
+class TransferSummaryIn(BaseModel):
+    chief_complaint: str = ""
+    key_findings: list[str] = Field(default_factory=list)
+    active_diagnoses: list[str] = Field(default_factory=list)
+    active_orders: list[str] = Field(default_factory=list)
+    vital_baseline: VitalBaselineIn = Field(default_factory=VitalBaselineIn)
+
+
+class TransferRequestBody(BaseModel):
+    """§6.1 cross-group transfer — extended with patient_id for ICU intake."""
+
+    from_group: str
+    to_group: str
+    reason: str
+    ctas_level: Literal["L1", "L2", "L3", "L4", "L5"]
+    summary: TransferSummaryIn
+    requested_resources: dict[str, Any] = Field(default_factory=dict)
+    patient_id: str
+    patient_name: str = "Unknown"
+    patient_gender: Literal["male", "female", "other", "unknown"] = "unknown"
+    patient_age: int = 0
+
+
+class TransferAcceptedData(BaseModel):
+    transfer_id: str
+    status: Literal["accepted", "rejected", "pending"]
+    assigned_bed: str | None = None
+    expected_eta_minutes: int | None = None
+    retry_after_seconds: int | None = None
 
 
 class TableRowPreview(BaseModel):

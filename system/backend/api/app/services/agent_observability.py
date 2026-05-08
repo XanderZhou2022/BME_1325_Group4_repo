@@ -7,6 +7,7 @@ from psycopg import Connection
 from psycopg.types.json import Json
 
 from app.services.ids import new_id
+from app.services.hospital_bus import mirror_agent_event_row
 
 
 def emit_agent_lifecycle_event(
@@ -39,6 +40,23 @@ def emit_agent_lifecycle_event(
                 Json(payload or {}),
             ),
         )
+        cur.execute(
+            "SELECT encounter_id FROM admissions WHERE admission_id = %s",
+            (admission_id,),
+        )
+        enc_row = cur.fetchone()
+    encounter_id = enc_row[0] if enc_row else None
+    pl = payload or {}
+    mirror_agent_event_row(
+        table_event_id=event_id,
+        admission_id=admission_id,
+        patient_id=patient_id,
+        bed_id=bed_id,
+        producer_agent=producer_agent,
+        internal_event_type=f"{producer_agent}.{lifecycle}",
+        payload=pl if isinstance(pl, dict) else {},
+        encounter_id=encounter_id,
+    )
     return event_id
 
 

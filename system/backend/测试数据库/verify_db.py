@@ -12,6 +12,7 @@ REQUIRED_TABLES = [
     "patients",
     "beds",
     "admissions",
+    "idempotency_keys",
     "events",
     "vital_sign_events",
     "lab_events",

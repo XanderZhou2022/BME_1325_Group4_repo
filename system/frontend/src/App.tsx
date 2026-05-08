@@ -57,6 +57,7 @@ export default function App() {
 
   const [newAdmission, setNewAdmission] = useState({
     admission_id: "",
+    encounter_id: "",
     patient_id: "",
     bed_id: "",
     admission_code: "",
@@ -66,6 +67,7 @@ export default function App() {
     severity_on_admission: "unstable",
     attending_team: "ICU-A",
     scenario_tag: "frontend",
+    encounter_status: "ADMITTED",
   });
 
   const [statusForm, setStatusForm] = useState({
@@ -204,7 +206,14 @@ export default function App() {
     try {
       await api.createAdmission(newAdmission as unknown as JsonObj);
       await loadAdmissionsAndWard();
-      setNewAdmission((prev) => ({ ...prev, admission_id: "", patient_id: "", bed_id: "", admission_code: "" }));
+      setNewAdmission((prev) => ({
+        ...prev,
+        admission_id: "",
+        encounter_id: "",
+        patient_id: "",
+        bed_id: "",
+        admission_code: "",
+      }));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Create admission failed");
     }
@@ -379,6 +388,7 @@ export default function App() {
           <h3>1) Add Admission</h3>
           <div className="formGrid">
             <input placeholder="admission_id" value={newAdmission.admission_id} onChange={(e) => setNewAdmission({ ...newAdmission, admission_id: e.target.value })} />
+            <input placeholder="encounter_id (E-YYYYMMDDHHmmss-xxxx)" value={newAdmission.encounter_id} onChange={(e) => setNewAdmission({ ...newAdmission, encounter_id: e.target.value })} />
             <input placeholder="patient_id" value={newAdmission.patient_id} onChange={(e) => setNewAdmission({ ...newAdmission, patient_id: e.target.value })} />
             <input placeholder="bed_id" value={newAdmission.bed_id} onChange={(e) => setNewAdmission({ ...newAdmission, bed_id: e.target.value })} />
             <input placeholder="admission_code" value={newAdmission.admission_code} onChange={(e) => setNewAdmission({ ...newAdmission, admission_code: e.target.value })} />

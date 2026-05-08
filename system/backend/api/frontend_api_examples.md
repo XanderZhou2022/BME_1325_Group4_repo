@@ -33,7 +33,7 @@ async function api<T>(path: string, init?: RequestInit): Promise<T> {
 ## 3) Write a vital sign event
 
 ```ts
-await api(`/api/v1/admissions/adm1/events/vital_sign`, {
+await api(`/api/v1/admissions/ICU-ADM-0001/events/vital_sign`, {
   method: "POST",
   body: JSON.stringify({
     timestamp: new Date().toISOString(),
@@ -51,27 +51,27 @@ await api(`/api/v1/admissions/adm1/events/vital_sign`, {
 ```ts
 await api(`/agents/bedside-monitor/analyze`, {
   method: "POST",
-  body: JSON.stringify({ admission_id: "adm1", analysis_window: "last_4h" }),
+  body: JSON.stringify({ admission_id: "ICU-ADM-0001", analysis_window: "last_4h" }),
 });
 
 await api(`/agents/intervention-tracker/evaluate`, {
   method: "POST",
-  body: JSON.stringify({ admission_id: "adm1", intervention_id: "intv2" }),
+  body: JSON.stringify({ admission_id: "ICU-ADM-0001", intervention_id: "INT-20260508-10002" }),
 });
 
 await api(`/agents/risk-sentinel/evaluate`, {
   method: "POST",
-  body: JSON.stringify({ admission_id: "adm1", max_events: 200 }),
+  body: JSON.stringify({ admission_id: "ICU-ADM-0001", max_events: 200 }),
 });
 ```
 
 ## 5) Read data for UI
 
 ```ts
-const currentState = await api(`/api/v1/admissions/adm1/state/current`);
-const alerts = await api(`/api/v1/admissions/adm1/alerts`);
-const risks = await api(`/api/v1/admissions/adm1/risks`);
-const agentEvents = await api(`/api/v1/admissions/adm1/agent_events?limit=50`);
+const currentState = await api(`/api/v1/admissions/ICU-ADM-0001/state/current`);
+const alerts = await api(`/api/v1/admissions/ICU-ADM-0001/alerts`);
+const risks = await api(`/api/v1/admissions/ICU-ADM-0001/risks`);
+const agentEvents = await api(`/api/v1/admissions/ICU-ADM-0001/agent_events?limit=50`);
 ```
 
 ## 6) Retry guidance
@@ -86,7 +86,7 @@ const agentEvents = await api(`/api/v1/admissions/adm1/agent_events?limit=50`);
 const run = await api(`/api/v1/orchestrator/demo-run`, {
   method: "POST",
   body: JSON.stringify({
-    admission_id: "adm1",
+    admission_id: "ICU-ADM-0001",
     memory_window_hours: 24,
     top_k: 10,
   }),

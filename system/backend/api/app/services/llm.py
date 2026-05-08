@@ -17,7 +17,7 @@ class LLMClient:
 
     @property
     def enabled(self) -> bool:
-        return bool(self.settings.llm_enabled and self.settings.llm_api_key)
+        return bool(self.settings.llm_enabled and self.settings.effective_llm_api_key())
 
     def ask_json(
         self,
@@ -30,8 +30,14 @@ class LLMClient:
         if not self.enabled:
             return fallback
 
+        allowed_models = {"gpt-4o", "gpt-4o-mini", "qwen-max", "qwen-vl-max", "deepseek-chat"}
+        model = self.settings.llm_model
+        if model not in allowed_models:
+            logger.warning("LLM model %s not on hospital whitelist; using gpt-4o-mini", model)
+            model = "gpt-4o-mini"
+
         payload = {
-            "model": self.settings.llm_model,
+            "model": model,
             "temperature": temperature,
             "response_format": {"type": "json_object"},
             "messages": [
@@ -39,8 +45,10 @@ class LLMClient:
                 {"role": "user", "content": user_prompt},
             ],
         }
+        base = self.settings.effective_llm_base_url()
+        key = self.settings.effective_llm_api_key()
         headers = {
-            "Authorization": f"Bearer {self.settings.llm_api_key}",
+            "Authorization": f"Bearer {key}",
             "Content-Type": "application/json",
         }
         last_error: Exception | None = None
@@ -48,10 +56,14 @@ class LLMClient:
             try:
                 with httpx.Client(timeout=self.settings.llm_timeout_seconds) as client:
                     resp = client.post(
-                        f"{self.settings.llm_base_url.rstrip('/')}/chat/completions",
+                        f"{base}/v1/chat/completions",
                         json=payload,
                         headers=headers,
                     )
+                if resp.status_code == 429:
+                    logger.warning("LLM gateway rate limited")
+                    last_error = RuntimeError("LLM_RATE_LIMITED")
+                    continue
                 resp.raise_for_status()
                 body = resp.json()
                 content = body["choices"][0]["message"]["content"]

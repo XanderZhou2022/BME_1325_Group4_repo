@@ -33,7 +33,7 @@ bedside_monitor 输出建议固定为：
 {
   "schema_version": "bedside_monitor.v1",
   "agent_name": "bedside_monitor",
-  "admission_id": "adm1",
+  "admission_id": "ICU-ADM-0001",
   "patient_id": "p1",
   "bed_id": "b1",
   "time_window": {

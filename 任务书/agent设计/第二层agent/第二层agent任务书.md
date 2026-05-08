@@ -32,7 +32,7 @@ Patient Memory Agent 的职责是：
 
 统一输出 `TemporalStateSummary`（结构对齐 `patient_state_current` 规范）：
 {
-  "admission_id": "adm1",
+  "admission_id": "ICU-ADM-0001",
   "window_hours": 6,
   "current_vitals": { "heart_rate": 92, "mean_arterial_pressure": 74, "spo2": 96, "temperature": 37.8, ... },
   "trend_vectors": { "mean_arterial_pressure": "stable", "spo2": "improving", "temperature": "worsening" },
@@ -71,7 +71,7 @@ Risk Sentinel Agent 的职责是：
 
 统一输出 `RiskAssessment`（可直接写入 `risk_assessments` 表）：
 {
-  "admission_id": "adm1",
+  "admission_id": "ICU-ADM-0001",
   "timestamp": "TIMESTAMPTZ",
   "risk_type": "apache_ii_comprehensive",
   "confidence": 0.85,

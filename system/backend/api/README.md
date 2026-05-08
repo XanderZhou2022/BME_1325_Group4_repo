@@ -1,4 +1,15 @@
-﻿# ICU Agent API 浣跨敤鎸囧崡锛堜竴鏈燂級
+﻿# ICU Agent API
+
+**BME1325 contract v1.0 (HTTP)**
+
+- Success payloads under `/api/v1/` are wrapped as `{ ok, data, error, trace_id }` (see `app/middleware/contract_envelope.py`).
+- Transfer intake: `POST /api/v1/encounters/{encounter_id}/transfer` (receiver must use `to_group=groupC.icu`).
+- Admissions: `POST /api/v1/admissions` requires contract-shaped IDs (`P-…`, `E-…`, …); optional `patient_profile` upserts the patient row.
+- Env: `HOSPITAL_REDIS_*`, `HOSPITAL_LLM_GATEWAY_URL`, `HOSPITAL_LLM_API_KEY` (see `app/config.py` and `docs/CONTRACT_v1_COMPLIANCE.md`).
+
+---
+
+# ICU Agent API 浣跨敤鎸囧崡锛堜竴鏈燂級
 
 缁熶竴鏁版嵁鍏ュ彛锛團astAPI锛夈€傛墍鏈夊閮ㄦā鍧楋紙鏃跺簭妯℃嫙鍣ㄣ€佸墠绔彲瑙嗗寲銆佸鏅鸿兘浣撶郴缁燂級**閮藉簲閫氳繃鏈?API 璁块棶鏁版嵁**锛岃€屼笉鏄洿鎺ヨ繛 PostgreSQL銆?
 褰撳墠浠撳簱宸茬粺涓€涓荤嚎涓?`system/...`锛屽巻鍙插壇鏈?`system/system` 宸茬Щ闄ゃ€?
@@ -156,7 +167,7 @@ ICU_CORS_ORIGINS=http://192.168.1.30:5173,https://your-frontend.example.com
 ### 3.1 鐢?curl 涓婁紶鐢熷懡浣撳緛
 
 ```bash
-curl -X POST "http://127.0.0.1:8000/api/v1/admissions/adm1/events/vital_sign" \
+curl -X POST "http://127.0.0.1:8000/api/v1/admissions/ICU-ADM-0001/events/vital_sign" \
   -H "Content-Type: application/json" \
   -d '{
     "timestamp": "2026-03-27T16:30:00+08:00",
@@ -174,7 +185,7 @@ curl -X POST "http://127.0.0.1:8000/api/v1/admissions/adm1/events/vital_sign" \
 {
   "event_id": "evt_xxx",
   "detail_id": "vital_xxx",
-  "admission_id": "adm1",
+  "admission_id": "ICU-ADM-0001",
   "patient_id": "p1",
   "bed_id": "b1"
 }
@@ -183,14 +194,14 @@ curl -X POST "http://127.0.0.1:8000/api/v1/admissions/adm1/events/vital_sign" \
 ### 3.2 鐢?curl 鏌ヨ褰撳墠鐘舵€?
 
 ```bash
-curl "http://127.0.0.1:8000/api/v1/admissions/adm1/state/current"
+curl "http://127.0.0.1:8000/api/v1/admissions/ICU-ADM-0001/state/current"
 ```
 
 杩斿洖鍏抽敭瀛楁锛堢畝鍖栵級锛?
 
 ```json
 {
-  "admission_id": "adm1",
+  "admission_id": "ICU-ADM-0001",
   "patient_id": "p1",
   "bed_id": "b1",
   "updated_at": "...",
@@ -229,7 +240,7 @@ print(requests.get(f"{BASE}/health").json())
 # 涓婁紶涓€鏉＄敓鍛戒綋寰?
 ts = datetime.now(timezone.utc).isoformat()
 resp = requests.post(
-    f"{BASE}/api/v1/admissions/adm1/events/vital_sign",
+    f"{BASE}/api/v1/admissions/ICU-ADM-0001/events/vital_sign",
     json={
         "timestamp": ts,
         "source": "monitor",
@@ -242,7 +253,7 @@ resp = requests.post(
 print(resp.status_code, resp.json())
 
 # 鏌ヨ褰撳墠鐘舵€?
-state = requests.get(f"{BASE}/api/v1/admissions/adm1/state/current").json()
+state = requests.get(f"{BASE}/api/v1/admissions/ICU-ADM-0001/state/current").json()
 print("care_phase:", state["care_phase"])
 print("vitals:", state["current_vitals"])
 ```
@@ -254,7 +265,7 @@ print("vitals:", state["current_vitals"])
 curl -X POST "http://127.0.0.1:8000/agents/bedside-monitor/analyze" \
   -H "Content-Type: application/json" \
   -d '{
-    "admission_id":"adm1",
+    "admission_id":"ICU-ADM-0001",
     "analysis_window":"last_4h"
   }'
 
@@ -262,15 +273,15 @@ curl -X POST "http://127.0.0.1:8000/agents/bedside-monitor/analyze" \
 curl -X POST "http://127.0.0.1:8000/agents/intervention-tracker/evaluate" \
   -H "Content-Type: application/json" \
   -d '{
-    "admission_id":"adm1",
-    "intervention_id":"intv2"
+    "admission_id":"ICU-ADM-0001",
+    "intervention_id":"INT-20260508-10002"
   }'
 
 # 3) risk_sentinel 鎸?cursor 澧為噺娑堣垂涓婃父浜嬩欢骞惰惤搴?
 curl -X POST "http://127.0.0.1:8000/agents/risk-sentinel/evaluate" \
   -H "Content-Type: application/json" \
   -d '{
-    "admission_id":"adm1",
+    "admission_id":"ICU-ADM-0001",
     "max_events":200
   }'
 ```
@@ -278,9 +289,9 @@ curl -X POST "http://127.0.0.1:8000/agents/risk-sentinel/evaluate" \
 ### 3.5 鏌ヨ agent 鎬荤嚎鐘舵€?
 
 ```bash
-curl "http://127.0.0.1:8000/api/v1/admissions/adm1/agent_outputs?limit=20"
-curl "http://127.0.0.1:8000/api/v1/admissions/adm1/agent_events?limit=20"
-curl "http://127.0.0.1:8000/api/v1/admissions/adm1/agent_cursors"
+curl "http://127.0.0.1:8000/api/v1/admissions/ICU-ADM-0001/agent_outputs?limit=20"
+curl "http://127.0.0.1:8000/api/v1/admissions/ICU-ADM-0001/agent_events?limit=20"
+curl "http://127.0.0.1:8000/api/v1/admissions/ICU-ADM-0001/agent_cursors"
 ```
 
 ---
@@ -360,7 +371,7 @@ curl "http://127.0.0.1:8000/api/v1/admissions/adm1/agent_cursors"
 curl -X POST "http://127.0.0.1:8000/api/v1/orchestrator/demo-run" \
   -H "Content-Type: application/json" \
   -d '{
-    "admission_id": "adm1",
+    "admission_id": "ICU-ADM-0001",
     "memory_window_hours": 24,
     "top_k": 10
   }'
