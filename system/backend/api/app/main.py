@@ -5,7 +5,7 @@ import os
 import sys
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.exceptions import RequestValidationError
+from fastapi.exceptions import RequestValidationError, ResponseValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
@@ -79,6 +79,19 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         status_code=400,
         code="EVENT_SCHEMA_INVALID",
         message="Request validation failed",
+        details={"errors": exc.errors()},
+        trace_id=trace_id,
+    )
+
+
+@app.exception_handler(ResponseValidationError)
+async def response_validation_exception_handler(request: Request, exc: ResponseValidationError):
+    """Return contract envelope so browsers still receive CORS headers (avoids opaque 500 + CORS errors)."""
+    trace_id = getattr(request.state, "trace_id", None) or new_trace_id()
+    return envelope_error(
+        status_code=500,
+        code="INTERNAL_ERROR",
+        message="Response serialization failed",
         details={"errors": exc.errors()},
         trace_id=trace_id,
     )

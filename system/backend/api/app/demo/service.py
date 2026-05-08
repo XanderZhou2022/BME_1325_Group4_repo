@@ -393,7 +393,8 @@ def next_demo_step(conn: Connection) -> DemoNextResponse:
                 """,
                 (admission_id, sim_before),
             )
-            triggered_agents = [dict(r) for r in cur.fetchall()]
+            # psycopg returns datetime/Decimal in rows; nested dicts must be JSON-safe for FastAPI + timeline insert
+            triggered_agents = [_json_safe(dict(r)) for r in cur.fetchall()]
         after_all = _counts(conn)
         effects = DemoDbEffects(
             agent_outputs_added=after_all["agent_outputs"] - before_all["agent_outputs"],
@@ -413,8 +414,8 @@ def next_demo_step(conn: Connection) -> DemoNextResponse:
             sim_time_after=sim_after,
             event_type=cast(Any, event_type),
             admission_id=admission_id,
-            event_request_payload=request_payload,
-            event_write_result=write_result,
+            event_request_payload=_json_safe(request_payload),
+            event_write_result=_json_safe(write_result),
             triggered_agents=triggered_agents,
             db_effects=effects,
             agent_delta_summary=delta,
@@ -431,7 +432,7 @@ def next_demo_step(conn: Connection) -> DemoNextResponse:
                 event_type,
                 admission_id,
                 Json(_json_safe(request_payload)),
-                Json(_json_safe(resp.model_dump(mode="json"))),
+                Json(_json_safe(resp.model_dump(mode="python"))),
             ),
         )
         cur.close()
