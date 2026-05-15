@@ -22,6 +22,8 @@ __pycache__/
 .idea/
 .vscode/
 .env/
+.cursor/
+.env
 
 
 

@@ -6,7 +6,14 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field
 
 
-DemoEventType = Literal["admission_create", "admission_discharge", "vital_sign", "lab", "intervention"]
+DemoEventType = Literal[
+    "admission_create",
+    "admission_discharge",
+    "vital_sign",
+    "lab",
+    "intervention",
+    "batch_step",
+]
 
 
 class DemoHospitalState(BaseModel):

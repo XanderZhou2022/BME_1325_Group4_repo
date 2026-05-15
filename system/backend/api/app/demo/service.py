@@ -300,6 +300,91 @@ def _fetch_audit_log_ids(conn: Connection, *, admission_id: str | None, since_st
         return [str(r["id"]) for r in cur.fetchall()]
 
 
+def _fetch_demo_triggered_agent_rows(
+    conn: Connection, *, since_started_at: datetime, scenario_tag: str, limit: int = 400
+) -> list[dict[str, Any]]:
+    conn.row_factory = dict_row
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT admission_id, patient_id, bed_id, producer_agent, event_type, produced_at, payload
+            FROM agent_events
+            WHERE produced_at >= %s
+              AND admission_id IN (
+                  SELECT admission_id FROM admissions WHERE scenario_tag = %s
+              )
+            ORDER BY produced_at DESC
+            LIMIT %s
+            """,
+            (since_started_at, scenario_tag, limit),
+        )
+        return [_json_safe(dict(r)) for r in cur.fetchall()]
+
+
+def _fetch_agent_workflow_trace_demo_batch(
+    conn: Connection, *, since_started_at: datetime, scenario_tag: str
+) -> list[dict[str, Any]]:
+    conn.row_factory = dict_row
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT output_id, admission_id, patient_id, bed_id, agent_name, output_type, generated_at, payload
+            FROM agent_outputs
+            WHERE generated_at >= %s
+              AND (
+                    admission_id IN (SELECT admission_id FROM admissions WHERE scenario_tag = %s)
+                    OR agent_name = 'ward_coordinator'
+                  )
+            ORDER BY generated_at ASC, agent_name ASC
+            """,
+            (since_started_at, scenario_tag),
+        )
+        rows = [dict(r) for r in cur.fetchall()]
+    trace: list[dict[str, Any]] = []
+    for row in rows:
+        payload = cast(dict[str, Any], row.get("payload") or {})
+        trace.append(
+            {
+                "agent_name": row["agent_name"],
+                "output_id": row["output_id"],
+                "output_type": row["output_type"],
+                "generated_at": _json_safe(row["generated_at"]),
+                "received_context": {
+                    "admission_id": row["admission_id"],
+                    "patient_id": row["patient_id"],
+                    "bed_id": row["bed_id"],
+                },
+                "knowledge": _knowledge_from_payload(payload),
+                "judgment": _agent_judgment_from_payload(str(row["agent_name"]), payload),
+                "llm": _llm_from_payload(payload),
+                "human_review_required": bool(payload.get("human_review_required", True)),
+                "forbidden_use_reminder": payload.get("forbidden_use_reminder") or payload.get("forbidden_use"),
+            }
+        )
+    return trace
+
+
+def _fetch_audit_log_ids_demo_batch(conn: Connection, *, since_started_at: datetime, scenario_tag: str, limit: int = 250) -> list[str]:
+    conn.row_factory = dict_row
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT id
+            FROM audit_logs
+            WHERE timestamp >= %s
+              AND (
+                    target_id IN (SELECT admission_id FROM admissions WHERE scenario_tag = %s)
+                    OR output ->> 'llm_audit_log_id' IS NOT NULL
+                    OR actor_id IN ('event_dispatcher', 'bedside_monitor', 'intervention_tracker', 'patient_memory', 'risk_sentinel', 'clinical_summary', 'ward_coordinator', 'compassion_family_communication')
+                  )
+            ORDER BY timestamp ASC
+            LIMIT %s
+            """,
+            (since_started_at, scenario_tag, limit),
+        )
+        return [str(r["id"]) for r in cur.fetchall()]
+
+
 def _active_admissions(conn: Connection) -> list[dict[str, Any]]:
     conn.row_factory = dict_row
     with conn.cursor() as cur:
@@ -315,10 +400,33 @@ def _active_admissions(conn: Connection) -> list[dict[str, Any]]:
         return [dict(r) for r in cur.fetchall()]
 
 
-def _create_patient_bed_admission(conn: Connection, sim_time: datetime, step_index: int) -> dict[str, Any]:
-    pid = f"demo_p_{step_index:05d}"
-    bid = f"demo_b_{((step_index - 1) % 20) + 1:02d}"
-    aid = f"demo_adm_{step_index:05d}"
+def _available_demo_bed(conn: Connection) -> str | None:
+    conn.row_factory = dict_row
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT bed_id FROM beds
+            WHERE bed_id LIKE 'demo_b_%%' AND status = 'empty'
+            ORDER BY bed_id
+            LIMIT 1
+            """,
+        )
+        row = cur.fetchone()
+    return str(row["bed_id"]) if row else None
+
+
+def _create_patient_bed_admission(
+    conn: Connection,
+    sim_time: datetime,
+    step_index: int,
+    *,
+    sub_tag: str = "",
+    bed_id: str | None = None,
+) -> dict[str, Any]:
+    stem = f"{step_index:05d}{sub_tag}" if sub_tag else f"{step_index:05d}"
+    pid = f"demo_p_{stem}"
+    aid = f"demo_adm_{stem}"
+    bid = bed_id or f"demo_b_{((step_index - 1) % 20) + 1:02d}"
     sev = random.choice(["stable", "unstable", "critical"])
     encounter_id = new_encounter_id(sim_time)
     care_phase = "critical" if sev == "critical" else "stable"
@@ -329,7 +437,7 @@ def _create_patient_bed_admission(conn: Connection, sim_time: datetime, step_ind
             VALUES (%s, %s, %s, %s, %s, '{}'::jsonb)
             ON CONFLICT (patient_id) DO NOTHING
             """,
-            (pid, f"DP{step_index:05d}", f"Demo Patient {step_index}", random.choice(["male", "female"]), random.randint(22, 88)),
+            (pid, f"DP{stem}", f"Demo Patient {stem}", random.choice(["male", "female"]), random.randint(22, 88)),
         )
         cur.execute(
             """
@@ -353,7 +461,7 @@ def _create_patient_bed_admission(conn: Connection, sim_time: datetime, step_ind
                 encounter_id,
                 pid,
                 bid,
-                f"DEMO-{step_index:05d}",
+                f"DEMO-{stem}",
                 sim_time,
                 random.choice(["sepsis", "respiratory_failure", "post_op"]),
                 random.choice(["shock_workup", "hypoxemia", "post-op monitoring"]),
@@ -523,22 +631,15 @@ def list_timeline(conn: Connection, limit: int = 100) -> list[DemoTimelineItem]:
     return items
 
 
-def _choose_event_type(active_count: int) -> str:
-    if active_count == 0:
-        return "admission_create"
-    bucket = random.random()
-    if bucket < 0.18:
-        return "admission_create"
-    if bucket < 0.30:
-        return "admission_discharge"
-    if bucket < 0.58:
-        return "vital_sign"
-    if bucket < 0.78:
-        return "intervention"
-    return "lab"
-
-
 def next_demo_step(conn: Connection) -> DemoNextResponse:
+    """Advance simulation by SIM_STEP_MINUTES with a **ward batch tick**.
+
+    Each tick may include:
+    - 0–2 discharges among active demo patients
+    - 0–2 admissions into empty demo beds
+    - For **every** active demo patient after those mutations: one random clinical event
+      (vital_sign / lab / intervention), each running the normal dispatch_event_chain.
+    """
     _ensure_demo_tables(conn)
     with conn.transaction():
         step_wall_started_at = datetime.now(timezone.utc)
@@ -555,62 +656,88 @@ def next_demo_step(conn: Connection) -> DemoNextResponse:
                 )
         sim_after = sim_before + timedelta(minutes=SIM_STEP_MINUTES)
         step_index = prev_index + 1
-        active = _active_admissions(conn)
-        event_type = _choose_event_type(len(active))
+        event_type = "batch_step"
         before_all = _counts(conn)
-        admission_id: str | None = None
-        request_payload: dict[str, Any] = {}
-        write_result: dict[str, Any] = {}
-        risk_before: dict[str, Any] = {}
 
-        if event_type == "admission_create":
-            write_result = _create_patient_bed_admission(conn, sim_after, step_index)
-            admission_id = cast(str, write_result["admission_id"])
-            risk_before = _risk_snapshot(conn, admission_id)
-        elif event_type == "admission_discharge":
-            target = random.choice(active)
-            admission_id = cast(str, target["admission_id"])
-            risk_before = _risk_snapshot(conn, admission_id)
-            write_result = _discharge_random(conn, target, sim_after)
-        else:
-            target = random.choice(active)
-            admission_id = cast(str, target["admission_id"])
-            risk_before = _risk_snapshot(conn, admission_id)
-            request_payload, write_result = _write_random_event(conn, target, sim_after, event_type)
+        active_start = _active_admissions(conn)
+        anchor_before = active_start[0]["admission_id"] if active_start else None
+        risk_before = _risk_snapshot(conn, anchor_before) if anchor_before else {}
+
+        sub_events: list[dict[str, Any]] = []
+        discharged_ids: list[str] = []
+
+        # 0–2 discharges (need at least one other patient if discharging one of two)
+        max_dis = min(2, len(active_start)) if active_start else 0
+        nd = random.randint(0, max_dis) if max_dis > 0 else 0
+        for _ in range(nd):
+            active_now = _active_admissions(conn)
+            pool = [a for a in active_now if a["admission_id"] not in discharged_ids]
+            if not pool:
+                break
+            tgt = random.choice(pool)
+            discharged_ids.append(cast(str, tgt["admission_id"]))
+            wr = _discharge_random(conn, tgt, sim_after)
+            sub_events.append({"type": "admission_discharge", "admission_id": tgt["admission_id"], "write_result": _json_safe(wr)})
+
+        # 0–2 admissions into free demo beds
+        na = random.randint(0, 2)
+        admit_tags = ["", "a", "b"]
+        for k in range(na):
+            bed = _available_demo_bed(conn)
+            if not bed:
+                break
+            sub_tag = admit_tags[k] if k < len(admit_tags) else f"x{k}"
+            wr = _create_patient_bed_admission(conn, sim_after, step_index, sub_tag=sub_tag, bed_id=bed)
+            sub_events.append({"type": "admission_create", "admission_id": wr["admission_id"], "write_result": _json_safe(wr)})
+
+        # Every active patient: one random vital / lab / intervention
+        active_clinical = _active_admissions(conn)
+        random.shuffle(active_clinical)
+        for adm in active_clinical:
+            et = random.choice(["vital_sign", "lab", "intervention"])
+            req, wr = _write_random_event(conn, adm, sim_after, et)
+            sub_events.append(
+                {
+                    "type": et,
+                    "admission_id": adm["admission_id"],
+                    "request_payload": _json_safe(req),
+                    "write_result": _json_safe(wr),
+                }
+            )
 
         _set_state(conn, sim_after, step_index)
-        cur = conn.cursor(row_factory=dict_row)
-        triggered_agents: list[dict[str, Any]] = []
-        if admission_id:
-            cur.execute(
-                """
-                SELECT producer_agent, event_type, produced_at, payload
-                FROM agent_events
-                WHERE admission_id = %s AND produced_at >= %s
-                ORDER BY produced_at DESC
-                LIMIT 40
-                """,
-                (admission_id, step_wall_started_at),
-            )
-            # psycopg returns datetime/Decimal in rows; nested dicts must be JSON-safe for FastAPI + timeline insert
-            triggered_agents = [_json_safe(dict(r)) for r in cur.fetchall()]
+
+        active_end = _active_admissions(conn)
+        anchor_after: str | None = None
+        if anchor_before and any(cast(str, a["admission_id"]) == anchor_before for a in active_end):
+            anchor_after = anchor_before
+        elif active_end:
+            anchor_after = cast(str, active_end[0]["admission_id"])
+        else:
+            anchor_after = None
+
+        admission_id = anchor_after
+        request_payload: dict[str, Any] = {"batch": True, "sub_events": sub_events}
+        write_result: dict[str, Any] = {
+            "batch": True,
+            "sub_event_count": len(sub_events),
+            "sub_events": sub_events,
+        }
+
+        triggered_agents = _fetch_demo_triggered_agent_rows(
+            conn, since_started_at=step_wall_started_at, scenario_tag=SIM_TAG, limit=500
+        )
         after_all = _counts(conn)
-        risk_after = _risk_snapshot(conn, admission_id)
+        risk_after = _risk_snapshot(conn, anchor_after) if anchor_after else {}
         risk_change = DemoRiskChange(
             before=risk_before,
             after=risk_after,
             changed=_risk_changed(risk_before, risk_after),
         )
-        workflow_trace = _fetch_agent_workflow_trace(
-            conn,
-            admission_id=admission_id,
-            since_started_at=step_wall_started_at,
+        workflow_trace = _fetch_agent_workflow_trace_demo_batch(
+            conn, since_started_at=step_wall_started_at, scenario_tag=SIM_TAG
         )
-        audit_log_ids = _fetch_audit_log_ids(
-            conn,
-            admission_id=admission_id,
-            since_started_at=step_wall_started_at,
-        )
+        audit_log_ids = _fetch_audit_log_ids_demo_batch(conn, since_started_at=step_wall_started_at, scenario_tag=SIM_TAG)
         effects = DemoDbEffects(
             agent_outputs_added=after_all["agent_outputs"] - before_all["agent_outputs"],
             agent_events_added=after_all["agent_events"] - before_all["agent_events"],
@@ -620,8 +747,10 @@ def next_demo_step(conn: Connection) -> DemoNextResponse:
         delta = {
             "event_type": event_type,
             "admission_id": admission_id,
-            "triggered_agent_names": sorted(list({str(a["producer_agent"]) for a in triggered_agents})),
-            "triggered_event_types": sorted(list({str(a["event_type"]) for a in triggered_agents})),
+            "sub_event_count": len(sub_events),
+            "sub_event_types": [str(s.get("type")) for s in sub_events],
+            "triggered_agent_names": sorted({str(a["producer_agent"]) for a in triggered_agents}),
+            "triggered_event_types": sorted({str(a["event_type"]) for a in triggered_agents}),
             "agent_output_names": [str(item["agent_name"]) for item in workflow_trace],
             "risk_changed": risk_change.changed,
             "risk_before": risk_change.before.get("highest_severity"),
@@ -668,6 +797,7 @@ def next_demo_step(conn: Connection) -> DemoNextResponse:
             audit_log_ids=audit_log_ids,
             full_observability_log=full_log,
         )
+        cur = conn.cursor()
         cur.execute(
             """
             INSERT INTO demo_auto_timeline (id, step_index, sim_time, event_type, admission_id, payload, result, created_at)

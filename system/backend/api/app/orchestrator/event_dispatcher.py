@@ -68,6 +68,7 @@ def dispatch_event_chain(
         s = datetime.now(timezone.utc)
         try:
             out = fn()
+            fin = datetime.now(timezone.utc)
             emit_agent_lifecycle_event(
                 conn,
                 admission_id=admission_id,
@@ -77,7 +78,15 @@ def dispatch_event_chain(
                 lifecycle="completed",
                 payload={"trigger": event_type, "detail_id": detail_id},
             )
-            steps.append({"step_name": name, "status": "ok", "started_at": s.isoformat(), "finished_at": datetime.now(timezone.utc).isoformat()})
+            steps.append(
+                {
+                    "step_name": name,
+                    "status": "ok",
+                    "started_at": s.isoformat(),
+                    "finished_at": fin.isoformat(),
+                    "duration_ms": int((fin - s).total_seconds() * 1000),
+                }
+            )
             audit_id = getattr(out, "audit_log_id", None)
             if audit_id:
                 audit_log_ids.append(str(audit_id))
@@ -85,6 +94,7 @@ def dispatch_event_chain(
                 nonlocal_fallback["count"] += 1
             return out
         except Exception as exc:
+            fin = datetime.now(timezone.utc)
             emit_agent_lifecycle_event(
                 conn,
                 admission_id=admission_id,
@@ -94,7 +104,16 @@ def dispatch_event_chain(
                 lifecycle="failed",
                 payload={"error": str(exc), "trigger": event_type},
             )
-            steps.append({"step_name": name, "status": "error", "error": str(exc), "started_at": s.isoformat(), "finished_at": datetime.now(timezone.utc).isoformat()})
+            steps.append(
+                {
+                    "step_name": name,
+                    "status": "error",
+                    "error": str(exc),
+                    "started_at": s.isoformat(),
+                    "finished_at": fin.isoformat(),
+                    "duration_ms": int((fin - s).total_seconds() * 1000),
+                }
+            )
             return None
 
     nonlocal_fallback = {"count": 0}
@@ -172,6 +191,7 @@ def dispatch_event_chain(
                 run_step("ward_coordinator", lambda: evaluate_ward(conn, WardCoordinatorEvaluateRequest(top_k=10)), {"trigger": "lab_risk_change"})
 
     finished = datetime.now(timezone.utc)
+    total_chain_ms = int((finished - started).total_seconds() * 1000)
     with conn.transaction():
         write_run_audit(
             conn,
@@ -184,6 +204,7 @@ def dispatch_event_chain(
             output_obj={
                 "started_at": started.isoformat(),
                 "finished_at": finished.isoformat(),
+                "total_chain_ms": total_chain_ms,
                 "step_count": len(steps),
                 "steps": steps,
                 "summary_generated": bool(summary_out),
@@ -203,6 +224,7 @@ def dispatch_event_chain(
         "event_id": detail_id,
         "event_type": event_type,
         "patient_id": patient_id,
+        "total_chain_ms": total_chain_ms,
         "triggered_agents": [s["step_name"] for s in steps],
         "step_count": len(steps),
         "steps": steps,

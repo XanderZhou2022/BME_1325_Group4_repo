@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import sys
+from datetime import datetime, timezone
 
 SYSTEM_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 if SYSTEM_ROOT not in sys.path:
@@ -10,25 +11,20 @@ API_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "
 if API_ROOT not in sys.path:
     sys.path.append(API_ROOT)
 
-import app.demo.service as demo_service  # noqa: E402
+from app.demo.schemas import DemoTimelineItem  # noqa: E402
 
 
-def test_choose_event_type_with_no_active_admissions() -> None:
-    assert demo_service._choose_event_type(0) == "admission_create"
-
-
-def test_choose_event_type_probability_buckets() -> None:
-    old_random = demo_service.random.random
-    try:
-        demo_service.random.random = lambda: 0.10
-        assert demo_service._choose_event_type(5) == "admission_create"
-        demo_service.random.random = lambda: 0.25
-        assert demo_service._choose_event_type(5) == "admission_discharge"
-        demo_service.random.random = lambda: 0.45
-        assert demo_service._choose_event_type(5) == "vital_sign"
-        demo_service.random.random = lambda: 0.70
-        assert demo_service._choose_event_type(5) == "intervention"
-        demo_service.random.random = lambda: 0.92
-        assert demo_service._choose_event_type(5) == "lab"
-    finally:
-        demo_service.random.random = old_random
+def test_timeline_accepts_batch_step_event_type() -> None:
+    """demo_auto_timeline rows now use event_type=batch_step for ward ticks."""
+    now = datetime.now(timezone.utc)
+    row = DemoTimelineItem(
+        id="dtl_test",
+        step_index=1,
+        sim_time=now,
+        event_type="batch_step",
+        admission_id=None,
+        payload={"sub_events": []},
+        result={},
+        created_at=now,
+    )
+    assert row.event_type == "batch_step"
