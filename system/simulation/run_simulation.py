@@ -22,6 +22,21 @@ BASE_URL = "http://localhost:8000/api/v1/demo/auto"
 DEFAULT_TRACE_LOG = Path("logs/simulation_agent_trace.jsonl")
 
 
+def _unwrap_contract_response(resp: requests.Response) -> Any:
+    """§5.2: successful /api/v1 JSON is wrapped as {ok, data, error, trace_id}."""
+    resp.raise_for_status()
+    body = resp.json()
+    if not isinstance(body, dict) or "ok" not in body:
+        return body
+    if not body.get("ok"):
+        err = body.get("error") or {}
+        code = err.get("code", "REQUEST_FAILED")
+        msg = err.get("message", str(body))
+        detail = f"{code}: {msg}"
+        raise requests.HTTPError(detail, response=resp)
+    return body.get("data")
+
+
 class StepSimulationClient:
     def __init__(self, base_url: str = BASE_URL) -> None:
         self.base_url = base_url.rstrip("/")
@@ -29,23 +44,19 @@ class StepSimulationClient:
 
     def reset(self) -> dict:
         resp = self.session.post(f"{self.base_url}/reset", timeout=20)
-        resp.raise_for_status()
-        return resp.json()
+        return _unwrap_contract_response(resp)
 
     def state(self) -> dict:
         resp = self.session.get(f"{self.base_url}/state", timeout=20)
-        resp.raise_for_status()
-        return resp.json()
+        return _unwrap_contract_response(resp)
 
     def next_step(self) -> dict:
         resp = self.session.post(f"{self.base_url}/next", timeout=30)
-        resp.raise_for_status()
-        return resp.json()
+        return _unwrap_contract_response(resp)
 
     def timeline(self, limit: int = 20) -> dict:
         resp = self.session.get(f"{self.base_url}/timeline?limit={limit}", timeout=20)
-        resp.raise_for_status()
-        return resp.json()
+        return _unwrap_contract_response(resp)
 
 
 def _print_state(state: dict) -> None:
@@ -180,6 +191,11 @@ def run_steps(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run step-based ICU demo simulation.")
+    parser.add_argument(
+        "--base-url",
+        default=BASE_URL,
+        help="Demo auto API base (default: %(default)s)",
+    )
     parser.add_argument("--reset", action="store_true", help="Reset demo data before running")
     parser.add_argument("--steps", type=int, default=1, help="How many steps to run")
     parser.add_argument("--delay", type=float, default=0.0, help="Delay seconds between steps")
@@ -190,7 +206,7 @@ def main() -> None:
     parser.add_argument("--log-md", type=Path, default=None, help="Optional readable Markdown trace log")
     args = parser.parse_args()
 
-    client = StepSimulationClient()
+    client = StepSimulationClient(base_url=args.base_url)
     if args.reset:
         st = client.reset()
         print(f"[RESET] {datetime.now().isoformat()} demo state reset")
