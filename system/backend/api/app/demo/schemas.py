@@ -25,6 +25,12 @@ class DemoDbEffects(BaseModel):
     risks_added: int = 0
 
 
+class DemoRiskChange(BaseModel):
+    before: dict[str, Any] = {}
+    after: dict[str, Any] = {}
+    changed: bool = False
+
+
 class DemoNextResponse(BaseModel):
     step_index: int
     sim_time_before: datetime
@@ -36,6 +42,10 @@ class DemoNextResponse(BaseModel):
     triggered_agents: list[dict[str, Any]] = []
     db_effects: DemoDbEffects
     agent_delta_summary: dict[str, Any] = {}
+    risk_change: DemoRiskChange = Field(default_factory=DemoRiskChange)
+    agent_workflow_trace: list[dict[str, Any]] = []
+    audit_log_ids: list[str] = []
+    full_observability_log: dict[str, Any] = {}
 
 
 class DemoTimelineItem(BaseModel):
