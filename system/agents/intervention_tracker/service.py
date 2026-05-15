@@ -9,6 +9,7 @@ from psycopg.rows import dict_row
 from psycopg.types.json import Json
 
 from app.services.ids import new_id
+from knowledge.retriever import retrieve_cards
 from .rules import run_intervention_tracker
 from .schemas import AssessmentWindow, InterventionEvaluateRequest, InterventionEvaluateResponse, InterventionType, MetricChange, VitalPoint
 
@@ -16,6 +17,11 @@ from .schemas import AssessmentWindow, InterventionEvaluateRequest, Intervention
 DEFAULT_PRE_WINDOW_MINUTES = 60
 DEFAULT_POST_WINDOW_MINUTES = 60
 DEFAULT_NOTIFY_AGENTS = ["patient_memory", "risk_sentinel"]
+INTV_REMINDER = [
+    "Do not use this output to adjust dose.",
+    "Do not use this output as a treatment plan.",
+    "Clinician review is required.",
+]
 
 
 def _window_profile(intervention_type: InterventionType) -> tuple[int, int, list[int]]:
@@ -48,6 +54,42 @@ def _ensure_pending_table(conn: Connection) -> None:
         )
         cur.execute("ALTER TABLE intervention_pending ADD COLUMN IF NOT EXISTS checkpoint_offsets_minutes JSONB NOT NULL DEFAULT '[]'::jsonb")
         cur.execute("ALTER TABLE intervention_pending ADD COLUMN IF NOT EXISTS next_checkpoint_at TIMESTAMPTZ")
+
+
+def _intervention_knowledge_context(
+    *,
+    patient_id: str,
+    bed_id: str,
+    intervention_type: str,
+    response_label: str,
+    concern_flags: list[str],
+) -> dict[str, Any]:
+    signals = [intervention_type, response_label] + concern_flags
+    retrieval = retrieve_cards(
+        "intervention_tracker",
+        {"patient_id": patient_id, "bed_id": bed_id},
+        trigger_signals=signals,
+        query=" ".join(signals),
+    )
+    cards = retrieval["retrieved_cards"]
+    medication_cards = [c for c in cards if c.get("domain") == "medication_safety"]
+    explanation = (
+        "The structured response assessment suggests limited or concerning response after the documented intervention. "
+        "Retrieved knowledge cards provide background for clinician review only, not treatment or dose adjustment guidance."
+        if response_label in ("partially_responsive", "non_responsive", "deteriorating_despite_intervention")
+        else "The structured intervention response assessment is provided for clinician review and should not be used as a treatment plan."
+    )
+    return {
+        "knowledge_background": cards,
+        "response_explanation": explanation,
+        "medication_safety_context": medication_cards,
+        "forbidden_use_reminder": INTV_REMINDER,
+        "knowledge_used": bool(cards),
+        "llm_used": False,
+        "fallback_used": False,
+        "audit_log_id": None,
+        "human_review_required": True,
+    }
 
 
 def register_pending_intervention(conn: Connection, *, admission_id: str, intervention_id: str) -> None:
@@ -287,6 +329,14 @@ def evaluate_intervention_tracker(conn: Connection, req: InterventionEvaluateReq
         "escalation_hint": result["escalation_hint"],
         "generated_at": generated_at.isoformat(),
     }
+    kctx = _intervention_knowledge_context(
+        patient_id=patient_id,
+        bed_id=bed_id,
+        intervention_type=str(intervention_type),
+        response_label=response_label,
+        concern_flags=concern_flags,
+    )
+    payload.update(kctx)
 
     with conn.transaction():
         with conn.cursor() as cur:
@@ -386,7 +436,12 @@ def evaluate_intervention_tracker(conn: Connection, req: InterventionEvaluateReq
                             "checkpoints": checkpoints,
                         }
                     ),
-                    Json({"response_label": response_label, "status_event": output_event, "urgency_level": urgency_level}),
+                    Json({
+                        "response_label": response_label,
+                        "status_event": output_event,
+                        "urgency_level": urgency_level,
+                        "retrieved_card_ids": [c["card_id"] for c in kctx["knowledge_background"]],
+                    }),
                 ),
             )
 
@@ -414,5 +469,13 @@ def evaluate_intervention_tracker(conn: Connection, req: InterventionEvaluateReq
         evidence=result["evidence"],
         escalation_hint=result["escalation_hint"],
         generated_at=generated_at,
+        knowledge_background=kctx["knowledge_background"],
+        response_explanation=kctx["response_explanation"],
+        medication_safety_context=kctx["medication_safety_context"],
+        forbidden_use_reminder=kctx["forbidden_use_reminder"],
+        knowledge_used=kctx["knowledge_used"],
+        llm_used=False,
+        fallback_used=False,
+        audit_log_id=None,
+        human_review_required=True,
     )
-

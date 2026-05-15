@@ -36,6 +36,10 @@ class WardPriorityItem(BaseModel):
     source_risk_ids: list[str] = []
     source_event_ids: list[str] = []
     summary_hint: str = ""
+    rationale: str = ""
+    active_risks: list[str] = []
+    knowledge_background: list[dict[str, Any]] = []
+    human_review_required: bool = True
 
 
 class WardBedPriority(WardPriorityItem):
@@ -57,3 +61,12 @@ class WardCoordinatorEvaluateResponse(BaseModel):
     ward_load_indicator: str
     alert_storm_summary: dict[str, int]
     debug_scoring: list[dict[str, Any]] = []
+    ward_id: str = "icu_01"
+    global_watch_items: list[str] = []
+    review_reminders: list[str] = []
+    forbidden_use_reminder: list[str] = []
+    knowledge_used: bool = False
+    llm_used: bool = False
+    fallback_used: bool = False
+    audit_log_id: str | None = None
+    human_review_required: bool = True

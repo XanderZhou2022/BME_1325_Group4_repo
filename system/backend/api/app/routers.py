@@ -67,6 +67,7 @@ from agents.patient_memory.router import router as patient_memory_router
 from agents.clinical_summary.router import router as clinical_summary_router
 from agents.ward_coordinator.router import router as ward_coordinator_router
 from agents.risk_sentinel.router import router as risk_sentinel_router
+from agents.compassion_family_communication.router import router as compassion_family_router
 from app.orchestrator.router import router as orchestrator_router
 from app.demo.router import router as demo_auto_router
 
@@ -76,6 +77,7 @@ router.include_router(patient_memory_router)
 router.include_router(clinical_summary_router)
 router.include_router(ward_coordinator_router)
 router.include_router(risk_sentinel_router)
+router.include_router(compassion_family_router)
 router.include_router(orchestrator_router)
 router.include_router(demo_auto_router)
 

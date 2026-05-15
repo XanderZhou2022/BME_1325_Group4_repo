@@ -89,4 +89,12 @@ class InterventionEvaluateResponse(BaseModel):
     evidence: list[dict[str, Any]]
     escalation_hint: str
     generated_at: datetime
-
+    knowledge_background: list[dict[str, Any]] = []
+    response_explanation: str = ""
+    medication_safety_context: list[dict[str, Any]] = []
+    forbidden_use_reminder: list[str] = []
+    knowledge_used: bool = False
+    llm_used: bool = False
+    fallback_used: bool = False
+    audit_log_id: str | None = None
+    human_review_required: bool = True

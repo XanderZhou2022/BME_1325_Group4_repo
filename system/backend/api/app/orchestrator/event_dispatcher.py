@@ -52,6 +52,8 @@ def dispatch_event_chain(
     bed_id = meta["bed_id"]
     started = datetime.now(timezone.utc)
     steps: list[dict[str, Any]] = []
+    audit_log_ids: list[str] = []
+    fallback_count = 0
 
     def run_step(name: str, fn: Any, trigger_payload: dict[str, Any]) -> Any:
         emit_agent_lifecycle_event(
@@ -76,6 +78,11 @@ def dispatch_event_chain(
                 payload={"trigger": event_type, "detail_id": detail_id},
             )
             steps.append({"step_name": name, "status": "ok", "started_at": s.isoformat(), "finished_at": datetime.now(timezone.utc).isoformat()})
+            audit_id = getattr(out, "audit_log_id", None)
+            if audit_id:
+                audit_log_ids.append(str(audit_id))
+            if bool(getattr(out, "fallback_used", False)):
+                nonlocal_fallback["count"] += 1
             return out
         except Exception as exc:
             emit_agent_lifecycle_event(
@@ -89,6 +96,8 @@ def dispatch_event_chain(
             )
             steps.append({"step_name": name, "status": "error", "error": str(exc), "started_at": s.isoformat(), "finished_at": datetime.now(timezone.utc).isoformat()})
             return None
+
+    nonlocal_fallback = {"count": 0}
 
     bedside_out = None
     intv_out = None
@@ -179,6 +188,29 @@ def dispatch_event_chain(
                 "steps": steps,
                 "summary_generated": bool(summary_out),
                 "memory_generated": bool(mem_out),
+                "triggered_agents": [s["step_name"] for s in steps],
+                "audit_log_ids": audit_log_ids,
+                "fallback_summary": {
+                    "llm_fallback_count": nonlocal_fallback["count"],
+                    "knowledge_retrieval_failures": 0,
+                },
+                "orchestration_trace": steps,
+                "human_review_required": True,
             },
         )
-    return {"status": "ok", "step_count": len(steps), "steps": steps}
+    return {
+        "status": "ok",
+        "event_id": detail_id,
+        "event_type": event_type,
+        "patient_id": patient_id,
+        "triggered_agents": [s["step_name"] for s in steps],
+        "step_count": len(steps),
+        "steps": steps,
+        "audit_log_ids": audit_log_ids,
+        "fallback_summary": {
+            "llm_fallback_count": nonlocal_fallback["count"],
+            "knowledge_retrieval_failures": 0,
+        },
+        "orchestration_trace": steps,
+        "human_review_required": True,
+    }

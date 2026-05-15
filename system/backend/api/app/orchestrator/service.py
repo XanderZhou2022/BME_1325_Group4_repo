@@ -71,6 +71,8 @@ def run_demo_pipeline(conn: Connection, req: DemoRunRequest) -> DemoRunResponse:
     run_id = new_id("run")
     started = datetime.now(timezone.utc)
     steps: list[StepResult] = []
+    audit_log_ids: list[str] = []
+    fallback_count = 0
 
     for admission_id in admissions:
         meta = _admission_meta(conn, admission_id)
@@ -83,6 +85,9 @@ def run_demo_pipeline(conn: Connection, req: DemoRunRequest) -> DemoRunResponse:
             bedside_out = analyze_bedside(conn, BedsideAnalyzeRequest(admission_id=admission_id, analysis_window="last_4h"))
             status = "ok"
             detail = {"urgency_level": bedside_out.urgency_level}
+            if bedside_out.audit_log_id:
+                audit_log_ids.append(bedside_out.audit_log_id)
+            fallback_count += int(bool(bedside_out.fallback_used))
             emit_agent_lifecycle_event(conn, admission_id=admission_id, patient_id=patient_id, bed_id=bed_id, producer_agent="bedside_monitor", lifecycle="completed", payload=detail)
             err_class = None
         except Exception as exc:
@@ -102,6 +107,9 @@ def run_demo_pipeline(conn: Connection, req: DemoRunRequest) -> DemoRunResponse:
                 intv_out = evaluate_intervention_tracker(conn, InterventionEvaluateRequest(admission_id=admission_id, intervention_id=intv_id))
                 status = "ok"
                 detail = {"response_assessment": intv_out.response_assessment}
+                if intv_out.audit_log_id:
+                    audit_log_ids.append(intv_out.audit_log_id)
+                fallback_count += int(bool(intv_out.fallback_used))
                 emit_agent_lifecycle_event(conn, admission_id=admission_id, patient_id=patient_id, bed_id=bed_id, producer_agent="intervention_tracker", lifecycle="completed", payload=detail)
                 err_class = None
             except Exception as exc:
@@ -117,6 +125,9 @@ def run_demo_pipeline(conn: Connection, req: DemoRunRequest) -> DemoRunResponse:
             mem_out = evaluate_memory(conn, MemoryEvaluateRequest(admission_id=admission_id, window_hours=req.memory_window_hours))
             status = "ok"
             detail = {"data_completeness_ratio": mem_out.data_completeness_ratio}
+            if mem_out.audit_log_id:
+                audit_log_ids.append(mem_out.audit_log_id)
+            fallback_count += int(bool(mem_out.fallback_used))
             emit_agent_lifecycle_event(conn, admission_id=admission_id, patient_id=patient_id, bed_id=bed_id, producer_agent="patient_memory", lifecycle="completed", payload=detail)
             err_class = None
         except Exception as exc:
@@ -132,6 +143,9 @@ def run_demo_pipeline(conn: Connection, req: DemoRunRequest) -> DemoRunResponse:
             risk_out = evaluate_risk_sentinel(conn, RiskSentinelEvaluateRequest(admission_id=admission_id, max_events=200))
             status = "ok"
             detail = {"risk_count": len(risk_out.risks), "escalation_level": risk_out.escalation_level}
+            if risk_out.audit_log_id:
+                audit_log_ids.append(risk_out.audit_log_id)
+            fallback_count += int(bool(risk_out.fallback_used))
             emit_agent_lifecycle_event(conn, admission_id=admission_id, patient_id=patient_id, bed_id=bed_id, producer_agent="risk_sentinel", lifecycle="completed", payload=detail)
             err_class = None
         except Exception as exc:
@@ -147,6 +161,9 @@ def run_demo_pipeline(conn: Connection, req: DemoRunRequest) -> DemoRunResponse:
             summary_out = evaluate_clinical_summary(conn, admission_id)
             status = "ok"
             detail = {"problem_count": len(summary_out.problem_list)}
+            if summary_out.audit_log_id:
+                audit_log_ids.append(summary_out.audit_log_id)
+            fallback_count += int(bool(summary_out.fallback_used))
             emit_agent_lifecycle_event(conn, admission_id=admission_id, patient_id=patient_id, bed_id=bed_id, producer_agent="clinical_summary", lifecycle="completed", payload=detail)
             err_class = None
         except Exception as exc:
@@ -161,6 +178,9 @@ def run_demo_pipeline(conn: Connection, req: DemoRunRequest) -> DemoRunResponse:
         ward_out = evaluate_ward(conn, WardCoordinatorEvaluateRequest(top_k=req.top_k))
         status = "ok"
         detail = {"queue_size": len(ward_out.priority_queue), "ward_load_indicator": ward_out.ward_load_indicator}
+        if ward_out.audit_log_id:
+            audit_log_ids.append(ward_out.audit_log_id)
+        fallback_count += int(bool(ward_out.fallback_used))
         err_class = None
     except Exception as exc:
         status = "error"
@@ -184,7 +204,30 @@ def run_demo_pipeline(conn: Connection, req: DemoRunRequest) -> DemoRunResponse:
                 INSERT INTO audit_logs (id, timestamp, actor, actor_id, action_type, target_type, target_id, input, output)
                 VALUES (%s, %s, 'system', 'orchestrator', 'run_agent', 'orchestrator_run', %s, %s::jsonb, %s::jsonb)
                 """,
-                (new_id("log"), finished, run_id, Json(req.model_dump()), Json({"step_count": len(steps), "steps": [s.model_dump(mode="json") for s in steps]})),
+                (
+                    new_id("log"),
+                    finished,
+                    run_id,
+                    Json(req.model_dump()),
+                    Json({
+                        "step_count": len(steps),
+                        "steps": [s.model_dump(mode="json") for s in steps],
+                        "audit_log_ids": audit_log_ids,
+                        "fallback_summary": {"llm_fallback_count": fallback_count, "knowledge_retrieval_failures": 0},
+                        "human_review_required": True,
+                    }),
+                ),
             )
 
-    return DemoRunResponse(run_id=run_id, started_at=started, finished_at=finished, target_admissions=admissions, step_results=steps)
+    return DemoRunResponse(
+        run_id=run_id,
+        started_at=started,
+        finished_at=finished,
+        target_admissions=admissions,
+        step_results=steps,
+        triggered_agents=[s.step_name for s in steps],
+        audit_log_ids=audit_log_ids,
+        fallback_summary={"llm_fallback_count": fallback_count, "knowledge_retrieval_failures": 0},
+        orchestration_trace=[s.model_dump(mode="json") for s in steps],
+        human_review_required=True,
+    )

@@ -21,6 +21,12 @@ class RiskImage(BaseModel):
     recommended_action: str
     trajectory: Literal["improving", "stable", "worsening", "unclear"] = "unclear"
     escalation_level: EscalationLevel = "watch"
+    trigger_signals: list[str] = []
+    knowledge_background: list[dict[str, Any]] = []
+    llm_explanation: str = ""
+    escalation_rationale: str = ""
+    forbidden_use_reminder: list[str] = []
+    human_review_required: bool = True
 
 
 class RiskSentinelEvaluateRequest(BaseModel):
@@ -46,3 +52,8 @@ class RiskSentinelEvaluateResponse(BaseModel):
     risks: list[RiskImage]
     escalation_level: EscalationLevel
     generated_at: datetime
+    overall_review_reminder: str = "Risk Sentinel outputs are decision-support signals only and require clinician review."
+    llm_used: bool = False
+    fallback_used: bool = True
+    audit_log_id: str | None = None
+    human_review_required: bool = True

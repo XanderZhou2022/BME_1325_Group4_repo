@@ -91,6 +91,17 @@ class ClinicalSummaryResponse(BaseModel):
     problem_list: List[ProblemListItem] = []
     focus_areas_for_today: List[str] = []
     clinical_narrative: str
+    major_problems: List[Dict[str, Any]] = []
+    key_changes_24h: List[str] = []
+    active_risks: List[str] = []
+    watch_items: List[str] = []
+    review_reminders: List[str] = []
+    forbidden_use_reminder: List[str] = []
+    knowledge_context: List[Dict[str, Any]] = []
+    llm_used: bool = False
+    fallback_used: bool = True
+    audit_log_id: str | None = None
+    human_review_required: bool = True
 
     class Config:
         populate_by_name = True

@@ -33,3 +33,9 @@ class DemoRunResponse(BaseModel):
     finished_at: datetime
     target_admissions: list[str]
     step_results: list[StepResult]
+    event_id: str | None = None
+    triggered_agents: list[str] = []
+    audit_log_ids: list[str] = []
+    fallback_summary: dict = {}
+    orchestration_trace: list[dict] = []
+    human_review_required: bool = True

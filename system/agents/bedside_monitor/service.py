@@ -10,6 +10,7 @@ from psycopg.types.json import Json
 
 from app.services.ids import new_id
 from app.services.state_merge import infer_care_phase_from_vitals, merge_vitals_into_current
+from knowledge.retriever import retrieve_cards
 from .rules import run_bedside_rules
 
 from .schemas import AbnormalFlag, BedsideAnalyzeRequest, BedsideAnalyzeResponse, TimeWindow, TrendLabel, VitalPoint
@@ -20,6 +21,11 @@ ANALYSIS_WINDOW_TO_MINUTES: dict[str, int] = {
     "last_4h": 240,
     "last_6h": 360,
 }
+BED_REMINDER = [
+    "Do not use this output as a diagnosis.",
+    "Do not use this output as a treatment recommendation.",
+    "Clinician review is required.",
+]
 
 
 def _analysis_end_from_request(
@@ -111,6 +117,38 @@ def _safe_payload(value: Any) -> Any:
     return value
 
 
+def _bedside_knowledge_context(response: BedsideAnalyzeResponse) -> dict[str, Any]:
+    abnormal = [f.type for f in response.abnormal_flags]
+    trends = [f"{t.metric}_{t.trend}" for t in response.trend_labels]
+    retrieval = retrieve_cards(
+        "bedside_monitor",
+        {"patient_id": response.patient_id, "bed_id": response.bed_id},
+        trigger_signals=abnormal + trends,
+        query=" ".join(abnormal + trends),
+    )
+    cards = retrieval["retrieved_cards"]
+    signal = abnormal[0] if abnormal else "no_major_abnormal_signal"
+    trend = trends[0] if trends else "no_major_trend"
+    explanation = (
+        "A persistent abnormal vital-sign or trend pattern was detected. Retrieved knowledge cards provide background for why "
+        "deterioration signals should remain visible for clinician review. This is not a diagnosis or treatment recommendation."
+        if abnormal or trends
+        else "No major rule-based abnormal signal was detected in the selected window. Clinician review remains required for use."
+    )
+    return {
+        "abnormal_signal": signal,
+        "trend_label": trend,
+        "knowledge_background": cards,
+        "signal_explanation": explanation,
+        "forbidden_use_reminder": BED_REMINDER,
+        "knowledge_used": bool(cards),
+        "llm_used": False,
+        "fallback_used": False,
+        "audit_log_id": None,
+        "human_review_required": True,
+    }
+
+
 def run_bedside_monitor(
     conn: Connection,
     admission_id: str,
@@ -156,6 +194,12 @@ def run_bedside_monitor(
         next_action_hint=cast(str, rule_out["next_action_hint"]),
         generated_at=now,
     )
+    kctx = _bedside_knowledge_context(response)
+    response.knowledge_background = kctx["knowledge_background"]
+    response.signal_explanation = kctx["signal_explanation"]
+    response.forbidden_use_reminder = kctx["forbidden_use_reminder"]
+    response.knowledge_used = kctx["knowledge_used"]
+    response.human_review_required = True
     payload = _safe_payload(response.model_dump(mode="json"))
     latest_vitals = cast(dict[str, Any], payload["evidence"].get("latest_vitals") or {})
 
@@ -246,7 +290,13 @@ def run_bedside_monitor(
                     now,
                     admission_id,
                     Json({"admission_id": admission_id, "window_minutes": window_minutes, "trend_hours": trend_hours, "start": current_start.isoformat(), "end": end_ts.isoformat()}),
-                    Json({"status": response.status, "urgency_level": response.urgency_level, "abnormal_count": len(response.abnormal_flags), "output_id": output_id}),
+                    Json({
+                        "status": response.status,
+                        "urgency_level": response.urgency_level,
+                        "abnormal_count": len(response.abnormal_flags),
+                        "output_id": output_id,
+                        "retrieved_card_ids": [c["card_id"] for c in response.knowledge_background],
+                    }),
                 ),
             )
     return response
@@ -262,4 +312,3 @@ def analyze_bedside(conn: Connection, req: BedsideAnalyzeRequest) -> BedsideAnal
         analysis_end=req.analysis_end,
         urine_output_points=req.urine_output_points,
     )
-

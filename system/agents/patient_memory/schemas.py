@@ -107,3 +107,13 @@ class MemoryEvaluateResponse(BaseModel):
     round_memory_for_summary: Dict[str, Any] = {}
     snapshot_generated_at: datetime
     generated_at: datetime
+    short_term_narrative: str = ""
+    intervention_response_memory: List[str] = []
+    communication_relevant_context: List[str] = []
+    knowledge_context: List[Dict[str, Any]] = []
+    forbidden_use_reminder: List[str] = []
+    knowledge_used: bool = False
+    llm_used: bool = False
+    fallback_used: bool = False
+    audit_log_id: str | None = None
+    human_review_required: bool = True

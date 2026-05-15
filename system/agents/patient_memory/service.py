@@ -9,6 +9,10 @@ from psycopg.rows import dict_row
 from psycopg.types.json import Json
 
 from app.services.ids import new_id
+from knowledge.retriever import retrieve_cards
+from llm.client import generate_structured_output
+from llm.prompt_loader import load_prompt_template
+from llm.schemas import PatientMemoryNarrativeOutput
 
 from .schemas import (
     LongTermMemory,
@@ -23,6 +27,13 @@ from .schemas import (
     InterventionEvent,
 )
 from .memory_manager import calculate_trend_for_metric, calculate_volatility, extract_window_data
+
+MEMORY_REMINDER = [
+    "Do not use this memory narrative as a diagnosis.",
+    "Do not use this memory narrative as a treatment recommendation.",
+    "Do not infer prognosis from this output.",
+    "Clinician review is required.",
+]
 
 
 def process_memory(request: MemoryRequest) -> TemporalStateSummary:
@@ -221,6 +232,64 @@ def _build_three_layer_memory(
     return short, mid, long, active_problems, unresolved, key_events, response_patterns
 
 
+def _enrich_memory_narrative(
+    *,
+    patient_id: str,
+    bed_id: str,
+    important_events: list[dict[str, Any]],
+    active_problems: list[str],
+    unresolved: list[str],
+    response_patterns: list[str],
+    long_summary: str,
+    time_window: str,
+    llm_enabled: bool | None = None,
+) -> dict[str, Any]:
+    query_parts = active_problems + unresolved + [str(e.get("event_summary") or "") for e in important_events[:5]]
+    retrieval = retrieve_cards(
+        "patient_memory",
+        {"patient_id": patient_id, "bed_id": bed_id},
+        trigger_signals=query_parts,
+        query=" ".join(query_parts),
+    )
+    cards = retrieval["retrieved_cards"]
+    prompt = load_prompt_template("patient_memory_narrative_prompt.md")
+    input_payload = {
+        "agent_name": "patient_memory",
+        "prompt_template_name": "patient_memory_narrative_prompt.md",
+        "patient_id": patient_id,
+        "time_window": time_window,
+        "recent_events": important_events[:20],
+        "previous_memory": long_summary,
+        "active_problems": active_problems,
+        "unresolved_issues": unresolved,
+        "response_patterns": response_patterns,
+        "retrieved_knowledge_cards": cards,
+        "global_forbidden_use": ["diagnosis", "treatment_recommendation", "prognosis_claim", "automatic_medical_decision"],
+    }
+    result = generate_structured_output(
+        "patient_memory_narrative",
+        prompt,
+        input_payload,
+        PatientMemoryNarrativeOutput,
+        llm_enabled=llm_enabled,
+    )
+    output = result.output.model_dump(mode="json")
+    return {
+        "short_term_narrative": output["short_term_narrative"],
+        "key_events": output.get("key_events") or [str(e.get("event_summary") or "") for e in important_events[:5]],
+        "unresolved_issues": output.get("unresolved_issues") or unresolved,
+        "intervention_response_memory": output.get("intervention_response_memory") or response_patterns,
+        "communication_relevant_context": output.get("communication_relevant_context") or [],
+        "knowledge_context": cards,
+        "forbidden_use_reminder": output.get("forbidden_use_reminder") or MEMORY_REMINDER,
+        "knowledge_used": bool(cards),
+        "llm_used": result.llm_used,
+        "fallback_used": result.fallback_used,
+        "audit_log_id": result.audit_log_id,
+        "human_review_required": True,
+    }
+
+
 def evaluate_memory(conn: Connection, req: MemoryEvaluateRequest) -> MemoryEvaluateResponse:
     _ensure_memory_tables(conn)
     conn.row_factory = dict_row
@@ -283,6 +352,16 @@ def evaluate_memory(conn: Connection, req: MemoryEvaluateRequest) -> MemoryEvalu
         summary=summary,
     )
     status = "ok" if important_events else "degraded"
+    narrative = _enrich_memory_narrative(
+        patient_id=admission["patient_id"],
+        bed_id=admission["bed_id"],
+        important_events=important_events,
+        active_problems=active_problems,
+        unresolved=unresolved,
+        response_patterns=response_patterns,
+        long_summary=long.icu_course_summary,
+        time_window=f"last_{req.window_hours}h",
+    )
 
     payload = {
         "schema_version": "patient_memory.v1.1",
@@ -291,7 +370,7 @@ def evaluate_memory(conn: Connection, req: MemoryEvaluateRequest) -> MemoryEvalu
         "admission_id": req.admission_id,
         "patient_id": admission["patient_id"],
         "bed_id": admission["bed_id"],
-        "short_term_summary": " ".join(short.key_events) if short.key_events else "No high-importance events in last 6h.",
+        "short_term_summary": narrative["short_term_narrative"] or (" ".join(short.key_events) if short.key_events else "No high-importance events in last 6h."),
         "mid_term_summary": " ".join(mid.major_changes) if mid.major_changes else "No major trajectory change in last 24h.",
         "long_term_summary": long.icu_course_summary,
         "active_problems": active_problems,
@@ -320,6 +399,7 @@ def evaluate_memory(conn: Connection, req: MemoryEvaluateRequest) -> MemoryEvalu
         "latest_interventions": [i.model_dump(mode="json") for i in summary.latest_interventions],
         "data_completeness_ratio": summary.data_completeness_ratio,
         "snapshot_generated_at": summary.snapshot_generated_at.isoformat(),
+        **narrative,
     }
 
     with conn.transaction():
@@ -418,7 +498,13 @@ def evaluate_memory(conn: Connection, req: MemoryEvaluateRequest) -> MemoryEvalu
                     now,
                     req.admission_id,
                     Json({"admission_id": req.admission_id, "window_hours": req.window_hours, "short_window_hours": req.short_window_hours, "mid_window_hours": req.mid_window_hours}),
-                    Json({"status": status, "important_event_count": len(important_events), "active_problems": active_problems}),
+                    Json({
+                        "status": status,
+                        "important_event_count": len(important_events),
+                        "active_problems": active_problems,
+                        "retrieved_card_ids": [c["card_id"] for c in narrative["knowledge_context"]],
+                        "llm_audit_log_id": narrative["audit_log_id"],
+                    }),
                 ),
             )
 
@@ -448,4 +534,14 @@ def evaluate_memory(conn: Connection, req: MemoryEvaluateRequest) -> MemoryEvalu
         round_memory_for_summary=payload["round_memory_for_summary"],
         snapshot_generated_at=summary.snapshot_generated_at,
         generated_at=now,
+        short_term_narrative=narrative["short_term_narrative"],
+        intervention_response_memory=narrative["intervention_response_memory"],
+        communication_relevant_context=narrative["communication_relevant_context"],
+        knowledge_context=narrative["knowledge_context"],
+        forbidden_use_reminder=narrative["forbidden_use_reminder"],
+        knowledge_used=narrative["knowledge_used"],
+        llm_used=narrative["llm_used"],
+        fallback_used=narrative["fallback_used"],
+        audit_log_id=narrative["audit_log_id"],
+        human_review_required=True,
     )

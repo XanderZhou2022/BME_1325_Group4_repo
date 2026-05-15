@@ -10,6 +10,10 @@ from psycopg.rows import dict_row
 from psycopg.types.json import Json
 
 from app.services.ids import new_id
+from knowledge.retriever import retrieve_cards
+from llm.client import generate_structured_output
+from llm.prompt_loader import load_prompt_template
+from llm.schemas import ClinicalSummaryLLMOutput
 
 from .schemas import (
     ClinicalSummaryRequest,
@@ -26,6 +30,12 @@ from .templates import (
     generate_summary_text,
     generate_focus_areas,
 )
+
+SUMMARY_FORBIDDEN_REMINDER = [
+    "Do not use this summary as a diagnosis.",
+    "Do not use this summary as a treatment plan.",
+    "Do not communicate this directly to family without clinician review.",
+]
 
 
 def _normalize_abnormal_flags(raw: Any) -> list[str]:
@@ -159,6 +169,99 @@ def generate_summary(req: ClinicalSummaryRequest, *, summary_type: str = "curren
     )
 
 
+def _safe_dump(value: Any) -> Any:
+    if hasattr(value, "model_dump"):
+        return value.model_dump(mode="json")
+    if isinstance(value, list):
+        return [_safe_dump(v) for v in value]
+    if isinstance(value, dict):
+        return {str(k): _safe_dump(v) for k, v in value.items()}
+    return value
+
+
+def enrich_summary_with_knowledge_and_llm(
+    *,
+    summary: ClinicalSummaryResponse,
+    req: ClinicalSummaryRequest,
+    bedside_payload: dict[str, Any],
+    intervention_payload: dict[str, Any],
+    memory_payload: dict[str, Any],
+    llm_enabled: bool | None = None,
+) -> tuple[ClinicalSummaryResponse, dict[str, Any]]:
+    risk_types = [risk.risk_type for risk in req.active_risks]
+    trigger_signals = list(dict.fromkeys(req.vitals_summary.abnormal_flags + req.vitals_summary.trend_labels + req.memory_context.unresolved_problems))
+    retrieval = retrieve_cards(
+        "clinical_summary",
+        {"patient_id": req.patient_id, "bed_id": req.bed_id},
+        risk_types=risk_types,
+        trigger_signals=trigger_signals,
+        query=" ".join(risk_types + trigger_signals + [req.memory_context.admission_reason]),
+    )
+    cards = retrieval["retrieved_cards"]
+    prompt = load_prompt_template("clinical_summary_knowledge_prompt.md")
+    input_payload = {
+        "agent_name": "clinical_summary",
+        "prompt_template_name": "clinical_summary_knowledge_prompt.md",
+        "patient_id": req.patient_id,
+        "summary_type": summary.summary_type,
+        "time_window": "last_24h",
+        "bedside_monitor_summary": {
+            "vital_trends": req.vitals_summary.trend_labels,
+            "abnormal_flags": req.vitals_summary.abnormal_flags,
+            "evidence": req.vitals_summary.evidence,
+            "raw_summary": _safe_dump(bedside_payload),
+        },
+        "intervention_tracker_summary": {
+            "recent_interventions": [_safe_dump(item) for item in req.intervention_responses],
+            "raw_summary": _safe_dump(intervention_payload),
+        },
+        "risk_sentinel_summary": {
+            "active_risks": [_safe_dump(risk) for risk in req.active_risks],
+        },
+        "patient_memory_summary": {
+            "admission_context": req.memory_context.admission_reason,
+            "major_course": req.memory_context.major_icu_course,
+            "unresolved_issues": req.memory_context.unresolved_problems,
+            "recent_turning_points": req.memory_context.key_turning_points,
+            "raw_summary": _safe_dump(memory_payload),
+        },
+        "retrieved_knowledge_cards": cards,
+        "global_constraints": [
+            "Do not introduce new clinical facts.",
+            "Do not make a diagnosis.",
+            "Do not recommend treatment.",
+            "Organize existing information into a clinician-facing summary.",
+            "All outputs require clinician review.",
+        ],
+        "global_forbidden_use": ["new_diagnosis", "new_treatment_plan", "family_direct_communication_without_review", "automatic_medical_decision"],
+    }
+    llm_result = generate_structured_output(
+        "clinical_summary_24h_round_summary",
+        prompt,
+        input_payload,
+        ClinicalSummaryLLMOutput,
+        llm_enabled=llm_enabled,
+    )
+    llm_output = llm_result.output.model_dump(mode="json")
+    summary.major_problems = llm_output.get("major_problems", [])
+    summary.key_changes_24h = llm_output.get("key_changes_24h", [])
+    summary.active_risks = llm_output.get("active_risks", risk_types)
+    summary.watch_items = llm_output.get("watch_items", [])
+    summary.review_reminders = llm_output.get("review_reminders", [])
+    summary.forbidden_use_reminder = llm_output.get("forbidden_use_reminder", SUMMARY_FORBIDDEN_REMINDER)
+    summary.knowledge_context = cards
+    summary.llm_used = llm_result.llm_used
+    summary.fallback_used = llm_result.fallback_used
+    summary.audit_log_id = llm_result.audit_log_id
+    summary.human_review_required = True
+    return summary, {
+        "retrieved_cards": cards,
+        "llm_used": llm_result.llm_used,
+        "fallback_used": llm_result.fallback_used,
+        "audit_log_id": llm_result.audit_log_id,
+    }
+
+
 def evaluate_clinical_summary(conn: Connection, admission_id: str, summary_type: str = "current_status_summary") -> ClinicalSummaryResponse:
     _ensure_clinical_summary_table(conn)
     conn.row_factory = dict_row
@@ -254,6 +357,13 @@ def evaluate_clinical_summary(conn: Connection, admission_id: str, summary_type:
     )
 
     summary = generate_summary(req, summary_type=summary_type if summary_type in ("current_status_summary", "24h_round_summary") else "current_status_summary")
+    summary, knowledge_meta = enrich_summary_with_knowledge_and_llm(
+        summary=summary,
+        req=req,
+        bedside_payload=bedside_payload,
+        intervention_payload=intv_payload,
+        memory_payload=mem_payload,
+    )
     payload = {
         "schema_version": "clinical_summary.v1.1",
         "agent": "clinical_summary",
@@ -271,6 +381,17 @@ def evaluate_clinical_summary(conn: Connection, admission_id: str, summary_type:
         "problem_list": [p.model_dump(mode="json") for p in summary.problem_list],
         "focus_areas_for_today": summary.focus_areas_for_today,
         "clinical_narrative": summary.clinical_narrative,
+        "major_problems": summary.major_problems,
+        "key_changes_24h": summary.key_changes_24h,
+        "active_risks": summary.active_risks,
+        "watch_items": summary.watch_items,
+        "review_reminders": summary.review_reminders,
+        "forbidden_use_reminder": summary.forbidden_use_reminder,
+        "knowledge_context": summary.knowledge_context,
+        "llm_used": summary.llm_used,
+        "fallback_used": summary.fallback_used,
+        "audit_log_id": summary.audit_log_id,
+        "human_review_required": True,
     }
 
     with conn.transaction():
@@ -349,7 +470,13 @@ def evaluate_clinical_summary(conn: Connection, admission_id: str, summary_type:
                     now,
                     admission_id,
                     Json({"admission_id": admission_id, "summary_type": summary.summary_type}),
-                    Json({"urgency_level": summary.urgency_level, "problem_count": len(summary.problem_list), "output_id": output_id}),
+                    Json({
+                        "urgency_level": summary.urgency_level,
+                        "problem_count": len(summary.problem_list),
+                        "output_id": output_id,
+                        "retrieved_card_ids": [c["card_id"] for c in knowledge_meta["retrieved_cards"]],
+                        "llm_audit_log_id": knowledge_meta["audit_log_id"],
+                    }),
                 ),
             )
 

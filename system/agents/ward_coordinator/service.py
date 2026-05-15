@@ -8,9 +8,18 @@ from psycopg.rows import dict_row
 from psycopg.types.json import Json
 
 from app.services.ids import new_id
+from knowledge.retriever import retrieve_cards
+from llm.client import generate_structured_output
+from llm.prompt_loader import load_prompt_template
+from llm.schemas import WardCoordinatorLLMOutput
 from .schemas import ICUStatus, MergedAlertGroup, WardCoordinatorEvaluateRequest, WardCoordinatorEvaluateResponse, WardPriorityItem
 
 RISK_SCORE = {"low": 1, "moderate": 2, "warning": 2, "high": 4, "critical": 6}
+WARD_REMINDER = [
+    "Do not use this queue as automatic bed allocation.",
+    "Do not use this queue as ICU admission or discharge decision.",
+    "Clinician review is required.",
+]
 
 
 def _ensure_ward_tables(conn: Connection) -> None:
@@ -130,6 +139,68 @@ def _compute_priority_score(
     return score, reasons
 
 
+def _enrich_ward_queue(
+    *,
+    queue: list[WardPriorityItem],
+    generated_at: datetime,
+    llm_enabled: bool | None = None,
+) -> dict[str, Any]:
+    risk_types = list(dict.fromkeys(rt for item in queue for rt in item.active_risks))
+    query = " ".join(risk_types + [reason for item in queue for reason in item.reason])
+    retrieval = retrieve_cards(
+        "ward_coordinator",
+        {"ward_id": "icu_01"},
+        risk_types=risk_types,
+        trigger_signals=query.split(),
+        query=query,
+    )
+    cards = retrieval["retrieved_cards"]
+    prompt = load_prompt_template("ward_coordinator_rationale_prompt.md")
+    input_payload = {
+        "agent_name": "ward_coordinator",
+        "prompt_template_name": "ward_coordinator_rationale_prompt.md",
+        "ward_id": "icu_01",
+        "generated_at": generated_at.isoformat(),
+        "priority_queue": [
+            {
+                "bed_id": item.bed_id,
+                "priority_rank": item.rank,
+                "rule_based_priority_score": item.priority_score,
+                "active_risks": item.active_risks,
+                "reasons": item.reason,
+            }
+            for item in queue
+        ],
+        "retrieved_knowledge_cards": cards,
+        "global_forbidden_use": ["automatic_bed_assignment", "icu_admission_or_discharge_decision", "withholding_treatment_decision", "treatment_recommendation"],
+    }
+    result = generate_structured_output(
+        "ward_coordinator_priority_rationale",
+        prompt,
+        input_payload,
+        WardCoordinatorLLMOutput,
+        llm_enabled=llm_enabled,
+    )
+    output = result.output.model_dump(mode="json")
+    rationales = {str(item["bed_id"]): item for item in output.get("priority_rationales", [])}
+    for item in queue:
+        rat = rationales.get(item.bed_id, {})
+        item.rationale = rat.get("rationale") or "This bed is ranked by structured rule scoring and requires clinician review."
+        item.knowledge_background = cards
+        item.human_review_required = True
+    return {
+        "knowledge_context": cards,
+        "global_watch_items": output.get("global_watch_items") or [],
+        "review_reminders": output.get("review_reminders") or ["Ward Coordinator output requires clinician review."],
+        "forbidden_use_reminder": output.get("forbidden_use_reminder") or WARD_REMINDER,
+        "knowledge_used": bool(cards),
+        "llm_used": result.llm_used,
+        "fallback_used": result.fallback_used,
+        "audit_log_id": result.audit_log_id,
+        "human_review_required": True,
+    }
+
+
 def evaluate_ward(conn: Connection, req: WardCoordinatorEvaluateRequest) -> WardCoordinatorEvaluateResponse:
     _ensure_ward_tables(conn)
     conn.row_factory = dict_row
@@ -178,6 +249,11 @@ def evaluate_ward(conn: Connection, req: WardCoordinatorEvaluateRequest) -> Ward
         source_event_ids: list[str] = [x for x in [risk_out.get("output_id"), cs_out.get("output_id"), mem_out.get("output_id"), intv_out.get("output_id"), bedside_out.get("output_id")] if x]
 
         active_risk_items = risk_payload.get("active_risks") or risk_payload.get("risks") or risks
+        active_risk_names = [
+            str((risk_item or {}).get("risk_type"))
+            for risk_item in active_risk_items
+            if isinstance(risk_item, dict) and (risk_item or {}).get("risk_type")
+        ] if isinstance(active_risk_items, list) else []
         active_risk_count = len(active_risk_items) if isinstance(active_risk_items, list) else 0
         if overall_risk in ("high", "critical"):
             high_risk_patients += 1
@@ -234,6 +310,7 @@ def evaluate_ward(conn: Connection, req: WardCoordinatorEvaluateRequest) -> Ward
                 source_risk_ids=source_risk_ids,
                 source_event_ids=source_event_ids,
                 summary_hint=str(cs_payload.get("one_line_status") or ""),
+                active_risks=active_risk_names,
             )
         )
         score_debug.append({"admission_id": admission_id, "score": score, "reasons": reasons})
@@ -242,6 +319,7 @@ def evaluate_ward(conn: Connection, req: WardCoordinatorEvaluateRequest) -> Ward
     for idx, item in enumerate(queue, start=1):
         item.rank = idx
     top = queue[: req.top_k]
+    ward_meta = _enrich_ward_queue(queue=top, generated_at=now)
 
     merged_alerts = [
         MergedAlertGroup(alert_group=group, beds=sorted(list(beds)), count=len(beds))
@@ -279,6 +357,14 @@ def evaluate_ward(conn: Connection, req: WardCoordinatorEvaluateRequest) -> Ward
         ward_load_indicator=load,
         alert_storm_summary=alert_summary,
         debug_scoring=score_debug,
+        global_watch_items=ward_meta["global_watch_items"],
+        review_reminders=ward_meta["review_reminders"],
+        forbidden_use_reminder=ward_meta["forbidden_use_reminder"],
+        knowledge_used=ward_meta["knowledge_used"],
+        llm_used=ward_meta["llm_used"],
+        fallback_used=ward_meta["fallback_used"],
+        audit_log_id=ward_meta["audit_log_id"],
+        human_review_required=True,
     )
     anchor_admission = top[0].admission_id if top else None
     anchor_patient = top[0].patient_id if top else None
@@ -295,6 +381,15 @@ def evaluate_ward(conn: Connection, req: WardCoordinatorEvaluateRequest) -> Ward
             "ward_load_indicator": out.ward_load_indicator,
             "alert_storm_summary": out.alert_storm_summary,
             "generated_at": out.generated_at.isoformat(),
+            "ward_id": out.ward_id,
+            "global_watch_items": out.global_watch_items,
+            "review_reminders": out.review_reminders,
+            "forbidden_use_reminder": out.forbidden_use_reminder,
+            "knowledge_used": out.knowledge_used,
+            "llm_used": out.llm_used,
+            "fallback_used": out.fallback_used,
+            "audit_log_id": out.audit_log_id,
+            "human_review_required": True,
         }
         with conn.transaction():
             with conn.cursor() as cur:
@@ -381,7 +476,13 @@ def evaluate_ward(conn: Connection, req: WardCoordinatorEvaluateRequest) -> Ward
                         out.generated_at,
                         anchor_admission,
                         Json({"top_k": req.top_k, "inputs": ["risk_sentinel", "clinical_summary", "patient_memory", "intervention_tracker", "bedside_monitor"]}),
-                        Json({"queue_size": len(out.priority_queue), "critical_patients": out.icu_status.critical_patients, "output_id": output_id}),
+                        Json({
+                            "queue_size": len(out.priority_queue),
+                            "critical_patients": out.icu_status.critical_patients,
+                            "output_id": output_id,
+                            "retrieved_card_ids": [c["card_id"] for c in ward_meta["knowledge_context"]],
+                            "llm_audit_log_id": ward_meta["audit_log_id"],
+                        }),
                     ),
                 )
     return out

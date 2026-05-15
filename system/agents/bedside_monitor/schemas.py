@@ -73,4 +73,11 @@ class BedsideAnalyzeResponse(BaseModel):
     urgency_level: UrgencyLevel
     next_action_hint: str
     generated_at: datetime
-
+    knowledge_background: list[dict[str, Any]] = []
+    signal_explanation: str = ""
+    forbidden_use_reminder: list[str] = []
+    knowledge_used: bool = False
+    llm_used: bool = False
+    fallback_used: bool = False
+    audit_log_id: str | None = None
+    human_review_required: bool = True

@@ -1,0 +1,255 @@
+{
+  "risk_sentinel": {
+    "allowed_domains": [
+      "clinical_deterioration",
+      "computational_concepts",
+      "medication_safety",
+      "triage_resource_allocation"
+    ],
+    "allowed_card_types": [
+      "risk_background",
+      "escalation_principle",
+      "scoring_context",
+      "medication_safety_context",
+      "guideline_context",
+      "icu_operations_context"
+    ],
+    "allowed_use": [
+      "risk explanation",
+      "human review escalation wording",
+      "clinical summary",
+      "risk_explanation",
+      "escalation_rationale",
+      "human_review_reminder"
+    ],
+    "forbidden_use": [
+      "diagnosis",
+      "treatment_recommendation",
+      "automatic_medical_decision",
+      "icu_admission_or_discharge_decision"
+    ],
+    "top_k": 5
+  },
+  "clinical_summary": {
+    "allowed_domains": [
+      "clinical_deterioration",
+      "medication_safety",
+      "padis_sedation_delirium",
+      "triage_resource_allocation",
+      "end_of_life_ethics",
+      "computational_concepts",
+      "general_icu_operations"
+    ],
+    "allowed_card_types": [
+      "guideline_context",
+      "risk_background",
+      "escalation_principle",
+      "communication_principle",
+      "ethical_policy",
+      "medication_safety_context",
+      "scoring_context",
+      "icu_operations_context"
+    ],
+    "allowed_use": [
+      "clinical summary",
+      "risk explanation",
+      "human review escalation wording",
+      "summary_context",
+      "problem_list_organization",
+      "watch_item_generation",
+      "human_review_reminder"
+    ],
+    "forbidden_use": [
+      "new_diagnosis",
+      "new_treatment_plan",
+      "family_direct_communication_without_review",
+      "automatic_medical_decision"
+    ],
+    "top_k": 6
+  },
+  "bedside_monitor": {
+    "allowed_domains": [
+      "clinical_deterioration",
+      "padis_sedation_delirium",
+      "computational_concepts"
+    ],
+    "allowed_card_types": [
+      "risk_background",
+      "scoring_context",
+      "guideline_context",
+      "escalation_principle"
+    ],
+    "allowed_use": [
+      "trend_explanation",
+      "abnormal_signal_context",
+      "human_review_reminder",
+      "risk explanation",
+      "clinical summary",
+      "score explanation"
+    ],
+    "forbidden_use": [
+      "diagnosis",
+      "treatment_recommendation",
+      "automatic_medical_decision"
+    ],
+    "top_k": 3,
+    "llm_enabled_default": false
+  },
+  "intervention_tracker": {
+    "allowed_domains": [
+      "clinical_deterioration",
+      "medication_safety",
+      "padis_sedation_delirium",
+      "computational_concepts"
+    ],
+    "allowed_card_types": [
+      "guideline_context",
+      "risk_background",
+      "medication_safety_context",
+      "scoring_context",
+      "escalation_principle"
+    ],
+    "allowed_use": [
+      "intervention_response_context",
+      "non_response_explanation",
+      "medication_safety_context",
+      "human_review_reminder",
+      "risk explanation",
+      "clinical summary",
+      "score explanation"
+    ],
+    "forbidden_use": [
+      "treatment_recommendation",
+      "dose_adjustment",
+      "medication_order",
+      "automatic_medical_decision"
+    ],
+    "top_k": 4,
+    "llm_enabled_default": false
+  },
+  "patient_memory": {
+    "allowed_domains": [
+      "clinical_deterioration",
+      "padis_sedation_delirium",
+      "family_communication",
+      "end_of_life_ethics",
+      "triage_resource_allocation",
+      "general_icu_operations"
+    ],
+    "allowed_card_types": [
+      "icu_operations_context",
+      "guideline_context",
+      "communication_principle",
+      "risk_background",
+      "ethical_policy",
+      "escalation_principle"
+    ],
+    "allowed_use": [
+      "patient_course_narrative",
+      "memory_summarization",
+      "unresolved_issue_tracking",
+      "communication_context",
+      "human_review_reminder",
+      "clinical summary",
+      "risk explanation",
+      "human review escalation wording"
+    ],
+    "forbidden_use": [
+      "diagnosis",
+      "treatment_recommendation",
+      "prognosis_claim",
+      "automatic_medical_decision"
+    ],
+    "top_k": 5,
+    "llm_enabled_default": true
+  },
+  "ward_coordinator": {
+    "allowed_domains": [
+      "triage_resource_allocation",
+      "clinical_deterioration",
+      "end_of_life_ethics",
+      "computational_concepts",
+      "general_icu_operations"
+    ],
+    "allowed_card_types": [
+      "icu_operations_context",
+      "risk_background",
+      "scoring_context",
+      "ethical_policy",
+      "guideline_context",
+      "escalation_principle"
+    ],
+    "allowed_use": [
+      "priority_rationale",
+      "alert_queue_explanation",
+      "rounding_priority_context",
+      "human_review_reminder",
+      "clinical summary",
+      "risk explanation",
+      "human review escalation wording"
+    ],
+    "forbidden_use": [
+      "automatic_bed_assignment",
+      "icu_admission_or_discharge_decision",
+      "withholding_treatment_decision",
+      "treatment_recommendation"
+    ],
+    "top_k": 6,
+    "llm_enabled_default": true
+  },
+  "compassion_family_communication": {
+    "allowed_domains": [
+      "family_communication",
+      "padis_sedation_delirium",
+      "end_of_life_ethics",
+      "general_icu_operations"
+    ],
+    "allowed_card_types": [
+      "communication_principle",
+      "ethical_policy",
+      "icu_operations_context",
+      "guideline_context"
+    ],
+    "allowed_use": [
+      "family_draft_guardrails",
+      "plain_language_summary",
+      "icu_diary_draft",
+      "communication_review_reminder",
+      "clinical summary",
+      "human review escalation wording"
+    ],
+    "forbidden_use": [
+      "direct_family_delivery_without_clinician_review",
+      "prognosis_claim",
+      "death_risk_prediction",
+      "treatment_decision",
+      "diagnosis",
+      "false_reassurance"
+    ],
+    "top_k": 6,
+    "llm_enabled_default": true
+  },
+  "icu_orchestrator": {
+    "allowed_domains": [
+      "general_icu_operations",
+      "triage_resource_allocation"
+    ],
+    "allowed_card_types": [
+      "icu_operations_context",
+      "guideline_context"
+    ],
+    "allowed_use": [
+      "routing_context",
+      "workflow_explanation",
+      "audit_context",
+      "clinical summary"
+    ],
+    "forbidden_use": [
+      "diagnosis",
+      "treatment_recommendation",
+      "automatic_medical_decision"
+    ],
+    "top_k": 3,
+    "llm_enabled_default": false
+  }
+}
