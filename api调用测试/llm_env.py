@@ -2,7 +2,7 @@
 
 密钥与模型写在同目录 `.env`：
   DASHSCOPE_API_KEY=sk-...
-  DASHSCOPE_MODEL=qwen3.7-max
+  DASHSCOPE_MODEL=qwen3-max
 
 后端 `system/backend/api` 启动时会自动加载本文件。
 """
@@ -17,7 +17,7 @@ ENV_DIR = Path(__file__).resolve().parent
 ENV_FILE = ENV_DIR / ".env"
 
 DASHSCOPE_BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
-DEFAULT_MODEL = "qwen3.7-max"
+DEFAULT_MODEL = "qwen3-max"
 
 
 def load_env(*, override: bool = False) -> bool:

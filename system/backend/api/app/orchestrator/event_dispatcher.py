@@ -44,6 +44,7 @@ def dispatch_event_chain(
     admission_id: str,
     event_type: str,
     detail_id: str,
+    defer_ward_coordinator: bool = False,
 ) -> dict[str, Any]:
     meta = _admission_meta(conn, admission_id)
     if not meta:
@@ -56,6 +57,21 @@ def dispatch_event_chain(
     fallback_count = 0
 
     def run_step(name: str, fn: Any, trigger_payload: dict[str, Any]) -> Any:
+        try:
+            from app.demo.progress import emit as demo_emit
+        except ImportError:
+            demo_emit = None  # type: ignore[assignment,misc]
+        if demo_emit:
+            demo_emit(
+                {
+                    "type": "agent_start",
+                    "agent_name": name,
+                    "admission_id": admission_id,
+                    "patient_id": patient_id,
+                    "bed_id": bed_id,
+                    "trigger": event_type,
+                }
+            )
         emit_agent_lifecycle_event(
             conn,
             admission_id=admission_id,
@@ -69,6 +85,16 @@ def dispatch_event_chain(
         try:
             out = fn()
             fin = datetime.now(timezone.utc)
+            if demo_emit:
+                demo_emit(
+                    {
+                        "type": "agent_done",
+                        "agent_name": name,
+                        "admission_id": admission_id,
+                        "status": "ok",
+                        "duration_ms": int((fin - s).total_seconds() * 1000),
+                    }
+                )
             emit_agent_lifecycle_event(
                 conn,
                 admission_id=admission_id,
@@ -95,6 +121,17 @@ def dispatch_event_chain(
             return out
         except Exception as exc:
             fin = datetime.now(timezone.utc)
+            if demo_emit:
+                demo_emit(
+                    {
+                        "type": "agent_done",
+                        "agent_name": name,
+                        "admission_id": admission_id,
+                        "status": "error",
+                        "error": str(exc),
+                        "duration_ms": int((fin - s).total_seconds() * 1000),
+                    }
+                )
             emit_agent_lifecycle_event(
                 conn,
                 admission_id=admission_id,
@@ -143,7 +180,8 @@ def dispatch_event_chain(
             )
             if _risk_requires_escalation(risk_out):
                 summary_out = run_step("clinical_summary", lambda: evaluate_clinical_summary(conn, admission_id), {"trigger": "risk_change"})
-                run_step("ward_coordinator", lambda: evaluate_ward(conn, WardCoordinatorEvaluateRequest(top_k=10)), {"trigger": "risk_change"})
+                if not defer_ward_coordinator:
+                    run_step("ward_coordinator", lambda: evaluate_ward(conn, WardCoordinatorEvaluateRequest(top_k=10)), {"trigger": "risk_change"})
     elif event_type == "intervention":
         register_pending_intervention(conn, admission_id=admission_id, intervention_id=detail_id)
         intv_out = run_step(
@@ -163,7 +201,8 @@ def dispatch_event_chain(
                 {"trigger": "poor_intervention_response", "response": intv_out.response_assessment},
             )
             summary_out = run_step("clinical_summary", lambda: evaluate_clinical_summary(conn, admission_id), {"trigger": "intervention_deterioration"})
-            run_step("ward_coordinator", lambda: evaluate_ward(conn, WardCoordinatorEvaluateRequest(top_k=10)), {"trigger": "intervention_deterioration"})
+            if not defer_ward_coordinator:
+                run_step("ward_coordinator", lambda: evaluate_ward(conn, WardCoordinatorEvaluateRequest(top_k=10)), {"trigger": "intervention_deterioration"})
     elif event_type == "lab":
         mem_out = run_step(
             "patient_memory",
@@ -188,7 +227,8 @@ def dispatch_event_chain(
             )
             if _risk_requires_escalation(risk_out):
                 summary_out = run_step("clinical_summary", lambda: evaluate_clinical_summary(conn, admission_id), {"trigger": "lab_risk_change"})
-                run_step("ward_coordinator", lambda: evaluate_ward(conn, WardCoordinatorEvaluateRequest(top_k=10)), {"trigger": "lab_risk_change"})
+                if not defer_ward_coordinator:
+                    run_step("ward_coordinator", lambda: evaluate_ward(conn, WardCoordinatorEvaluateRequest(top_k=10)), {"trigger": "lab_risk_change"})
 
     finished = datetime.now(timezone.utc)
     total_chain_ms = int((finished - started).total_seconds() * 1000)

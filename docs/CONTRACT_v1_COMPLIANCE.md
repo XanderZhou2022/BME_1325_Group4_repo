@@ -55,7 +55,7 @@ PATCH `/admissions/{id}/status` 会同步更新 `encounter_status`。
 
 ## LLM（本地：阿里云百炼 DashScope）
 
-- **唯一配置**：`BME_1325_Group4_repo/api调用测试/.env`（`DASHSCOPE_API_KEY`、`DASHSCOPE_MODEL=qwen3.7-max`）。
+- **唯一配置**：`BME_1325_Group4_repo/api调用测试/.env`（`DASHSCOPE_API_KEY`、`DASHSCOPE_MODEL=qwen3-max`）。
 - **唯一实现入口**：`system/llm/client.py` 的 `generate_structured_output()`（各 Agent 经此调用）；辅助 JSON 客户端见 `app/services/llm.py`。
 - Base URL：`https://dashscope.aliyuncs.com/compatible-mode/v1`（OpenAI 兼容 `/chat/completions`）。
 - 已弃用教学网 GenAI（`genaiapi.shanghaitech.edu.cn`）；勿再设置 `HOSPITAL_LLM_*` / `ICU_LLM_API_KEY` 指向该网关。

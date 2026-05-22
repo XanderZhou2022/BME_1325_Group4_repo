@@ -70,6 +70,7 @@ from agents.risk_sentinel.router import router as risk_sentinel_router
 from agents.compassion_family_communication.router import router as compassion_family_router
 from app.orchestrator.router import router as orchestrator_router
 from app.demo.router import router as demo_auto_router
+from app.mdt.router import router as mdt_consultation_router
 
 router.include_router(bedside_monitor_router)
 router.include_router(intervention_tracker_router)
@@ -80,6 +81,7 @@ router.include_router(risk_sentinel_router)
 router.include_router(compassion_family_router)
 router.include_router(orchestrator_router)
 router.include_router(demo_auto_router)
+router.include_router(mdt_consultation_router)
 
 
 # === Write-side: events driving state ===

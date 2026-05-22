@@ -9,7 +9,12 @@ from psycopg import Connection
 from psycopg.rows import dict_row
 from psycopg.types.json import Json
 
+from app.services.agent_action_requests import (
+    derive_requests_from_risk_sentinel,
+    register_agent_action_requests,
+)
 from app.services.ids import new_id
+from types import SimpleNamespace
 from knowledge.retriever import retrieve_cards
 from llm.client import generate_structured_output
 from llm.prompt_loader import load_prompt_template
@@ -516,7 +521,29 @@ def evaluate_risk_sentinel(conn: Connection, req: RiskSentinelEvaluateRequest) -
                 "audit_log_id": knowledge_meta["audit_log_id"],
                 "human_review_required": True,
             }
+            if risks:
+                _highest = max(risks, key=lambda r: RISK_ORDER[str(r["risk_level"])])
+                _escalation = LEVEL_TO_ESCALATION[str(_highest["risk_level"])]
+            else:
+                _escalation = "info"
+            _risk_stub = SimpleNamespace(
+                escalation_level=_escalation,
+                overall_risk_level=overall_risk_level,
+                recommended_next_attention=payload["recommended_next_attention"],
+                new_or_worsening_flags=payload["new_or_worsening_flags"],
+            )
+            _action_specs = derive_requests_from_risk_sentinel(_risk_stub)
             output_id = new_id("out")
+            _action_rows = register_agent_action_requests(
+                conn,
+                admission_id=req.admission_id,
+                patient_id=patient_id,
+                bed_id=bed_id,
+                requested_by_agent="risk_sentinel",
+                specs=_action_specs,
+                source_output_id=output_id,
+            )
+            payload["action_requests"] = _action_rows
             event_id = new_id("aevt")
             cur.execute(
                 """

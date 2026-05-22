@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import time
 from typing import Any
 
 from .card_loader import KnowledgeCard, load_cards
@@ -83,6 +84,23 @@ def retrieve_cards(
     profile = get_profile(normalized)
     canonical = AGENT_NAME_ALIASES.get(normalized, agent_name)
     limit = top_k or profile.top_k
+    started = time.perf_counter()
+    try:
+        from app.demo.progress import emit as demo_emit
+    except ImportError:
+        demo_emit = None  # type: ignore[assignment,misc]
+    if demo_emit:
+        demo_emit(
+            {
+                "type": "knowledge_start",
+                "agent_name": canonical,
+                "admission_id": patient_context.get("admission_id"),
+                "patient_id": patient_context.get("patient_id"),
+                "bed_id": patient_context.get("bed_id"),
+                "domains": list(profile.allowed_domains),
+                "top_k": limit,
+            }
+        )
     risks = risk_types or []
     signals = trigger_signals or []
 
@@ -103,12 +121,25 @@ def retrieve_cards(
     scored.sort(key=lambda item: (item[0], item[1].confidence == "high", item[1].card_id), reverse=True)
     selected = scored[:limit]
 
+    cards_out = [_card_to_result(card, score, matched) for score, card, matched in selected]
+    if demo_emit:
+        demo_emit(
+            {
+                "type": "knowledge_done",
+                "agent_name": canonical,
+                "admission_id": patient_context.get("admission_id"),
+                "patient_id": patient_context.get("patient_id"),
+                "card_count": len(cards_out),
+                "card_ids": [c["card_id"] for c in cards_out],
+                "duration_ms": int((time.perf_counter() - started) * 1000),
+            }
+        )
     return {
         "agent_name": normalized,
         "query": query or "",
         "patient_id": patient_context.get("patient_id") or patient_context.get("bed_id") or "",
         "risk_types": risks,
         "trigger_signals": signals,
-        "retrieved_cards": [_card_to_result(card, score, matched) for score, card, matched in selected],
+        "retrieved_cards": cards_out,
         "safety_notice": "Knowledge cards provide background only and require human review.",
     }

@@ -288,6 +288,24 @@ DDL_STATEMENTS = [
     );
     """,
     """
+
+    """
+    CREATE TABLE IF NOT EXISTS agent_action_requests (
+        request_id TEXT PRIMARY KEY,
+        admission_id TEXT NOT NULL REFERENCES admissions(admission_id),
+        patient_id TEXT NOT NULL,
+        bed_id TEXT NOT NULL,
+        request_type TEXT NOT NULL CHECK (request_type IN ('lab', 'mdt_consultation')),
+        status TEXT NOT NULL DEFAULT 'pending'
+            CHECK (status IN ('pending', 'completed', 'failed')),
+        requested_by_agent TEXT NOT NULL,
+        payload JSONB NOT NULL DEFAULT '{}'::jsonb,
+        source_output_id TEXT,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        fulfilled_at TIMESTAMPTZ,
+        fulfillment_detail JSONB
+    );
+    """,
     CREATE TABLE IF NOT EXISTS ward_priority_snapshots (
         snapshot_id TEXT PRIMARY KEY,
         generated_at TIMESTAMPTZ NOT NULL,

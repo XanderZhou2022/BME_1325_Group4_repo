@@ -10,6 +10,8 @@ import { reactionEvidence, reactionSummary, timelineOneLine } from "./autoDemoRe
 import type { AdmissionBoardRow, DemoNextFull, UiMode, WardPriorityQueueItem } from "./autoDemoTypes";
 import { loadUiMode, saveUiMode } from "./autoDemoTypes";
 import { buildFallbackQueue, extractQueueFromLastStep, pickLatestWardPayload, queueSignature } from "./autoDemoWardQueue";
+import { formatProgressLine, progressKind, type DemoProgressEvent } from "./autoDemoProgress";
+import { buildTimelineSteps, formatSimTimeLabel, resolveViewPosition } from "./autoDemoTimelineNav";
 import "./showcase.css";
 
 type DemoState = {
@@ -134,7 +136,14 @@ export default function AutoDemoPage() {
   const [selectedAgent, setSelectedAgent] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [workingSeconds, setWorkingSeconds] = useState(0);
+  const [progressLines, setProgressLines] = useState<DemoProgressEvent[]>([]);
+  const [plannedSimAfter, setPlannedSimAfter] = useState<string | null>(null);
+  const [viewingStepIndex, setViewingStepIndex] = useState<number | null>(null);
+  const progressEndRef = useRef<HTMLLIElement>(null);
   const [error, setError] = useState("");
+  const [mdtLoading, setMdtLoading] = useState(false);
+  const [mdtError, setMdtError] = useState("");
+  const [mdtResult, setMdtResult] = useState<JsonObj | null>(null);
 
   const presentation = uiMode === "presentation";
 
@@ -148,8 +157,48 @@ export default function AutoDemoPage() {
     return () => window.clearInterval(id);
   }, [loading]);
 
+  useEffect(() => {
+    if (!loading) return;
+    progressEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [progressLines.length, loading]);
+
+  const timelineSteps = useMemo(() => buildTimelineSteps(timeline), [timeline]);
+
+  const viewPosition = useMemo(
+    () => resolveViewPosition(timelineSteps, viewingStepIndex, state?.step_index ?? null),
+    [timelineSteps, viewingStepIndex, state?.step_index]
+  );
+
+  const displayedStep = useMemo((): DemoNextFull | null => {
+    if (viewingStepIndex != null) {
+      const hit = timelineSteps.find((s) => s.step_index === viewingStepIndex);
+      if (hit?.step) return hit.step;
+    }
+    return lastStep;
+  }, [viewingStepIndex, lastStep, timelineSteps]);
+
+  const isViewingHistory = Boolean(
+    displayedStep && viewPosition.step_index != null && !viewPosition.isLatest && (state?.step_index ?? 0) > (viewPosition.step_index ?? 0)
+  );
+
+  const canGoPrevStep = viewPosition.listIndex > 0;
+  const canGoNextStep = viewPosition.listIndex >= 0 && viewPosition.listIndex < timelineSteps.length - 1;
+
+  const statusBarTitle = useMemo(() => {
+    if (loading) {
+      const sim = plannedSimAfter ? formatSimTimeLabel(plannedSimAfter) : "";
+      return `本步进行中… 已等待 ${workingSeconds}s${sim ? ` · 下一步仿真时间：${sim}` : ""}`;
+    }
+    if (lastStep || (state?.step_index ?? 0) > 0) {
+      const sim = formatSimTimeLabel(lastStep?.sim_time_after ?? state?.sim_time);
+      const step = state?.step_index ?? lastStep?.step_index ?? "—";
+      return `本步骤结束 · Step #${step}${sim ? ` · 仿真时间：${sim}` : ""}`;
+    }
+    return "等待点击 Next Step 开始演示";
+  }, [loading, workingSeconds, plannedSimAfter, lastStep, state?.sim_time, state?.step_index]);
+
   const subEventChainTimings = useMemo(() => {
-    const wr = (lastStep?.event_write_result ?? {}) as JsonObj;
+    const wr = (displayedStep?.event_write_result ?? {}) as JsonObj;
     const subs = (wr.sub_events as JsonObj[] | undefined) ?? [];
     if (!Array.isArray(subs) || subs.length === 0) return [];
     return subs.map((s, i) => {
@@ -162,25 +211,25 @@ export default function AutoDemoPage() {
       const aid = String(s.admission_id ?? "").slice(0, 14);
       return `${i + 1}. ${String(s.type)} ${aid}…  chain ${ms != null ? `${ms}ms` : "—"}  |  ${stepBrief || "(no dispatch steps)"}`;
     });
-  }, [lastStep]);
+  }, [displayedStep]);
 
   const fixedBedSlots = useMemo(() => buildFixedBedSlots(boardRows), [boardRows]);
 
   const activeAdmissions = useMemo(() => admissions.filter((a) => a.status === "active"), [admissions]);
 
   const stepEventItems = useMemo(
-    () => buildStepEventItems(lastStep as JsonObj | null, admissions),
-    [lastStep, admissions]
+    () => buildStepEventItems(displayedStep as JsonObj | null, admissions),
+    [displayedStep, admissions]
   );
 
   const stepHighlightBeds = useMemo(() => bedIdsInStepEvents(stepEventItems), [stepEventItems]);
 
   const llmTraceRows = useMemo(
-    () => buildLlmTraceRows(lastStep?.agent_workflow_trace),
-    [lastStep?.agent_workflow_trace]
+    () => buildLlmTraceRows(displayedStep?.agent_workflow_trace),
+    [displayedStep?.agent_workflow_trace]
   );
 
-  const agentOps = useMemo(() => (lastStep?.triggered_agents ?? []) as JsonObj[], [lastStep]);
+  const agentOps = useMemo(() => (displayedStep?.triggered_agents ?? []) as JsonObj[], [displayedStep]);
 
   const filteredAgentOps = useMemo(() => {
     if (!selectedAgent) return agentOps;
@@ -192,11 +241,23 @@ export default function AutoDemoPage() {
     [agentOps]
   );
 
-  const narrativeLines = useMemo(() => buildStepNarrativeLines(lastStep), [lastStep]);
-  const pipelineNodes = useMemo(() => inferPipelineStatuses(lastStep), [lastStep]);
+  const narrativeLines = useMemo(() => buildStepNarrativeLines(displayedStep), [displayedStep]);
+  const pipelineNodes = useMemo(() => inferPipelineStatuses(displayedStep), [displayedStep]);
 
-  const currentEventBedId = useMemo(() => resolveCurrentEventBedId(lastStep, admissions), [lastStep, admissions]);
-  const currentEventAdmissionId = useMemo(() => String(lastStep?.admission_id ?? ""), [lastStep]);
+  const currentEventBedId = useMemo(() => resolveCurrentEventBedId(displayedStep, admissions), [displayedStep, admissions]);
+  const currentEventAdmissionId = useMemo(() => String(displayedStep?.admission_id ?? ""), [displayedStep]);
+
+  const goToPrevTimelineStep = useCallback(() => {
+    if (viewPosition.listIndex > 0) {
+      setViewingStepIndex(timelineSteps[viewPosition.listIndex - 1].step_index);
+    }
+  }, [timelineSteps, viewPosition.listIndex]);
+
+  const goToNextTimelineStep = useCallback(() => {
+    if (viewPosition.listIndex >= 0 && viewPosition.listIndex < timelineSteps.length - 1) {
+      setViewingStepIndex(timelineSteps[viewPosition.listIndex + 1].step_index);
+    }
+  }, [timelineSteps, viewPosition.listIndex]);
 
   const selectedBedId = useMemo(() => {
     const fromState = String(selectedPatientState?.bed_id ?? "");
@@ -361,6 +422,7 @@ export default function AutoDemoPage() {
     try {
       await api.demoAutoReset();
       setLastStep(null);
+      setViewingStepIndex(null);
       prevSigRef.current = "";
       await refreshAll(null);
     } catch (e) {
@@ -373,10 +435,19 @@ export default function AutoDemoPage() {
   async function nextStep() {
     setLoading(true);
     setWorkingSeconds(0);
+    setProgressLines([]);
+    setPlannedSimAfter(null);
     setError("");
     try {
-      const out = (await api.demoAutoNext()) as unknown as DemoNextFull;
+      const out = (await api.demoAutoNextStream((ev) => {
+        const row = ev as DemoProgressEvent;
+        if (row.type === "step_plan" && row.sim_after) {
+          setPlannedSimAfter(String(row.sim_after));
+        }
+        setProgressLines((prev) => [...prev, row]);
+      })) as unknown as DemoNextFull;
       setLastStep(out);
+      setViewingStepIndex(null);
       setSelectedAgent("");
       await refreshAll(out);
     } catch (e) {
@@ -431,18 +502,25 @@ export default function AutoDemoPage() {
         </div>
       )}
 
-      {loading && (
-        <div className="adStepWaitBanner" role="status" aria-live="polite">
-          <strong>处理中… 已等待 {workingSeconds}s</strong>
-          <p>
-            每一步是<strong>批量</strong>：每位在院患者会顺序跑一条临床事件链；链上的{" "}
-            <code>patient_memory</code>、<code>risk_sentinel</code>、<code>clinical_summary</code>、
-            <code>ward_coordinator</code> 等会对阿里云百炼 DashScope 做<strong>同步 HTTP</strong>（大模型单次常数秒到数十秒）。整步在一个数据库事务里完成，
-            浏览器在收到本接口响应前<strong>无法</strong>显示每个 Agent 的实时进度（不是前端卡死）。完成后可在 Debug 面板查看各子链{" "}
-            <code>duration_ms</code> / <code>total_chain_ms</code>。
-          </p>
+      <div className="adStepStatusBar adLiveProgress" role="status" aria-live="polite">
+        <strong>{statusBarTitle}</strong>
+        <div className="adLiveFeed">
+          {loading && progressLines.length === 0 ? (
+            <p className="adMuted">正在连接进度流…</p>
+          ) : progressLines.length === 0 ? (
+            <p className="adMuted">本步详细进度将在点击 Next Step 后显示于此。</p>
+          ) : (
+            <ul className="adLiveFeedList">
+              {progressLines.map((ev, i) => (
+                <li key={`${ev.ts ?? ""}-${ev.type}-${i}`} className={`adLiveLine adLive-${progressKind(ev)}`}>
+                  {formatProgressLine(ev)}
+                </li>
+              ))}
+              <li ref={progressEndRef} />
+            </ul>
+          )}
         </div>
-      )}
+      </div>
 
       <section className="scMetrics">
         <div className="scMetricCard">
@@ -511,11 +589,40 @@ export default function AutoDemoPage() {
         </div>
 
         <div className="scPanel adStepFeedPanel adCurrentEventPanel">
-          <h2>
-            本步事件 {state?.step_index != null ? `(Step #${state.step_index})` : ""}
-          </h2>
-          {!lastStep && <p className="adMuted">点击 Next Step 后，此处会列出本步全部子事件（收治/出院/体征/检验/干预）。</p>}
-          {lastStep && stepEventItems.length === 0 && <p className="adMuted">本步无子事件记录。</p>}
+          <div className="adStepEventsHead">
+            <h2 className="adStepEventsTitle">
+              <button
+                type="button"
+                className="adStepNavBtn"
+                aria-label="上一步事件"
+                disabled={!canGoPrevStep}
+                onClick={() => goToPrevTimelineStep()}
+              >
+                ←
+              </button>
+              <span>
+                本步事件
+                {viewPosition.step_index != null ? ` (Step #${viewPosition.step_index})` : ""}
+                {isViewingHistory ? " · 历史" : ""}
+              </span>
+              <button
+                type="button"
+                className="adStepNavBtn"
+                aria-label="下一步事件"
+                disabled={!canGoNextStep}
+                onClick={() => goToNextTimelineStep()}
+              >
+                →
+              </button>
+            </h2>
+            {timelineSteps.length > 1 && (
+              <span className="adStepNavHint">
+                {viewPosition.listIndex + 1} / {timelineSteps.length}
+              </span>
+            )}
+          </div>
+          {!displayedStep && <p className="adMuted">点击 Next Step 后，此处会列出本步全部子事件（收治/出院/体征/检验/干预）。</p>}
+          {displayedStep && stepEventItems.length === 0 && <p className="adMuted">本步无子事件记录。</p>}
           <div className="adStepEventList">
             {stepEventItems.map((ev) => (
               <div
@@ -549,10 +656,10 @@ export default function AutoDemoPage() {
             <p className="adMuted">
               逐步对照：患者 / 床位 / Agent / 成功或 fallback / 返回摘要。完整 JSON 见 Debug 模式。
             </p>
-            {(lastStep?.agent_delta_summary as JsonObj)?.llm_used_by != null && (
+            {(displayedStep?.agent_delta_summary as JsonObj)?.llm_used_by != null && (
               <div className="adBanner adBannerInfo" style={{ marginBottom: 8 }}>
-                本步 LLM 成功标记：{JSON.stringify((lastStep?.agent_delta_summary as JsonObj).llm_used_by)} · fallback：{" "}
-                {JSON.stringify((lastStep?.agent_delta_summary as JsonObj).fallback_used_by ?? [])}
+                本步 LLM 成功标记：{JSON.stringify((displayedStep?.agent_delta_summary as JsonObj).llm_used_by)} · fallback：{" "}
+                {JSON.stringify((displayedStep?.agent_delta_summary as JsonObj).fallback_used_by ?? [])}
               </div>
             )}
             {llmTraceRows.length === 0 && <p className="adMuted">本步尚无 agent_workflow_trace（或未跑 Agent）。</p>}
@@ -680,7 +787,7 @@ export default function AutoDemoPage() {
 
           {!presentation && (
             <CollapsibleRaw title="Raw: last step JSON (debug)" defaultOpen={false}>
-              <pre className="adSmallPre">{JSON.stringify(lastStep ?? {}, null, 2)}</pre>
+              <pre className="adSmallPre">{JSON.stringify(displayedStep ?? {}, null, 2)}</pre>
             </CollapsibleRaw>
           )}
         </div>
@@ -692,6 +799,66 @@ export default function AutoDemoPage() {
           <div className="adBanner adBannerInfo">
             <strong>Selected:</strong> Bed <code>{selectedBedId || "—"}</code> / Admission <code>{selectedAdmissionId || "—"}</code>
           </div>
+          {selectedAdmissionId && (
+            <div className="adMdtActions">
+              <button
+                type="button"
+                className="scBtn scBtnPrimary"
+                disabled={mdtLoading || loading}
+                onClick={async () => {
+                  setMdtLoading(true);
+                  setMdtError("");
+                  try {
+                    const res = await api.requestMdtConsultation(selectedAdmissionId, {
+                      reason: "ICU manual MDT consultation",
+                      use_api: false,
+                    });
+                    setMdtResult(res);
+                    const outputs = await api.getAgentOutputs(selectedAdmissionId, "mdt_consultation", 5).catch(() => []);
+                    if (outputs.length > 0) {
+                      setSelectedAgent("mdt_consultation");
+                    }
+                  } catch (e) {
+                    setMdtResult(null);
+                    const msg = e instanceof Error ? e.message : String(e);
+                    setMdtError(
+                      msg.includes("SIMI") || msg.includes("503")
+                        ? `${msg} — 请确认 simi 已启动：uvicorn mdt_consultation_api:app --port 8001`
+                        : msg
+                    );
+                  } finally {
+                    setMdtLoading(false);
+                  }
+                }}
+              >
+                {mdtLoading ? "MDT 会诊中…" : "申请 MDT 会诊"}
+              </button>
+            </div>
+          )}
+          {mdtError && <div className="adBanner adBannerWarn">{mdtError}</div>}
+          {mdtResult && (
+            <CollapsibleRaw title="MDT consultation result" defaultOpen>
+              <div className="scKeyValue">
+                <span>Status</span>
+                <strong>{String((mdtResult.mdt_judgment as JsonObj)?.status_level ?? "—")}</strong>
+              </div>
+              <div className="scKeyValue">
+                <span>Surgery ready</span>
+                <strong>{String((mdtResult.mdt_judgment as JsonObj)?.surgery_ready ?? "—")}</strong>
+              </div>
+              <p className="adMuted">{String(mdtResult.case_summary ?? "").slice(0, 400)}</p>
+              {Array.isArray(mdtResult.required_updates) && mdtResult.required_updates.length > 0 && (
+                <ul className="adList">
+                  {(mdtResult.required_updates as JsonObj[]).slice(0, 6).map((u, i) => (
+                    <li key={String(u.update_id ?? i)}>
+                      {String(u.description ?? u.type ?? JSON.stringify(u)).slice(0, 200)}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <pre className="adSmallPre">{JSON.stringify(mdtResult, null, 2)}</pre>
+            </CollapsibleRaw>
+          )}
           {!selectedAdmissionId && <div>点击左侧在院床位或右侧事件/LLM 行查看详情。</div>}
           {selectedAdmissionId && (
             <>
@@ -861,7 +1028,7 @@ export default function AutoDemoPage() {
         </div>
         <div className="scKeyValue">
           <span>Triggered agents</span>
-          <strong>{(lastStep?.agent_delta_summary as JsonObj)?.triggered_agent_names ? JSON.stringify((lastStep?.agent_delta_summary as JsonObj).triggered_agent_names) : "—"}</strong>
+          <strong>{(displayedStep?.agent_delta_summary as JsonObj)?.triggered_agent_names ? JSON.stringify((displayedStep?.agent_delta_summary as JsonObj).triggered_agent_names) : "—"}</strong>
         </div>
         <div className="scKeyValue">
           <span>DB effects</span>

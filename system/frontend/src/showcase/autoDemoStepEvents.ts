@@ -107,6 +107,38 @@ export function buildStepEventItems(
       };
     }
 
+    if (type === "admissions_batch_complete") {
+      const created = Number((sub as JsonObj).admissions_created ?? 0);
+      const dis = Number((sub as JsonObj).discharges ?? 0);
+      return {
+        index: index + 1,
+        type,
+        admission_id: "",
+        bed_id: "",
+        patient_id: "",
+        title: "出入院批次完成",
+        details: [`新收治 ${created} 人`, `出院 ${dis} 人`, "随后才启动患者级 Agent"],
+        tone: "admin",
+      };
+    }
+
+    if (type === "ward_coordinator_batch") {
+      return {
+        index: index + 1,
+        type,
+        admission_id: String((sub as JsonObj).anchor_admission_id ?? ""),
+        bed_id: "",
+        patient_id: "",
+        title: "全病房 ward_coordinator",
+        details: [
+          `状态: ${String((sub as JsonObj).status ?? "—")}`,
+          `队列: ${String((sub as JsonObj).queue_size ?? "—")} 人`,
+          `负荷: ${String((sub as JsonObj).ward_load_indicator ?? "—")}`,
+        ],
+        tone: "admin",
+      };
+    }
+
     if (type === "admission_discharge") {
       return {
         index: index + 1,

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import time
 from dataclasses import dataclass
 from typing import Any, TypeVar
 
@@ -11,6 +12,7 @@ from pydantic import BaseModel
 from app.config import get_settings
 
 from .audit import write_llm_audit
+from .concurrency import llm_request_slot
 from .dashscope_config import chat_completions_url, load_api_test_env
 from .safety import validate_llm_medical_safety
 
@@ -235,6 +237,24 @@ def generate_structured_output(
     llm_used = False
 
     if enabled and settings.effective_llm_api_key():
+        agent_name = str(input_payload.get("agent_name") or task_name.split("_")[0])
+        patient_id = input_payload.get("patient_id")
+        llm_started = time.perf_counter()
+        try:
+            from app.demo.progress import emit as demo_emit
+
+            demo_emit(
+                {
+                    "type": "llm_start",
+                    "agent_name": agent_name,
+                    "task_name": task_name,
+                    "model": selected_model,
+                    "patient_id": patient_id,
+                    "admission_id": input_payload.get("admission_id"),
+                }
+            )
+        except ImportError:
+            demo_emit = None  # type: ignore[assignment,misc]
         schema_hint = json.dumps(output_schema.model_json_schema(), ensure_ascii=False)
         system_content = (
             f"{prompt_template}\n\n"
@@ -256,7 +276,7 @@ def generate_structured_output(
         attempts = max(1, int(settings.llm_max_retries) + 1)
         for attempt in range(attempts):
             try:
-                with httpx.Client(timeout=settings.llm_timeout_seconds) as client:
+                with llm_request_slot(), httpx.Client(timeout=settings.llm_timeout_seconds) as client:
                     resp = client.post(url, json=request_payload, headers=headers)
                 resp.raise_for_status()
                 raw_output = _parse_content(resp.json())
@@ -284,6 +304,22 @@ def generate_structured_output(
                     continue
         if last_exc is not None:
             output = output_schema.model_validate(fallback)
+        try:
+            from app.demo.progress import emit as demo_emit_end
+
+            demo_emit_end(
+                {
+                    "type": "llm_end",
+                    "agent_name": agent_name,
+                    "task_name": task_name,
+                    "duration_ms": int((time.perf_counter() - llm_started) * 1000),
+                    "llm_used": llm_used,
+                    "fallback_used": fallback_used,
+                    "error": error,
+                }
+            )
+        except (ImportError, NameError):
+            pass
     else:
         output = output_schema.model_validate(fallback)
 

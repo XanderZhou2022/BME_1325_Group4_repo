@@ -7,6 +7,7 @@ from typing import Any
 import httpx
 
 from app.config import get_settings
+from llm.concurrency import llm_request_slot
 from llm.dashscope_config import chat_completions_url, dashscope_model, load_api_test_env
 
 logger = logging.getLogger(__name__)
@@ -60,7 +61,7 @@ class LLMClient:
         last_error: Exception | None = None
         for attempt in range(self.settings.llm_max_retries + 1):
             try:
-                with httpx.Client(timeout=self.settings.llm_timeout_seconds) as client:
+                with llm_request_slot(), httpx.Client(timeout=self.settings.llm_timeout_seconds) as client:
                     resp = client.post(url, json=payload, headers=headers)
                 if resp.status_code == 429:
                     logger.warning("LLM rate limited")

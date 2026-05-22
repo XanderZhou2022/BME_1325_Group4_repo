@@ -8,7 +8,7 @@ from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 DASHSCOPE_BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
-DEFAULT_DASHSCOPE_MODEL = "qwen3.7-max"
+DEFAULT_DASHSCOPE_MODEL = "qwen3-max"
 _GENAI_MARKERS = ("genaiapi.shanghaitech", "genaiapi", "/api/v1/start")
 
 
@@ -53,6 +53,7 @@ class Settings(BaseSettings):
     llm_model: str = DEFAULT_DASHSCOPE_MODEL
     llm_timeout_seconds: float = 60.0
     llm_max_retries: int = 2
+    llm_max_concurrency: int = 100
 
     hospital_llm_gateway_url: str | None = None
     hospital_llm_api_key: str | None = None
@@ -60,9 +61,19 @@ class Settings(BaseSettings):
     scheduler_enabled: bool = True
     scheduler_interval_seconds: int = 60
 
+    # simi_hospital MDT consultation API (mdt_consultation_api, default port 8001)
+    simi_mdt_base_url: str = "http://127.0.0.1:8001"
+    simi_mdt_timeout_seconds: float = 300.0
+    simi_mdt_workflow_path: str = "/api/v1/integration/icu/workflow"
+
     @property
     def hospital_bus_enabled(self) -> bool:
         return bool(self.hospital_redis_host)
+
+    def simi_mdt_workflow_url(self) -> str:
+        base = self.simi_mdt_base_url.rstrip("/")
+        path = self.simi_mdt_workflow_path if self.simi_mdt_workflow_path.startswith("/") else f"/{self.simi_mdt_workflow_path}"
+        return f"{base}{path}"
 
     def effective_llm_base_url(self) -> str:
         return self.llm_base_url.rstrip("/")

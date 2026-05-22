@@ -9,6 +9,10 @@ from psycopg import Connection
 from psycopg.rows import dict_row
 from psycopg.types.json import Json
 
+from app.services.agent_action_requests import (
+    derive_requests_from_clinical_summary,
+    register_agent_action_requests,
+)
 from app.services.ids import new_id
 from knowledge.retriever import retrieve_cards
 from llm.client import generate_structured_output
@@ -394,6 +398,18 @@ def evaluate_clinical_summary(conn: Connection, admission_id: str, summary_type:
         "human_review_required": True,
     }
 
+    output_id = new_id("out")
+    action_specs = derive_requests_from_clinical_summary(summary, output_id=output_id)
+    payload["action_requests"] = register_agent_action_requests(
+        conn,
+        admission_id=admission_id,
+        patient_id=summary.patient_id,
+        bed_id=summary.bed_id,
+        requested_by_agent="clinical_summary",
+        specs=action_specs,
+        source_output_id=output_id,
+    )
+
     with conn.transaction():
         with conn.cursor() as cur:
             cur.execute(
@@ -412,7 +428,6 @@ def evaluate_clinical_summary(conn: Connection, admission_id: str, summary_type:
                 ON CONFLICT (agent_name) DO UPDATE SET enabled = TRUE, updated_at = NOW()
                 """
             )
-            output_id = new_id("out")
             event_id = new_id("aevt")
             now = datetime.now(timezone.utc)
             cur.execute(

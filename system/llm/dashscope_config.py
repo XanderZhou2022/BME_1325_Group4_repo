@@ -7,7 +7,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 DASHSCOPE_BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
-DEFAULT_DASHSCOPE_MODEL = "qwen3.7-max"
+DEFAULT_DASHSCOPE_MODEL = "qwen3-max"
 
 
 def repo_root() -> Path:

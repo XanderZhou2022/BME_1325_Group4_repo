@@ -85,6 +85,18 @@ export const api = {
   getRisks: (admissionId: string, limit = 50) =>
     request<JsonObj[]>(`/admissions/${encodeURIComponent(admissionId)}/risks?limit=${limit}`),
 
+  requestMdtConsultation: (admissionId: string, body?: JsonObj) =>
+    request<JsonObj>(`/admissions/${encodeURIComponent(admissionId)}/consultations/mdt`, {
+      method: "POST",
+      body: JSON.stringify(body ?? { reason: "ICU manual MDT consultation", use_api: false }),
+    }),
+
+  getMdtExport: (admissionId: string) =>
+    request<JsonObj>(`/admissions/${encodeURIComponent(admissionId)}/consultations/mdt/export`),
+
+  getLatestMdtConsultation: (admissionId: string) =>
+    request<JsonObj>(`/admissions/${encodeURIComponent(admissionId)}/consultations/mdt/latest`),
+
   getAgentOutputs: (admissionId: string, agentName?: string, limit = 30) => {
     const q = agentName
       ? `?agent_name=${encodeURIComponent(agentName)}&limit=${limit}`
@@ -109,4 +121,57 @@ export const api = {
   demoAutoNext: () => request<JsonObj>("/demo/auto/next", { method: "POST" }),
   demoAutoState: () => request<JsonObj>("/demo/auto/state"),
   demoAutoTimeline: (limit = 100) => request<JsonObj>(`/demo/auto/timeline?limit=${limit}`),
+
+  /** NDJSON stream: progress events, then `{ type: "result", data }` or `{ type: "error" }`. */
+  demoAutoNextStream: async (onEvent: (ev: JsonObj) => void): Promise<JsonObj> => {
+    const res = await fetch(`${API_BASE}/demo/auto/next/stream`, {
+      method: "POST",
+      headers: { Accept: "application/x-ndjson" },
+    });
+    if (!res.ok) {
+      const text = await res.text();
+      let msg = `${res.status} ${res.statusText}`;
+      try {
+        const raw = JSON.parse(text) as { error?: { message?: string; code?: string } };
+        if (raw.error?.message) msg = `${raw.error.code ?? res.status}: ${raw.error.message}`;
+      } catch {
+        if (text) msg = text.slice(0, 200);
+      }
+      throw new Error(msg);
+    }
+    const body = res.body;
+    if (!body) throw new Error("No response body");
+    const reader = body.getReader();
+    const decoder = new TextDecoder();
+    let buf = "";
+    let result: JsonObj | null = null;
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += decoder.decode(value, { stream: true });
+      const lines = buf.split("\n");
+      buf = lines.pop() ?? "";
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed) continue;
+        const ev = JSON.parse(trimmed) as JsonObj;
+        if (ev.type === "result" && ev.data) {
+          result = ev.data as JsonObj;
+        } else if (ev.type === "error") {
+          throw new Error(String(ev.message ?? "next step stream failed"));
+        } else {
+          onEvent(ev);
+        }
+      }
+    }
+    const tail = buf.trim();
+    if (tail) {
+      const ev = JSON.parse(tail) as JsonObj;
+      if (ev.type === "result" && ev.data) result = ev.data as JsonObj;
+      else if (ev.type === "error") throw new Error(String(ev.message ?? "next step stream failed"));
+      else onEvent(ev);
+    }
+    if (!result) throw new Error("Stream ended without result payload");
+    return result;
+  },
 };
