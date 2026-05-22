@@ -8,8 +8,8 @@
 |------|------|
 | `HOSPITAL_REDIS_HOST` / `ICU_HOSPITAL_REDIS_HOST` | Redis Pub/Sub + Stream（§4） |
 | `HOSPITAL_REDIS_PORT` / `HOSPITAL_REDIS_PASSWORD` | Redis 连接 |
-| `HOSPITAL_LLM_GATEWAY_URL` / `ICU_HOSPITAL_LLM_GATEWAY_URL` | LLM 网关 Base URL（§7） |
-| `HOSPITAL_LLM_API_KEY` | 网关密钥（勿提交仓库） |
+| `DASHSCOPE_API_KEY` / `DASHSCOPE_MODEL` | **本地开发**：`api调用测试/.env`（与 `api使用.py` 一致，勿提交） |
+| `ICU_LLM_ENABLED` | 后端是否启用 LLM（`system/backend/api/.env`） |
 | `ICU_GROUP_PRODUCER` | 默认 `groupC.icu`（`config.group_producer`） |
 
 未配置 Redis 时，事件发布为 no-op（开发机可照常启动）；教学联调环境必须配置。
@@ -53,10 +53,13 @@ PATCH `/admissions/{id}/status` 会同步更新 `encounter_status`。
 - `services/hospital_bus.publish_contract_event`：信封 §4.3，频道 `hospital.<event_type>`，★ 事件写入 `hospital:journal` Stream。
 - `emit_agent_lifecycle_event` 在写入 `agent_events` 后镜像为 `alert.raised`（满足跨组可观测性；其它直接 INSERT 的 agent 行未全部覆盖，可后续抽公共函数）。
 
-## LLM（§7）
+## LLM（本地：阿里云百炼 DashScope）
 
-- `app/services/llm.py` 使用 `Settings.effective_llm_base_url()` / `effective_llm_api_key()`，请求 `.../v1/chat/completions`。
-- 模型名限制在教学组白名单；`429` 走重试与回退。
+- **唯一配置**：`BME_1325_Group4_repo/api调用测试/.env`（`DASHSCOPE_API_KEY`、`DASHSCOPE_MODEL=qwen3.7-max`）。
+- **唯一实现入口**：`system/llm/client.py` 的 `generate_structured_output()`（各 Agent 经此调用）；辅助 JSON 客户端见 `app/services/llm.py`。
+- Base URL：`https://dashscope.aliyuncs.com/compatible-mode/v1`（OpenAI 兼容 `/chat/completions`）。
+- 已弃用教学网 GenAI（`genaiapi.shanghaitech.edu.cn`）；勿再设置 `HOSPITAL_LLM_*` / `ICU_LLM_API_KEY` 指向该网关。
+- `429` / 5xx 走重试与规则 fallback。
 
 ## 参考
 

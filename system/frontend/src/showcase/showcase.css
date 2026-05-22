@@ -214,6 +214,207 @@
   gap: 10px;
 }
 
+.adMainSplit {
+  display: grid;
+  grid-template-columns: minmax(280px, 340px) 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .adMainSplit {
+    grid-template-columns: 1fr;
+  }
+}
+
+.adBedGridFixed {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bedCard {
+  text-align: left;
+  border-radius: 10px;
+  border: 1px solid #334155;
+  padding: 12px;
+  width: 100%;
+  color: #e5e7eb;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.bedCard.empty {
+  background: #1e293b;
+  border-color: #475569;
+  color: #94a3b8;
+  cursor: default;
+}
+
+.bedCard.empty .bedCardLabel {
+  color: #64748b;
+}
+
+.bedCard.occupied {
+  cursor: pointer;
+}
+
+.bedCard.occupied:hover {
+  border-color: #60a5fa;
+}
+
+.bedCard.selected {
+  outline: 2px solid #60a5fa;
+}
+
+.bedCard.stepHighlight {
+  box-shadow: 0 0 0 2px #a78bfa;
+}
+
+.bedCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.bedCardLabel {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.bedCardEmptyText {
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.adStepFeedPanel {
+  max-height: calc(100vh - 220px);
+  overflow: auto;
+}
+
+.adStepEventList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.adStepEventCard {
+  border-radius: 10px;
+  border: 1px solid #334155;
+  padding: 10px 12px;
+  background: rgba(15, 23, 42, 0.9);
+}
+
+.adStepEventCard.admin {
+  border-left: 3px solid #38bdf8;
+}
+
+.adStepEventCard.clinical {
+  border-left: 3px solid #f59e0b;
+}
+
+.adStepEventHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.adStepEventIdx {
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.adStepEventTitle {
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.adStepEventMeta code {
+  font-size: 11px;
+}
+
+.adStepEventDetails {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #cbd5e1;
+}
+
+.adLlmSection {
+  border-top: 1px solid #334155;
+  padding-top: 12px;
+}
+
+.adLlmCard {
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 8px;
+  background: #0f172a;
+}
+
+.adLlmCard.success {
+  border-left: 3px solid #22c55e;
+}
+
+.adLlmCard.fallback {
+  border-left: 3px solid #ef4444;
+}
+
+.adLlmCard.skipped {
+  border-left: 3px solid #64748b;
+}
+
+.adLlmCardHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.adLlmBadge {
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.adLlmBadge.ok {
+  background: rgba(34, 197, 94, 0.25);
+  color: #86efac;
+}
+
+.adLlmBadge.fail {
+  background: rgba(239, 68, 68, 0.25);
+  color: #fecaca;
+}
+
+.adLlmBadge.skip {
+  background: rgba(100, 116, 139, 0.35);
+  color: #cbd5e1;
+}
+
+.adLlmPreview {
+  font-size: 12px;
+  line-height: 1.45;
+  color: #e2e8f0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  max-height: 120px;
+  overflow: auto;
+  background: #020617;
+  border-radius: 6px;
+  padding: 8px;
+}
+
 .patientCard {
   text-align: left;
   border-radius: 10px;

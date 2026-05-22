@@ -14,9 +14,14 @@
 所有 agent 的目录结构必须遵循以下模板：
 
 ```text
+system/llm/
+  client.py              # 唯一外部 LLM HTTP 入口（DashScope OpenAI 兼容）
+  dashscope_config.py    # 加载 api调用测试/.env
+  audit.py
+  safety.py
+
 system/backend/app/agents/
   common/
-    llm_client.py
     json_guard.py
     prompt_registry.py
     llm_types.py
@@ -31,7 +36,7 @@ system/backend/app/agents/
 
 说明：
 
-- `common/llm_client.py`：唯一允许触发外部 LLM API 的实现。
+- `system/llm/client.py`：唯一允许触发外部 LLM API 的实现（阿里云百炼 DashScope，配置见 `api调用测试/.env`）。
 - `common/json_guard.py`：统一 JSON 解析与校验。
 - `common/prompt_registry.py`：集中管理 prompt 版本。
 - `contract.py`：agent 输入/输出契约常量，必须与 `agent_contract.md` 对齐。
@@ -48,7 +53,9 @@ system/backend/app/agents/
 
 所有 LLM 调用必须经过：
 
-- `system/backend/app/agents/common/llm_client.py`
+- `system/llm/client.py` → `generate_structured_output()`
+
+配置与密钥：`BME_1325_Group4_repo/api调用测试/.env`（`DASHSCOPE_API_KEY`、`DASHSCOPE_MODEL`），与 `api调用测试/api使用.py` 同源。**禁止**使用教学网 GenAI 网关。
 
 任何 `service.py`、`rules.py`、`router.py` 中直接调用外部模型 SDK 或 HTTP 接口的行为，均视为违规。
 
@@ -237,7 +244,7 @@ LLM 调用后写库路径必须如下：
 每个 agent 接入完成后，必须通过以下检查：
 
 1. 目录结构符合第 2 章。
-2. 外部 LLM 调用仅存在于 `common/llm_client.py`。
+2. 外部 LLM 调用仅存在于 `system/llm/client.py`。
 3. prompt 包含 Role/Input/Output Contract。
 4. 输出严格 JSON 且通过 7 步校验。
 5. 失败重试 + fallback + degraded 标记生效。

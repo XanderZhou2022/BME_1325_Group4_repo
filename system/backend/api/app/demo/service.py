@@ -18,6 +18,7 @@ from .schemas import DemoDbEffects, DemoHospitalState, DemoNextResponse, DemoRis
 
 SIM_TAG = "demo_auto"
 SIM_STEP_MINUTES = 5
+DEMO_MAX_BEDS = 5
 
 
 def _json_safe(value: Any) -> Any:
@@ -210,21 +211,28 @@ def _agent_judgment_from_payload(agent_name: str, payload: dict[str, Any]) -> di
 
 
 def _llm_from_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    generated = {
+        key: payload[key]
+        for key in (
+            "llm_explanation",
+            "short_term_narrative",
+            "family_plain_language_draft",
+            "icu_diary_draft",
+            "rationale",
+            "one_line_status",
+            "problem_list",
+            "overall_review_reminder",
+        )
+        if key in payload
+    }
+    risks = payload.get("active_risks") or payload.get("risk_explanations")
+    if risks is not None and "active_risks" not in generated:
+        generated["active_risks"] = risks
     return {
         "llm_used": bool(payload.get("llm_used")),
         "fallback_used": bool(payload.get("fallback_used")),
         "audit_log_id": payload.get("audit_log_id"),
-        "generated_text_fields": {
-            key: payload[key]
-            for key in (
-                "llm_explanation",
-                "short_term_narrative",
-                "family_plain_language_draft",
-                "icu_diary_draft",
-                "rationale",
-            )
-            if key in payload
-        },
+        "generated_text_fields": generated,
     }
 
 
@@ -400,7 +408,23 @@ def _active_admissions(conn: Connection) -> list[dict[str, Any]]:
         return [dict(r) for r in cur.fetchall()]
 
 
-def _available_demo_bed(conn: Connection) -> str | None:
+def _seed_demo_beds(conn: Connection) -> None:
+    """Pre-create DEMO_MAX_BEDS empty demo beds so admissions stay within the ward cap."""
+    with conn.cursor() as cur:
+        for i in range(1, DEMO_MAX_BEDS + 1):
+            bid = f"demo_b_{i:02d}"
+            cur.execute(
+                """
+                INSERT INTO beds (bed_id, bed_code, room_code, bed_type, status, notes)
+                VALUES (%s, %s, 'DEMO', 'icu', 'empty', 'auto demo')
+                ON CONFLICT (bed_id) DO UPDATE SET status = 'empty', updated_at = NOW()
+                """,
+                (bid, bid.upper()),
+            )
+
+
+def _available_demo_bed(conn: Connection, *, step_index: int, slot: int = 0) -> str:
+    """Return an empty demo bed id, or allocate a new demo_b_XX id when none exist yet."""
     conn.row_factory = dict_row
     with conn.cursor() as cur:
         cur.execute(
@@ -412,7 +436,10 @@ def _available_demo_bed(conn: Connection) -> str | None:
             """,
         )
         row = cur.fetchone()
-    return str(row["bed_id"]) if row else None
+        if row:
+            return str(row["bed_id"])
+    # No demo beds yet (e.g. after seed/reset) — _create_patient_bed_admission will INSERT the bed.
+    return f"demo_b_{((step_index - 1 + slot) % DEMO_MAX_BEDS) + 1:02d}"
 
 
 def _create_patient_bed_admission(
@@ -426,7 +453,7 @@ def _create_patient_bed_admission(
     stem = f"{step_index:05d}{sub_tag}" if sub_tag else f"{step_index:05d}"
     pid = f"demo_p_{stem}"
     aid = f"demo_adm_{stem}"
-    bid = bed_id or f"demo_b_{((step_index - 1) % 20) + 1:02d}"
+    bid = bed_id or f"demo_b_{((step_index - 1) % DEMO_MAX_BEDS) + 1:02d}"
     sev = random.choice(["stable", "unstable", "critical"])
     encounter_id = new_encounter_id(sim_time)
     care_phase = "critical" if sev == "critical" else "stable"
@@ -552,32 +579,43 @@ def reset_demo_auto(conn: Connection) -> DemoHospitalState:
     _ensure_demo_tables(conn)
     with conn.transaction():
         with conn.cursor() as cur:
-            for table in [
-                "demo_auto_timeline",
-                "demo_auto_state",
-                "orchestrator_runs",
-                "agent_consumption_cursor",
-                "agent_events",
-                "agent_outputs",
-                "alerts",
-                "risk_assessments",
-                "patient_state_snapshots",
-                "patient_state_current",
-                "patient_memory_events",
-                "patient_memory",
-                "intervention_pending",
-                "events",
-                "vital_sign_events",
-                "lab_events",
-                "intervention_events",
-                "admissions",
-                "beds",
-                "patients",
-                "audit_logs",
-            ]:
-                cur.execute(f"DELETE FROM {table}")
+            cur.execute("DELETE FROM demo_auto_timeline")
+            cur.execute("DELETE FROM demo_auto_state")
+            # 与 seed_test_data 一致：含 clinical_summaries / ward_priority_*，避免删 admissions 时外键冲突
+            cur.execute(
+                """
+                TRUNCATE TABLE
+                  orchestrator_runs,
+                  agent_consumption_cursor,
+                  agent_events,
+                  agent_outputs,
+                  clinical_summaries,
+                  ward_priority_events,
+                  ward_priority_snapshots,
+                  patient_memory_events,
+                  patient_memory,
+                  patient_state_snapshots,
+                  patient_state_current,
+                  intervention_pending,
+                  alerts,
+                  risk_assessments,
+                  events,
+                  intervention_events,
+                  lab_events,
+                  vital_sign_events,
+                  audit_logs,
+                  admissions,
+                  beds,
+                  patients
+                RESTART IDENTITY CASCADE
+                """
+            )
             now = _now_utc()
-            cur.execute("INSERT INTO demo_auto_state (id, sim_time, step_index, updated_at) VALUES (1, %s, 0, NOW())", (now,))
+            cur.execute(
+                "INSERT INTO demo_auto_state (id, sim_time, step_index, updated_at) VALUES (1, %s, 0, NOW())",
+                (now,),
+            )
+            _seed_demo_beds(conn)
     return get_demo_state(conn)
 
 
@@ -639,6 +677,7 @@ def next_demo_step(conn: Connection) -> DemoNextResponse:
     - 0–2 admissions into empty demo beds
     - For **every** active demo patient after those mutations: one random clinical event
       (vital_sign / lab / intervention), each running the normal dispatch_event_chain.
+    Ward capacity is capped at **DEMO_MAX_BEDS** (5) demo beds (`demo_b_01` … `demo_b_05`).
     """
     _ensure_demo_tables(conn)
     with conn.transaction():
@@ -679,13 +718,16 @@ def next_demo_step(conn: Connection) -> DemoNextResponse:
             wr = _discharge_random(conn, tgt, sim_after)
             sub_events.append({"type": "admission_discharge", "admission_id": tgt["admission_id"], "write_result": _json_safe(wr)})
 
-        # 0–2 admissions into free demo beds
+        # 0–2 admissions into free demo beds (capped at DEMO_MAX_BEDS; admit ≥1 when ward was empty)
+        active_after_dis = _active_admissions(conn)
+        admit_slots = max(0, DEMO_MAX_BEDS - len(active_after_dis))
         na = random.randint(0, 2)
+        if not active_start:
+            na = max(na, 1)
+        na = min(na, admit_slots)
         admit_tags = ["", "a", "b"]
         for k in range(na):
-            bed = _available_demo_bed(conn)
-            if not bed:
-                break
+            bed = _available_demo_bed(conn, step_index=step_index, slot=k)
             sub_tag = admit_tags[k] if k < len(admit_tags) else f"x{k}"
             wr = _create_patient_bed_admission(conn, sim_after, step_index, sub_tag=sub_tag, bed_id=bed)
             sub_events.append({"type": "admission_create", "admission_id": wr["admission_id"], "write_result": _json_safe(wr)})

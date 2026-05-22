@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass
 from typing import Any, TypeVar
 
@@ -10,7 +11,10 @@ from pydantic import BaseModel
 from app.config import get_settings
 
 from .audit import write_llm_audit
+from .dashscope_config import chat_completions_url, load_api_test_env
 from .safety import validate_llm_medical_safety
+
+load_api_test_env()
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -188,13 +192,25 @@ def _parse_content(body: dict[str, Any]) -> str:
     return json.dumps(body)
 
 
-def _chat_completions_url(base_url: str) -> str:
-    base = base_url.rstrip("/")
-    if base.endswith("/chat/completions") or base.endswith("/start"):
-        return base
-    if base.endswith("/v1"):
-        return base + "/chat/completions"
-    return base + "/v1/chat/completions"
+def _parse_llm_json_object(raw: str) -> dict[str, Any]:
+    """Parse model text into a JSON object (handles ```json fences and prose wrappers)."""
+    text = raw.strip()
+    if not text:
+        raise ValueError("empty LLM response")
+    fence = re.search(r"```(?:json)?\s*([\s\S]*?)\s*```", text, flags=re.IGNORECASE)
+    if fence:
+        text = fence.group(1).strip()
+    try:
+        parsed = json.loads(text)
+    except json.JSONDecodeError:
+        start = text.find("{")
+        end = text.rfind("}")
+        if start < 0 or end <= start:
+            raise
+        parsed = json.loads(text[start : end + 1])
+    if not isinstance(parsed, dict):
+        raise ValueError("LLM JSON root must be an object")
+    return parsed
 
 
 def generate_structured_output(
@@ -219,32 +235,54 @@ def generate_structured_output(
     llm_used = False
 
     if enabled and settings.effective_llm_api_key():
-        try:
-            payload = {
-                "model": selected_model,
-                "messages": [
-                    {"role": "system", "content": prompt_template},
-                    {"role": "user", "content": json.dumps(input_payload, ensure_ascii=False)},
-                ],
-                "temperature": temperature,
-                "stream": False,
-            }
-            headers = {"Authorization": f"Bearer {settings.effective_llm_api_key()}", "Content-Type": "application/json"}
-            with httpx.Client(timeout=settings.llm_timeout_seconds) as client:
-                resp = client.post(_chat_completions_url(settings.effective_llm_base_url()), json=payload, headers=headers)
-            resp.raise_for_status()
-            raw_output = _parse_content(resp.json())
-            parsed = json.loads(raw_output)
-            output = output_schema.model_validate(parsed)
-            schema_valid = True
-            safety_valid, violations = validate_llm_medical_safety(task_name, output.model_dump(mode="json"), input_payload.get("global_forbidden_use", []))
-            if not safety_valid:
-                error = "; ".join(violations)
-                raise ValueError(error)
-            llm_used = True
-            fallback_used = False
-        except Exception as exc:
-            error = str(exc)
+        schema_hint = json.dumps(output_schema.model_json_schema(), ensure_ascii=False)
+        system_content = (
+            f"{prompt_template}\n\n"
+            "Respond with ONE raw JSON object only (no markdown fences, no extra text). "
+            f"Your JSON MUST validate against this schema:\n{schema_hint}"
+        )
+        request_payload = {
+            "model": selected_model,
+            "messages": [
+                {"role": "system", "content": system_content},
+                {"role": "user", "content": json.dumps(input_payload, ensure_ascii=False)},
+            ],
+            "temperature": temperature,
+            "stream": False,
+        }
+        headers = {"Authorization": f"Bearer {settings.effective_llm_api_key()}", "Content-Type": "application/json"}
+        url = chat_completions_url(settings.effective_llm_base_url())
+        last_exc: Exception | None = None
+        attempts = max(1, int(settings.llm_max_retries) + 1)
+        for attempt in range(attempts):
+            try:
+                with httpx.Client(timeout=settings.llm_timeout_seconds) as client:
+                    resp = client.post(url, json=request_payload, headers=headers)
+                resp.raise_for_status()
+                raw_output = _parse_content(resp.json())
+                parsed = _parse_llm_json_object(raw_output)
+                output = output_schema.model_validate(parsed)
+                schema_valid = True
+                # Post-LLM medical safety filter (off by default; see llm/safety.py)
+                safety_valid, violations = validate_llm_medical_safety(
+                    task_name,
+                    output.model_dump(mode="json"),
+                    input_payload.get("global_forbidden_use", []),
+                )
+                if not safety_valid:
+                    error = "; ".join(violations)
+                    raise ValueError(error)
+                llm_used = True
+                fallback_used = False
+                last_exc = None
+                break
+            except Exception as exc:
+                last_exc = exc
+                error = str(exc)
+                retryable = "502" in error or "503" in error or "504" in error or "timeout" in error.lower()
+                if attempt + 1 < attempts and retryable:
+                    continue
+        if last_exc is not None:
             output = output_schema.model_validate(fallback)
     else:
         output = output_schema.model_validate(fallback)

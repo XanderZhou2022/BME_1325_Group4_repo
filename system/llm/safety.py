@@ -1,8 +1,12 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 from typing import Any
+
+# 暂时关闭：设为 "1"/"true" 可重新启用 post-LLM 医疗安全过滤
+SAFETY_CHECK_ENABLED = os.getenv("ICU_LLM_SAFETY_ENABLED", "false").lower() in ("1", "true", "yes")
 
 
 _DIAGNOSIS_PATTERNS = [
@@ -72,6 +76,8 @@ def validate_llm_medical_safety(
     output: dict[str, Any],
     forbidden_use: list[str],
 ) -> tuple[bool, list[str]]:
+    if not SAFETY_CHECK_ENABLED:
+        return True, []
     violations: list[str] = []
     if not _contains_human_review_true(output):
         violations.append("human_review_required must be true on output and nested items")

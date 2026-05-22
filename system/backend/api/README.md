@@ -5,7 +5,7 @@
 - Success payloads under `/api/v1/` are wrapped as `{ ok, data, error, trace_id }` (see `app/middleware/contract_envelope.py`).
 - Transfer intake: `POST /api/v1/encounters/{encounter_id}/transfer` (receiver must use `to_group=groupC.icu`).
 - Admissions: `POST /api/v1/admissions` requires contract-shaped IDs (`P-…`, `E-…`, …); optional `patient_profile` upserts the patient row.
-- Env: `HOSPITAL_REDIS_*`, `HOSPITAL_LLM_GATEWAY_URL`, `HOSPITAL_LLM_API_KEY` (see `app/config.py` and `docs/CONTRACT_v1_COMPLIANCE.md`).
+- Env: `HOSPITAL_REDIS_*`（可选）；LLM 见 `api调用测试/.env`（`DASHSCOPE_*`）+ `ICU_LLM_ENABLED`（见 `docs/CONTRACT_v1_COMPLIANCE.md`）。
 
 ---
 

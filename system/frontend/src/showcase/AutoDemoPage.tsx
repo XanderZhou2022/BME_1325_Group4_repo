@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { api } from "../api";
 import type { JsonObj } from "../types";
+import { buildFixedBedSlots } from "./autoDemoBeds";
+import { buildLlmTraceRows } from "./autoDemoLlmTrace";
 import { buildStepNarrativeLines, resolveCurrentEventBedId } from "./autoDemoNarrative";
 import { inferPipelineStatuses } from "./autoDemoPipeline";
+import { bedIdsInStepEvents, buildStepEventItems } from "./autoDemoStepEvents";
 import { reactionEvidence, reactionSummary, timelineOneLine } from "./autoDemoReactionHelpers";
 import type { AdmissionBoardRow, DemoNextFull, UiMode, WardPriorityQueueItem } from "./autoDemoTypes";
 import { loadUiMode, saveUiMode } from "./autoDemoTypes";
@@ -161,16 +164,21 @@ export default function AutoDemoPage() {
     });
   }, [lastStep]);
 
-  const sortedBoard = useMemo(() => {
-    return [...boardRows].sort((a, b) => {
-      const d = careSortKey(a.care_phase) - careSortKey(b.care_phase);
-      if (d !== 0) return d;
-      if (b.risk_count !== a.risk_count) return b.risk_count - a.risk_count;
-      return String(b.updated_at ?? "").localeCompare(String(a.updated_at ?? ""));
-    });
-  }, [boardRows]);
+  const fixedBedSlots = useMemo(() => buildFixedBedSlots(boardRows), [boardRows]);
 
   const activeAdmissions = useMemo(() => admissions.filter((a) => a.status === "active"), [admissions]);
+
+  const stepEventItems = useMemo(
+    () => buildStepEventItems(lastStep as JsonObj | null, admissions),
+    [lastStep, admissions]
+  );
+
+  const stepHighlightBeds = useMemo(() => bedIdsInStepEvents(stepEventItems), [stepEventItems]);
+
+  const llmTraceRows = useMemo(
+    () => buildLlmTraceRows(lastStep?.agent_workflow_trace),
+    [lastStep?.agent_workflow_trace]
+  );
 
   const agentOps = useMemo(() => (lastStep?.triggered_agents ?? []) as JsonObj[], [lastStep]);
 
@@ -413,13 +421,23 @@ export default function AutoDemoPage() {
 
       {error && <div className="scError">{error}</div>}
 
+      {!loading && (state?.active_admissions ?? 0) === 0 && (
+        <div className="adStepWaitBanner" role="status">
+          <strong>病区暂无在院演示患者</strong>
+          <p>
+            点击 <strong>Next Step</strong> 会自动收治；若步数增加但面板仍为空，请先点{" "}
+            <strong>Reset Hospital</strong> 再逐步推进。
+          </p>
+        </div>
+      )}
+
       {loading && (
         <div className="adStepWaitBanner" role="status" aria-live="polite">
           <strong>处理中… 已等待 {workingSeconds}s</strong>
           <p>
             每一步是<strong>批量</strong>：每位在院患者会顺序跑一条临床事件链；链上的{" "}
             <code>patient_memory</code>、<code>risk_sentinel</code>、<code>clinical_summary</code>、
-            <code>ward_coordinator</code> 等会对教学网关做<strong>同步 HTTP</strong>（大模型单次常数秒到数十秒）。整步在一个数据库事务里完成，
+            <code>ward_coordinator</code> 等会对阿里云百炼 DashScope 做<strong>同步 HTTP</strong>（大模型单次常数秒到数十秒）。整步在一个数据库事务里完成，
             浏览器在收到本接口响应前<strong>无法</strong>显示每个 Agent 的实时进度（不是前端卡死）。完成后可在 Debug 面板查看各子链{" "}
             <code>duration_ms</code> / <code>total_chain_ms</code>。
           </p>
@@ -445,50 +463,146 @@ export default function AutoDemoPage() {
         </div>
       </section>
 
-      <section className="scGrid2">
-        <div className="scPanel">
-          <h2>Hospital Situation</h2>
-          {sortedBoard.length === 0 && <div>No active patients in hospital.</div>}
-          <div className="patientGrid">
-            {sortedBoard.map((a) => (
-              <button
-                key={a.admission_id}
-                type="button"
-                className={`patientCard ${getSeverityClass(a.care_phase ?? a.severity_on_admission)} ${
-                  selectedAdmissionId === a.admission_id ? "selected" : ""
-                } ${currentEventAdmissionId === a.admission_id ? "patientCardEventStep" : ""}`}
-                onClick={() => setSelectedAdmissionId(a.admission_id)}
-              >
-                <div className="patientCardTop">
-                  <strong>{a.bed_id}</strong>
-                  <span>{a.care_phase ?? a.severity_on_admission ?? "—"}</span>
-                </div>
-                {currentEventAdmissionId === a.admission_id && <div className="adStepBadge">This step</div>}
-                <div>Patient: {a.patient_id}</div>
-                <div>Admission: {a.admission_id}</div>
-                <div className="patientCardSub">{a.primary_diagnosis ?? "N/A"}</div>
-                <div className="patientCardMeta">
-                  Risks: {a.risk_count} · Updated: {a.updated_at ? a.updated_at.slice(0, 19) : "—"}
-                </div>
-              </button>
-            ))}
+      <section className="adMainSplit">
+        <div className="scPanel adBedPanel">
+          <h2>病区床位（固定 5 床）</h2>
+          <p className="adMuted">灰色为空床；点击在院患者查看详情。高亮边框表示本步有事件。</p>
+          <div className="adBedGridFixed">
+            {fixedBedSlots.map((slot) => {
+              if (!slot.occupied || !slot.row) {
+                return (
+                  <div
+                    key={slot.bed_id}
+                    className={`bedCard empty ${stepHighlightBeds.has(slot.bed_id) ? "stepHighlight" : ""}`}
+                  >
+                    <div className="bedCardTop">
+                      <span className="bedCardLabel">{slot.bed_id}</span>
+                      <span>空床</span>
+                    </div>
+                    <div className="bedCardEmptyText">暂无患者</div>
+                  </div>
+                );
+              }
+              const a = slot.row;
+              return (
+                <button
+                  key={slot.bed_id}
+                  type="button"
+                  className={`bedCard occupied patientCard ${getSeverityClass(a.care_phase ?? a.severity_on_admission)} ${
+                    selectedAdmissionId === a.admission_id ? "selected" : ""
+                  } ${stepHighlightBeds.has(slot.bed_id) ? "stepHighlight" : ""}`}
+                  onClick={() => setSelectedAdmissionId(a.admission_id)}
+                >
+                  <div className="bedCardTop">
+                    <span className="bedCardLabel">{slot.bed_id}</span>
+                    <span>{a.care_phase ?? a.severity_on_admission ?? "—"}</span>
+                  </div>
+                  {currentEventAdmissionId === a.admission_id && <div className="adStepBadge">本步锚点</div>}
+                  <div>患者：{a.patient_id}</div>
+                  <div>入院：{a.admission_id}</div>
+                  <div className="patientCardSub">{a.primary_diagnosis ?? "—"}</div>
+                  <div className="patientCardMeta">
+                    风险数 {a.risk_count} · 更新 {a.updated_at ? a.updated_at.slice(0, 19) : "—"}
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        <div className="scPanel adCurrentEventPanel">
-          <h2>Current Step</h2>
+        <div className="scPanel adStepFeedPanel adCurrentEventPanel">
+          <h2>
+            本步事件 {state?.step_index != null ? `(Step #${state.step_index})` : ""}
+          </h2>
+          {!lastStep && <p className="adMuted">点击 Next Step 后，此处会列出本步全部子事件（收治/出院/体征/检验/干预）。</p>}
+          {lastStep && stepEventItems.length === 0 && <p className="adMuted">本步无子事件记录。</p>}
+          <div className="adStepEventList">
+            {stepEventItems.map((ev) => (
+              <div
+                key={`${ev.index}-${ev.type}-${ev.admission_id}`}
+                className={`adStepEventCard ${ev.tone}`}
+                role="button"
+                tabIndex={0}
+                onClick={() => ev.admission_id && setSelectedAdmissionId(ev.admission_id)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && ev.admission_id) setSelectedAdmissionId(ev.admission_id);
+                }}
+              >
+                <div className="adStepEventHead">
+                  <span className="adStepEventIdx">#{ev.index}</span>
+                  <span className="adStepEventTitle">{ev.title}</span>
+                  <span className="adStepEventMeta">
+                    床 <code>{ev.bed_id}</code> · 入院 <code>{ev.admission_id.slice(0, 18)}</code>
+                  </span>
+                </div>
+                <ul className="adStepEventDetails">
+                  {ev.details.map((line, li) => (
+                    <li key={li}>{line}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          <div className="adLlmSection">
+            <h3>LLM 调用（本步）</h3>
+            <p className="adMuted">
+              逐步对照：患者 / 床位 / Agent / 成功或 fallback / 返回摘要。完整 JSON 见 Debug 模式。
+            </p>
+            {(lastStep?.agent_delta_summary as JsonObj)?.llm_used_by != null && (
+              <div className="adBanner adBannerInfo" style={{ marginBottom: 8 }}>
+                本步 LLM 成功标记：{JSON.stringify((lastStep?.agent_delta_summary as JsonObj).llm_used_by)} · fallback：{" "}
+                {JSON.stringify((lastStep?.agent_delta_summary as JsonObj).fallback_used_by ?? [])}
+              </div>
+            )}
+            {llmTraceRows.length === 0 && <p className="adMuted">本步尚无 agent_workflow_trace（或未跑 Agent）。</p>}
+            {llmTraceRows.map((row, i) => (
+              <div
+                key={`${row.agent_name}-${row.admission_id}-${i}`}
+                className={`adLlmCard ${row.status}`}
+                role="button"
+                tabIndex={0}
+                onClick={() => {
+                  if (row.admission_id && row.admission_id !== "—" && !row.admission_id.startsWith("（")) {
+                    setSelectedAdmissionId(row.admission_id);
+                  }
+                }}
+              >
+                <div className="adLlmCardHead">
+                  <strong>{row.agent_name}</strong>
+                  <span
+                    className={`adLlmBadge ${row.status === "success" ? "ok" : row.status === "fallback" ? "fail" : "skip"}`}
+                  >
+                    {row.status_label}
+                  </span>
+                  <span>
+                    床 <code>{row.bed_id}</code>
+                  </span>
+                  <span>
+                    患者 <code>{row.patient_id}</code>
+                  </span>
+                </div>
+                <div className="scKeyValue">
+                  <span>audit_log_id</span>
+                  <strong>{row.audit_log_id}</strong>
+                </div>
+                <pre className="adLlmPreview">{row.response_preview}</pre>
+              </div>
+            ))}
+          </div>
+
           <div className="adBanner adBannerInfo">
-            <strong>Current event affects:</strong> Bed <code>{currentEventBedId || "—"}</code> / Admission{" "}
-            <code>{currentEventAdmissionId || "—"}</code>
+            <strong>本步锚点入院：</strong> <code>{currentEventAdmissionId || "—"}</code> / 床{" "}
+            <code>{currentEventBedId || "—"}</code>
           </div>
           {mismatchSelectedVsEvent && (
             <div className="adBanner adBannerWarn">
-              Selected patient differs from the admission in this step — left column is long-term detail for the
-              selected bed; this panel describes the latest simulation step.
+              左侧选中床位与锚点入院不一致；右侧为本步全部事件与 LLM 记录。
             </div>
           )}
+
           <div className="adNarrativeCard">
-            <h3>What happened</h3>
+            <h3>摘要</h3>
             <ul className="adNarrativeList">
               {narrativeLines.map((line, i) => (
                 <li key={i}>{line}</li>
@@ -578,7 +692,7 @@ export default function AutoDemoPage() {
           <div className="adBanner adBannerInfo">
             <strong>Selected:</strong> Bed <code>{selectedBedId || "—"}</code> / Admission <code>{selectedAdmissionId || "—"}</code>
           </div>
-          {!selectedAdmissionId && <div>Select a patient card or a queue row.</div>}
+          {!selectedAdmissionId && <div>点击左侧在院床位或右侧事件/LLM 行查看详情。</div>}
           {selectedAdmissionId && (
             <>
               <div className="scKeyValue">

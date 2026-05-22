@@ -8,7 +8,6 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError, ResponseValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.config import get_settings
 from app.middleware.contract_envelope import ContractEnvelopeMiddleware, envelope_error, new_trace_id
 
 # Allow importing core agent modules from `local/system/agents`.
@@ -16,6 +15,12 @@ from app.middleware.contract_envelope import ContractEnvelopeMiddleware, envelop
 SYSTEM_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../"))
 if SYSTEM_ROOT not in sys.path:
     sys.path.append(SYSTEM_ROOT)
+
+from llm.dashscope_config import load_api_test_env  # noqa: E402
+
+load_api_test_env()
+
+from app.config import get_settings  # noqa: E402
 
 from app.routers import router  # noqa: E402
 from app.orchestrator.scheduler import scheduler_loop  # noqa: E402

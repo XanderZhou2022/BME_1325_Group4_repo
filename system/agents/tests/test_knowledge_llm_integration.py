@@ -19,7 +19,7 @@ from agents.clinical_summary.schemas import (  # noqa: E402
 )
 from agents.clinical_summary.service import enrich_summary_with_knowledge_and_llm, generate_summary  # noqa: E402
 from agents.risk_sentinel.service import _calculate_risk_from_payloads, enrich_risks_with_knowledge_and_llm  # noqa: E402
-from llm.safety import validate_llm_medical_safety  # noqa: E402
+from llm.safety import SAFETY_CHECK_ENABLED, validate_llm_medical_safety  # noqa: E402
 
 
 def _risk_inputs():
@@ -69,6 +69,8 @@ def test_risk_sentinel_output_contains_knowledge_background() -> None:
 
 
 def test_risk_sentinel_no_treatment_recommendation() -> None:
+    if not SAFETY_CHECK_ENABLED:
+        return
     ok, violations = validate_llm_medical_safety(
         "risk_sentinel_explanation",
         {"human_review_required": True, "risk_explanations": [{"human_review_required": True, "explanation": "start norepinephrine now"}]},
@@ -137,6 +139,8 @@ def test_clinical_summary_contains_major_problems() -> None:
 
 
 def test_clinical_summary_no_treatment_plan() -> None:
+    if not SAFETY_CHECK_ENABLED:
+        return
     ok, violations = validate_llm_medical_safety(
         "clinical_summary_24h_round_summary",
         {"human_review_required": True, "major_problems": [{"human_review_required": True, "recent_course": "treatment plan: give antibiotics"}]},

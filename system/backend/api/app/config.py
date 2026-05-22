@@ -2,9 +2,32 @@ from __future__ import annotations
 
 from functools import lru_cache
 import os
+from pathlib import Path
 
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+DASHSCOPE_BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+DEFAULT_DASHSCOPE_MODEL = "qwen3.7-max"
+_GENAI_MARKERS = ("genaiapi.shanghaitech", "genaiapi", "/api/v1/start")
+
+
+def _repo_root() -> Path:
+    return Path(__file__).resolve().parents[4]
+
+
+def _load_api_test_env() -> None:
+    from dotenv import load_dotenv
+
+    api_env = _repo_root() / "api调用测试" / ".env"
+    if api_env.is_file():
+        load_dotenv(api_env, override=False)
+
+
+def _is_genai_url(url: str | None) -> bool:
+    if not url:
+        return False
+    return any(m in url for m in _GENAI_MARKERS)
 
 
 class Settings(BaseSettings):
@@ -18,18 +41,17 @@ class Settings(BaseSettings):
     port: int = 8000
     group_producer: str = "groupC.icu"
 
-    # BME1325 contract — Redis (also read unprefixed env per §4.1)
     hospital_redis_host: str | None = None
     hospital_redis_port: int = 6379
     hospital_redis_db: int = 0
     hospital_redis_password: str | None = None
 
-    # LLM: prefer teaching-gateway vars §7; ICU_* overrides for local dev
+    # LLM：阿里云百炼 DashScope（与 api调用测试/api使用.py 一致）
     llm_enabled: bool = False
-    llm_base_url: str = "https://api.openai.com/v1"
+    llm_base_url: str = DASHSCOPE_BASE_URL
     llm_api_key: str = ""
-    llm_model: str = "gpt-4o-mini"
-    llm_timeout_seconds: float = 12.0
+    llm_model: str = DEFAULT_DASHSCOPE_MODEL
+    llm_timeout_seconds: float = 60.0
     llm_max_retries: int = 2
 
     hospital_llm_gateway_url: str | None = None
@@ -38,19 +60,19 @@ class Settings(BaseSettings):
     scheduler_enabled: bool = True
     scheduler_interval_seconds: int = 60
 
-    def effective_llm_base_url(self) -> str:
-        return (self.hospital_llm_gateway_url or self.llm_base_url).rstrip("/")
-
-    def effective_llm_api_key(self) -> str:
-        return self.hospital_llm_api_key or self.llm_api_key
-
     @property
     def hospital_bus_enabled(self) -> bool:
         return bool(self.hospital_redis_host)
 
+    def effective_llm_base_url(self) -> str:
+        return self.llm_base_url.rstrip("/")
+
+    def effective_llm_api_key(self) -> str:
+        return self.llm_api_key
+
     @model_validator(mode="after")
     def _fallback_unprefixed_contract_env(self) -> Settings:
-        """§4 / §7: teaching env vars use HOSPITAL_* without ICU_ prefix."""
+        """§4: Redis 仍可读 HOSPITAL_REDIS_*；LLM 仅使用 api调用测试/.env 的 DashScope。"""
         if self.hospital_redis_host is None and os.getenv("HOSPITAL_REDIS_HOST"):
             object.__setattr__(self, "hospital_redis_host", os.getenv("HOSPITAL_REDIS_HOST"))
         if os.getenv("HOSPITAL_REDIS_PORT"):
@@ -58,10 +80,31 @@ class Settings(BaseSettings):
         pw = os.getenv("HOSPITAL_REDIS_PASSWORD")
         if pw is not None:
             object.__setattr__(self, "hospital_redis_password", pw)
-        if self.hospital_llm_gateway_url is None and os.getenv("HOSPITAL_LLM_GATEWAY_URL"):
-            object.__setattr__(self, "hospital_llm_gateway_url", os.getenv("HOSPITAL_LLM_GATEWAY_URL"))
-        if self.hospital_llm_api_key is None and os.getenv("HOSPITAL_LLM_API_KEY"):
-            object.__setattr__(self, "hospital_llm_api_key", os.getenv("HOSPITAL_LLM_API_KEY"))
+        return self._apply_dashscope_from_api_test_env()
+
+    def _apply_dashscope_from_api_test_env(self) -> Settings:
+        _load_api_test_env()
+        dash_key = os.getenv("DASHSCOPE_API_KEY", "").strip()
+        dash_model = (os.getenv("DASHSCOPE_MODEL") or DEFAULT_DASHSCOPE_MODEL).strip()
+        dash_base = (os.getenv("DASHSCOPE_BASE_URL") or DASHSCOPE_BASE_URL).strip()
+
+        object.__setattr__(self, "hospital_llm_gateway_url", None)
+        object.__setattr__(self, "hospital_llm_api_key", None)
+
+        if _is_genai_url(self.llm_base_url):
+            object.__setattr__(self, "llm_base_url", dash_base)
+
+        legacy_models = {"gpt-4o-mini", "GPT-5.2", "GPT-5", "gpt-4o"}
+        if self.llm_model in legacy_models:
+            object.__setattr__(self, "llm_model", dash_model)
+
+        if not os.getenv("ICU_LLM_API_KEY") and dash_key:
+            object.__setattr__(self, "llm_api_key", dash_key)
+        if not os.getenv("ICU_LLM_BASE_URL"):
+            object.__setattr__(self, "llm_base_url", dash_base)
+        if not os.getenv("ICU_LLM_MODEL"):
+            object.__setattr__(self, "llm_model", dash_model)
+
         return self
 
 

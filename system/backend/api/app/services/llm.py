@@ -7,8 +7,19 @@ from typing import Any
 import httpx
 
 from app.config import get_settings
+from llm.dashscope_config import chat_completions_url, dashscope_model, load_api_test_env
 
 logger = logging.getLogger(__name__)
+
+load_api_test_env()
+
+
+def _resolve_model(model: str) -> str:
+    m = (model or "").strip()
+    if m.startswith("qwen") or m.startswith("gpt-") or m.startswith("deepseek-"):
+        return m
+    logger.warning("LLM model %s not recognized; using %s", model, dashscope_model())
+    return dashscope_model()
 
 
 class LLMClient:
@@ -30,12 +41,7 @@ class LLMClient:
         if not self.enabled:
             return fallback
 
-        allowed_models = {"gpt-4o", "gpt-4o-mini", "qwen-max", "qwen-vl-max", "deepseek-chat"}
-        model = self.settings.llm_model
-        if model not in allowed_models:
-            logger.warning("LLM model %s not on hospital whitelist; using gpt-4o-mini", model)
-            model = "gpt-4o-mini"
-
+        model = _resolve_model(self.settings.llm_model)
         payload = {
             "model": model,
             "temperature": temperature,
@@ -45,7 +51,7 @@ class LLMClient:
                 {"role": "user", "content": user_prompt},
             ],
         }
-        base = self.settings.effective_llm_base_url()
+        url = chat_completions_url(self.settings.effective_llm_base_url())
         key = self.settings.effective_llm_api_key()
         headers = {
             "Authorization": f"Bearer {key}",
@@ -55,13 +61,9 @@ class LLMClient:
         for attempt in range(self.settings.llm_max_retries + 1):
             try:
                 with httpx.Client(timeout=self.settings.llm_timeout_seconds) as client:
-                    resp = client.post(
-                        f"{base}/v1/chat/completions",
-                        json=payload,
-                        headers=headers,
-                    )
+                    resp = client.post(url, json=payload, headers=headers)
                 if resp.status_code == 429:
-                    logger.warning("LLM gateway rate limited")
+                    logger.warning("LLM rate limited")
                     last_error = RuntimeError("LLM_RATE_LIMITED")
                     continue
                 resp.raise_for_status()
