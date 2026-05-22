@@ -83,13 +83,14 @@ def trigger_mdt_consultation(
         raise _simi_http_exception(exc) from exc
 
     admission = bundle["admission"]
-    output_id = save_mdt_agent_output(
-        conn,
-        admission_id=admission_id,
-        patient_id=str(admission["patient_id"]),
-        bed_id=str(admission.get("bed_id") or bundle.get("patient_state_current", {}).get("bed_id") or ""),
-        bridge_response=bridge,
-    )
+    with conn.transaction():
+        output_id = save_mdt_agent_output(
+            conn,
+            admission_id=admission_id,
+            patient_id=str(admission["patient_id"]),
+            bed_id=str(admission.get("bed_id") or bundle.get("patient_state_current", {}).get("bed_id") or ""),
+            bridge_response=bridge,
+        )
     return _bridge_to_result(bridge, output_id, simi_health_ok=simi_ok)
 
 

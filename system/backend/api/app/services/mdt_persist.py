@@ -50,5 +50,4 @@ def save_mdt_agent_output(
             """,
             (event_id, admission_id, patient_id, bed_id, now, output_id, Json({"output_id": output_id, "consultation_id": bridge_response.get("consultation_id")})),
         )
-    conn.commit()
     return output_id
