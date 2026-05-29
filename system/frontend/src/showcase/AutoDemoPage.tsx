@@ -835,7 +835,7 @@ export default function AutoDemoPage() {
           )}
           {mdtError && <div className="adBanner adBannerWarn">{mdtError}</div>}
           {mdtResult && (
-            <CollapsibleRaw title="MDT consultation result" defaultOpen>
+            <CollapsibleRaw title="MDT consultation result" defaultOpen={!presentation}>
               <div className="scKeyValue">
                 <span>Status</span>
                 <strong>{String((mdtResult.mdt_judgment as JsonObj)?.status_level ?? "—")}</strong>
@@ -854,7 +854,7 @@ export default function AutoDemoPage() {
                   ))}
                 </ul>
               )}
-              <pre className="adSmallPre">{JSON.stringify(mdtResult, null, 2)}</pre>
+              {!presentation && <pre className="adSmallPre">{JSON.stringify(mdtResult, null, 2)}</pre>}
             </CollapsibleRaw>
           )}
           {!selectedAdmissionId && <div>点击左侧在院床位或右侧事件/LLM 行查看详情。</div>}

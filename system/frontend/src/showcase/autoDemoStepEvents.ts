@@ -71,6 +71,40 @@ function formatDispatch(dr: JsonObj | undefined): string[] {
   return lines;
 }
 
+function pickBridge(sub: JsonObj): JsonObj {
+  const bridge = sub.bridge;
+  return bridge && typeof bridge === "object" ? (bridge as JsonObj) : {};
+}
+
+function formatMdtFulfilled(sub: JsonObj): string[] {
+  const bridge = pickBridge(sub);
+  const judgment = (bridge.mdt_judgment && typeof bridge.mdt_judgment === "object" ? bridge.mdt_judgment : {}) as JsonObj;
+  const updates = Array.isArray(bridge.required_updates) ? bridge.required_updates : [];
+  const lines = [
+    `请求 ID：${String(sub.request_id ?? "—")}`,
+    `触发 Agent：${String(sub.requested_by_agent ?? "—")}`,
+    `会诊 ID：${String(sub.consultation_id ?? bridge.consultation_id ?? "—")}`,
+    `状态：${String(judgment.status_level ?? bridge.mdt_output_type ?? sub.mdt_output_type ?? "已完成")}`,
+  ];
+  if (judgment.surgery_ready != null) lines.push(`手术准备：${String(judgment.surgery_ready)}`);
+  if (bridge.case_summary) lines.push(`摘要：${String(bridge.case_summary).slice(0, 160)}`);
+  if (updates.length > 0) {
+    lines.push(`需更新事项：${updates.length} 项`);
+    for (const item of updates.slice(0, 3)) {
+      const u = item && typeof item === "object" ? (item as JsonObj) : {};
+      lines.push(`  · ${String(u.description ?? u.type ?? JSON.stringify(item)).slice(0, 120)}`);
+    }
+  }
+  return lines;
+}
+
+function formatMdtFailed(sub: JsonObj): string[] {
+  return [
+    `请求 ID：${String(sub.request_id ?? "—")}`,
+    `MDT 会诊失败：${String(sub.error ?? "未知错误")}`,
+  ];
+}
+
 export function buildStepEventItems(
   lastStep: JsonObj | null | undefined,
   admissions: { admission_id: string; patient_id: string; bed_id: string }[]
@@ -187,6 +221,50 @@ export function buildStepEventItems(
         patient_id: ids.patient_id,
         title: "治疗干预",
         details: [...formatIntervention(req), ...formatDispatch(dr)],
+        tone: "clinical",
+      };
+    }
+
+    if (type === "agent_request_mdt_fulfilled") {
+      return {
+        index: index + 1,
+        type,
+        admission_id,
+        bed_id: ids.bed_id,
+        patient_id: ids.patient_id,
+        title: "MDT 会诊请求已完成",
+        details: formatMdtFulfilled(sub),
+        tone: "clinical",
+      };
+    }
+
+    if (type === "agent_request_mdt_failed") {
+      return {
+        index: index + 1,
+        type,
+        admission_id,
+        bed_id: ids.bed_id,
+        patient_id: ids.patient_id,
+        title: "MDT 会诊请求失败",
+        details: formatMdtFailed(sub),
+        tone: "clinical",
+      };
+    }
+
+    if (type === "agent_request_lab_fulfilled") {
+      return {
+        index: index + 1,
+        type,
+        admission_id,
+        bed_id: ids.bed_id,
+        patient_id: ids.patient_id,
+        title: "Agent 请求检验已完成",
+        details: [
+          `请求 ID：${String(sub.request_id ?? "—")}`,
+          `触发 Agent：${String(sub.requested_by_agent ?? "—")}`,
+          `检验项目：${String(sub.lab_type ?? "—")}`,
+          ...formatDispatch(sub.dispatch_result as JsonObj | undefined),
+        ],
         tone: "clinical",
       };
     }
