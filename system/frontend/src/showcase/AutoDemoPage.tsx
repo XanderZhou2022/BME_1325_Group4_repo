@@ -469,8 +469,8 @@ export default function AutoDemoPage() {
     <div className="scPage">
       <header className="scTopBar">
         <div>
-          <h1>Auto ICU Demo</h1>
-          <p>ICU multi-agent demo dashboard — presentation vs debug</p>
+          <h1>ICU Auto Demo Dashboard</h1>
+          <p>一屏看清当前病区、正在发生的事件、患者风险与 Agent 响应</p>
         </div>
         <div className="scTopActions">
           <label className="adModeToggle">
@@ -480,7 +480,6 @@ export default function AutoDemoPage() {
               <option value="debug">Debug</option>
             </select>
           </label>
-          <a href="/">Back to Console</a>
           <button type="button" onClick={() => void resetDemo()} disabled={loading}>
             {loading ? "Working..." : "Reset Hospital"}
           </button>
@@ -504,14 +503,14 @@ export default function AutoDemoPage() {
 
       <div className="adStepStatusBar adLiveProgress" role="status" aria-live="polite">
         <strong>{statusBarTitle}</strong>
-        <div className="adLiveFeed">
+        {(loading || !presentation) && <div className="adLiveFeed">
           {loading && progressLines.length === 0 ? (
             <p className="adMuted">正在连接进度流…</p>
           ) : progressLines.length === 0 ? (
-            <p className="adMuted">本步详细进度将在点击 Next Step 后显示于此。</p>
+            <p className="adMuted">点击 Next Step 后显示本步执行进度。</p>
           ) : (
             <ul className="adLiveFeedList">
-              {progressLines.map((ev, i) => (
+              {(presentation ? progressLines.slice(-6) : progressLines).map((ev, i) => (
                 <li key={`${ev.ts ?? ""}-${ev.type}-${i}`} className={`adLiveLine adLive-${progressKind(ev)}`}>
                   {formatProgressLine(ev)}
                 </li>
@@ -519,32 +518,32 @@ export default function AutoDemoPage() {
               <li ref={progressEndRef} />
             </ul>
           )}
-        </div>
+        </div>}
       </div>
 
       <section className="scMetrics">
         <div className="scMetricCard">
-          <div className="scMetricTitle">Sim Time</div>
+          <div className="scMetricTitle">仿真时间</div>
           <div className="scMetricValue">{state?.sim_time ?? "N/A"}</div>
         </div>
         <div className="scMetricCard">
-          <div className="scMetricTitle">Step Index</div>
+          <div className="scMetricTitle">当前步骤</div>
           <div className="scMetricValue">{state?.step_index ?? 0}</div>
         </div>
         <div className="scMetricCard">
-          <div className="scMetricTitle">Active Admissions</div>
+          <div className="scMetricTitle">在院患者</div>
           <div className="scMetricValue">{state?.active_admissions ?? 0}</div>
         </div>
         <div className="scMetricCard">
-          <div className="scMetricTitle">Occupied Beds</div>
+          <div className="scMetricTitle">占用床位</div>
           <div className="scMetricValue">{state?.occupied_beds ?? 0}</div>
         </div>
       </section>
 
       <section className="adMainSplit">
         <div className="scPanel adBedPanel">
-          <h2>病区床位（固定 5 床）</h2>
-          <p className="adMuted">灰色为空床；点击在院患者查看详情。高亮边框表示本步有事件。</p>
+          <h2>病区床位</h2>
+          <p className="adMuted">点击床位查看患者。高亮表示本步事件涉及该床。</p>
           <div className="adBedGridFixed">
             {fixedBedSlots.map((slot) => {
               if (!slot.occupied || !slot.row) {
@@ -621,6 +620,14 @@ export default function AutoDemoPage() {
               </span>
             )}
           </div>
+          <div className="adNarrativeCard adNarrativeHero">
+            <h3>本步摘要</h3>
+            <ul className="adNarrativeList">
+              {narrativeLines.length === 0 ? <li>等待下一步事件。</li> : narrativeLines.map((line, i) => (
+                <li key={i}>{line}</li>
+              ))}
+            </ul>
+          </div>
           {!displayedStep && <p className="adMuted">点击 Next Step 后，此处会列出本步全部子事件（收治/出院/体征/检验/干预）。</p>}
           {displayedStep && stepEventItems.length === 0 && <p className="adMuted">本步无子事件记录。</p>}
           <div className="adStepEventList">
@@ -651,7 +658,7 @@ export default function AutoDemoPage() {
             ))}
           </div>
 
-          <div className="adLlmSection">
+          {!presentation && <div className="adLlmSection">
             <h3>LLM 调用（本步）</h3>
             <p className="adMuted">
               逐步对照：患者 / 床位 / Agent / 成功或 fallback / 返回摘要。完整 JSON 见 Debug 模式。
@@ -696,26 +703,17 @@ export default function AutoDemoPage() {
                 <pre className="adLlmPreview">{row.response_preview}</pre>
               </div>
             ))}
-          </div>
+          </div>}
 
-          <div className="adBanner adBannerInfo">
+          {!presentation && <div className="adBanner adBannerInfo">
             <strong>本步锚点入院：</strong> <code>{currentEventAdmissionId || "—"}</code> / 床{" "}
             <code>{currentEventBedId || "—"}</code>
-          </div>
-          {mismatchSelectedVsEvent && (
+          </div>}
+          {!presentation && mismatchSelectedVsEvent && (
             <div className="adBanner adBannerWarn">
               左侧选中床位与锚点入院不一致；右侧为本步全部事件与 LLM 记录。
             </div>
           )}
-
-          <div className="adNarrativeCard">
-            <h3>摘要</h3>
-            <ul className="adNarrativeList">
-              {narrativeLines.map((line, i) => (
-                <li key={i}>{line}</li>
-              ))}
-            </ul>
-          </div>
 
           <div className="adPipeline">
             <h3>Agent pipeline</h3>
@@ -735,7 +733,7 @@ export default function AutoDemoPage() {
           )}
 
           <div className="adWardQueuePanel">
-            <h3>Ward coordinator queue</h3>
+            <h3>病区优先队列</h3>
             {wardQueueSource === "fallback" && (
               <p className="adMuted">Fallback ordering (no ward_coordinator snapshot in DB for this refresh).</p>
             )}
@@ -772,7 +770,7 @@ export default function AutoDemoPage() {
                 ))}
               </tbody>
             </table>
-            {wardQueue.map((q, qi) => (
+            {!presentation && wardQueue.map((q, qi) => (
               <CollapsibleRaw key={`ex-${q.admission_id}-${qi}`} title={`Factors: ${q.bed_id}`}>
                 <pre className="adSmallPre">{JSON.stringify(q.reason ?? q, null, 2)}</pre>
               </CollapsibleRaw>
@@ -793,9 +791,9 @@ export default function AutoDemoPage() {
         </div>
       </section>
 
-      <section className="scGrid2">
+      <section className={`scGrid2 ${presentation ? "adPatientOnlyGrid" : ""}`}>
         <div className="scPanel">
-          <h2>Selected patient detail</h2>
+          <h2>选中患者</h2>
           <div className="adBanner adBannerInfo">
             <strong>Selected:</strong> Bed <code>{selectedBedId || "—"}</code> / Admission <code>{selectedAdmissionId || "—"}</code>
           </div>
@@ -870,9 +868,16 @@ export default function AutoDemoPage() {
                 <span>Active risks (state)</span>
                 <strong>{Array.isArray(selectedPatientState?.active_risks) ? selectedPatientState?.active_risks.length : 0}</strong>
               </div>
+              <div className="scKeyValue">
+                <span>Latest vitals</span>
+                <strong>
+                  HR {fmtCell(selectedVitals[0]?.heart_rate)} · MAP {fmtCell(selectedVitals[0]?.mean_arterial_pressure)} · SpO₂{" "}
+                  {fmtCell(selectedVitals[0]?.spo2)}
+                </strong>
+              </div>
               <div className="scDivider" />
 
-              <h3>Recent vitals</h3>
+              <h3>近期生命体征</h3>
               {selectedVitals.length === 0 ? (
                 <p className="adMuted">No vital rows yet.</p>
               ) : (
@@ -891,7 +896,7 @@ export default function AutoDemoPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {selectedVitals.slice(0, 20).map((v) => (
+                      {selectedVitals.slice(0, presentation ? 6 : 20).map((v) => (
                         <tr key={String(v.id ?? v.timestamp)}>
                           <td>{fmtCell(v.timestamp)}</td>
                           <td>{fmtCell(v.heart_rate)}</td>
@@ -908,12 +913,12 @@ export default function AutoDemoPage() {
                 </div>
               )}
 
-              <h3>Recent interventions</h3>
+              <h3>近期干预</h3>
               {selectedInterventions.length === 0 ? (
                 <p className="adMuted">No interventions yet.</p>
               ) : (
                 <ul className="adList">
-                  {selectedInterventions.slice(0, 10).map((x) => (
+                  {selectedInterventions.slice(0, presentation ? 5 : 10).map((x) => (
                     <li key={String(x.event_id ?? x.detail_id)}>
                       <strong>{String(x.timestamp ?? "").slice(0, 19)}</strong> — {String(x.intervention_type)}: {String(x.description ?? "").slice(0, 120)}
                     </li>
@@ -921,24 +926,24 @@ export default function AutoDemoPage() {
                 </ul>
               )}
 
-              <AgentOutputBlock
+              {!presentation && <AgentOutputBlock
                 title="Latest bedside monitor output"
                 rows={selectedBedside}
                 presentation={presentation}
                 emptyHint="No bedside_monitor output yet."
-              />
-              <AgentOutputBlock
+              />}
+              {!presentation && <AgentOutputBlock
                 title="Latest intervention tracker output"
                 rows={selectedTrackerOutputs}
                 presentation={presentation}
                 emptyHint="No intervention_tracker output yet (needs intervention + follow-up data)."
-              />
-              <AgentOutputBlock
+              />}
+              {!presentation && <AgentOutputBlock
                 title="Latest patient memory output"
                 rows={selectedMemory}
                 presentation={presentation}
                 emptyHint="No patient_memory output yet."
-              />
+              />}
               <div className="adAgentBlock">
                 <h4>Latest risk sentinel</h4>
                 {selectedRisks.length === 0 ? (
@@ -983,7 +988,7 @@ export default function AutoDemoPage() {
           )}
         </div>
 
-        <div className="scPanel">
+        {!presentation && <div className="scPanel">
           <h2>Timeline</h2>
           <p className="adMuted">Latest simulation steps. Expand a row for raw JSON.</p>
           <div className="adTimelineList">
@@ -1010,10 +1015,10 @@ export default function AutoDemoPage() {
               </div>
             ))}
           </div>
-        </div>
+        </div>}
       </section>
 
-      <section className="scPanel">
+      {!presentation && <section className="scPanel">
         <h2>Agent reactions (this step)</h2>
         <div className="scTopActions" style={{ marginBottom: 10 }}>
           <span>Filter agent:</span>
@@ -1056,7 +1061,7 @@ export default function AutoDemoPage() {
             )}
           </div>
         ))}
-      </section>
+      </section>}
 
       {presentation && lastStep && (
         <section className="scPanel adHintFooter">
