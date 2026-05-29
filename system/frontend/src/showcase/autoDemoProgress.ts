@@ -27,6 +27,10 @@ export function formatProgressLine(ev: DemoProgressEvent): string {
       const st = ev.status === "error" ? "失败" : "完成";
       return `${prefix}Agent「${String(ev.agent_name)}」${st}，耗时 ${ev.duration_ms}ms`;
     }
+    case "agent_requests_start":
+      return `${prefix}检查 Agent 待办：入院 ${String(ev.admission_id ?? "—")} / 床 ${String(ev.bed_id ?? "—")}`;
+    case "agent_request_fulfilled":
+      return `${prefix}Agent 待办已执行：${String(ev.request ?? ev.request_type ?? "—")}；理由：${String(ev.reason ?? "—")}；来源：${String(ev.requested_by_agent ?? "—")}`;
     case "knowledge_start":
       return `${prefix}「${String(ev.agent_name)}」检索知识库（领域：${String(ev.domains ?? "—")}）…`;
     case "knowledge_done":

@@ -50,10 +50,11 @@ def build_icu_native_bundle(
     reason: str = "ICU manual MDT consultation",
     use_api: bool = False,
     questions_for_mdt: list[str] | None = None,
+    action_request_context: dict[str, Any] | None = None,
     labs_limit: int = 20,
     interventions_limit: int = 20,
     risks_limit: int = 10,
-    agent_names: tuple[str, ...] = ("clinical_summary", "patient_memory"),
+    agent_names: tuple[str, ...] = ("clinical_summary", "risk_sentinel", "patient_memory", "intervention_tracker", "bedside_monitor"),
 ) -> dict[str, Any]:
     """Aggregate ICU DB rows into simi_hospital icu-native payload."""
     conn.row_factory = dict_row
@@ -177,6 +178,23 @@ def build_icu_native_bundle(
                     }
                 )
 
+    knowledge_cards: dict[str, dict[str, Any]] = {}
+    for output in agent_outputs:
+        payload = output.get("payload") if isinstance(output, dict) else {}
+        if not isinstance(payload, dict):
+            continue
+        for key in ("knowledge_context", "knowledge_background"):
+            values = payload.get(key) or []
+            if isinstance(values, list):
+                for card in values:
+                    if isinstance(card, dict) and card.get("card_id"):
+                        knowledge_cards[str(card["card_id"])] = card
+        for risk in payload.get("active_risks") or payload.get("risks") or []:
+            if isinstance(risk, dict):
+                for card in risk.get("knowledge_background") or []:
+                    if isinstance(card, dict) and card.get("card_id"):
+                        knowledge_cards[str(card["card_id"])] = card
+
     bundle: dict[str, Any] = {
         "admission": _row_to_dict(admission),
         "patient": _row_to_dict(patient),
@@ -195,9 +213,18 @@ def build_icu_native_bundle(
         "alerts": [_row_to_dict(r) for r in alerts],
         "risk_assessments": [_row_to_dict(r) for r in risk_assessments],
         "agent_outputs": [_jsonable(o) for o in agent_outputs],
+        "knowledge_context": {
+            "used": bool(knowledge_cards),
+            "card_ids": list(knowledge_cards)[:20],
+            "domains": list(dict.fromkeys(str(c.get("domain")) for c in knowledge_cards.values() if c.get("domain"))),
+            "cards": [_jsonable(c) for c in list(knowledge_cards.values())[:20]],
+            "safety_notice": "Knowledge cards provide review-only context and must not be treated as automatic orders.",
+        },
         "reason": reason,
         "use_api": use_api,
     }
+    if action_request_context:
+        bundle["action_request_context"] = _jsonable(action_request_context)
     if questions_for_mdt:
         bundle["questions_for_mdt"] = questions_for_mdt
     return bundle

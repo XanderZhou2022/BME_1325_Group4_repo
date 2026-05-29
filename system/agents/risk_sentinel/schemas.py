@@ -54,6 +54,6 @@ class RiskSentinelEvaluateResponse(BaseModel):
     generated_at: datetime
     overall_review_reminder: str = "Risk Sentinel outputs are decision-support signals only and require clinician review."
     llm_used: bool = False
-    fallback_used: bool = True
+    fallback_used: bool = False
     audit_log_id: str | None = None
     human_review_required: bool = True

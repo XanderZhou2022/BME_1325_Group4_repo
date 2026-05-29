@@ -10,6 +10,7 @@ from psycopg.rows import dict_row
 from psycopg.types.json import Json
 
 from app.services.agent_action_requests import (
+    build_knowledge_guided_review_steps,
     derive_requests_from_clinical_summary,
     register_agent_action_requests,
 )
@@ -252,6 +253,7 @@ def enrich_summary_with_knowledge_and_llm(
     summary.active_risks = llm_output.get("active_risks", risk_types)
     summary.watch_items = llm_output.get("watch_items", [])
     summary.review_reminders = llm_output.get("review_reminders", [])
+    summary.clinician_review_next_steps = build_knowledge_guided_review_steps(cards)
     summary.forbidden_use_reminder = llm_output.get("forbidden_use_reminder", SUMMARY_FORBIDDEN_REMINDER)
     summary.knowledge_context = cards
     summary.llm_used = llm_result.llm_used
@@ -390,6 +392,7 @@ def evaluate_clinical_summary(conn: Connection, admission_id: str, summary_type:
         "active_risks": summary.active_risks,
         "watch_items": summary.watch_items,
         "review_reminders": summary.review_reminders,
+        "clinician_review_next_steps": summary.clinician_review_next_steps,
         "forbidden_use_reminder": summary.forbidden_use_reminder,
         "knowledge_context": summary.knowledge_context,
         "llm_used": summary.llm_used,

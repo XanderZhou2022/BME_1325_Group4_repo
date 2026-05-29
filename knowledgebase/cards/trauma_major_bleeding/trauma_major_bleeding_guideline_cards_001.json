@@ -1,0 +1,329 @@
+[
+  {
+    "card_id": "trauma_hemorrhagic_shock_001",
+    "source_id": "european_trauma_bleeding_2023_001",
+    "source_title": "The European Guideline on Management of Major Bleeding and Coagulopathy Following Trauma: Sixth Edition",
+    "domain": "trauma_major_bleeding",
+    "subdomain": "hemorrhagic_shock",
+    "population": "adult",
+    "card_type": "risk_background",
+    "topic": "Hemorrhagic shock context requires bleeding source and perfusion trend",
+    "clinical_context": "Use when trauma, active bleeding, hypotension, tachycardia, falling hemoglobin, rising lactate, or transfusion activation appears.",
+    "key_points": [
+      "Major bleeding summaries should organize bleeding source, perfusion, hemoglobin trend, lactate/base deficit, and transfusion context.",
+      "Hemorrhagic shock should be flagged for clinician review, not automatically diagnosed.",
+      "Use this card when persistent shock may be bleeding-related or mixed."
+    ],
+    "trigger_signals": [
+      "major trauma",
+      "active bleeding",
+      "persistent hypotension",
+      "tachycardia",
+      "falling hemoglobin",
+      "rising lactate",
+      "massive transfusion activation"
+    ],
+    "related_risk_types": [
+      "hemorrhagic_shock_risk",
+      "trauma_bleeding_risk",
+      "persistent_shock_risk",
+      "coagulopathy_risk",
+      "aki_risk"
+    ],
+    "used_by_agents": [
+      "BedsideMonitorAgent",
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "risk explanation",
+      "clinical summary",
+      "human review escalation wording",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "automatic diagnosis",
+      "transfusion order",
+      "surgical decision",
+      "procedure recommendation",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "trauma bleeding",
+      "hemorrhagic shock",
+      "falling hemoglobin",
+      "lactate",
+      "massive transfusion"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Guideline scope",
+      "quote": "management of major bleeding and coagulopathy"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "trauma_massive_transfusion_context_002",
+    "source_id": "european_trauma_bleeding_2023_001",
+    "source_title": "The European Guideline on Management of Major Bleeding and Coagulopathy Following Trauma: Sixth Edition",
+    "domain": "trauma_major_bleeding",
+    "subdomain": "transfusion_context",
+    "population": "adult",
+    "card_type": "escalation_principle",
+    "topic": "Massive transfusion activation is high-priority review context",
+    "clinical_context": "Use when massive transfusion protocol, rapid blood product use, ongoing bleeding, or shock despite transfusion appears.",
+    "key_points": [
+      "Massive bleeding protocols require coordinated clinical and laboratory review.",
+      "Clinical Summary can flag ongoing transfusion needs and response trajectory.",
+      "Do not recommend product ratios, thresholds, or transfusion orders."
+    ],
+    "trigger_signals": [
+      "massive transfusion protocol",
+      "rapid transfusion",
+      "ongoing bleeding",
+      "shock despite transfusion",
+      "coagulopathy",
+      "low fibrinogen"
+    ],
+    "related_risk_types": [
+      "trauma_bleeding_risk",
+      "hemorrhagic_shock_risk",
+      "coagulopathy_risk",
+      "persistent_shock_risk"
+    ],
+    "used_by_agents": [
+      "RiskSentinelAgent",
+      "InterventionTrackerAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "human review escalation wording",
+      "intervention_response_context",
+      "clinical summary",
+      "priority_rationale"
+    ],
+    "forbidden_use": [
+      "blood product order",
+      "transfusion ratio recommendation",
+      "surgical decision",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "massive transfusion",
+      "major bleeding",
+      "trauma coagulopathy",
+      "fibrinogen",
+      "ongoing hemorrhage"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Initial resuscitation and transfusion",
+      "quote": "major bleeding and coagulopathy following trauma"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "trauma_coagulopathy_monitoring_003",
+    "source_id": "european_trauma_bleeding_2023_001",
+    "source_title": "The European Guideline on Management of Major Bleeding and Coagulopathy Following Trauma: Sixth Edition",
+    "domain": "trauma_major_bleeding",
+    "subdomain": "coagulopathy",
+    "population": "adult",
+    "card_type": "guideline_context",
+    "topic": "Coagulopathy trend should remain visible in bleeding summaries",
+    "clinical_context": "Use when INR/PT, platelet count, fibrinogen, viscoelastic testing, temperature, calcium, acidosis, or anticoagulant exposure is abnormal.",
+    "key_points": [
+      "Trauma-related coagulopathy should be summarized with bleeding and resuscitation context.",
+      "Clinical Summary can flag worsening coagulation parameters as watch items.",
+      "Do not recommend factor, fibrinogen, platelet, or reversal therapy."
+    ],
+    "trigger_signals": [
+      "coagulopathy",
+      "elevated INR",
+      "low platelets",
+      "low fibrinogen",
+      "acidosis",
+      "hypothermia",
+      "anticoagulant exposure"
+    ],
+    "related_risk_types": [
+      "coagulopathy_risk",
+      "trauma_bleeding_risk",
+      "hemorrhagic_shock_risk",
+      "severe_electrolyte_risk"
+    ],
+    "used_by_agents": [
+      "RiskSentinelAgent",
+      "InterventionTrackerAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "clinical summary",
+      "risk explanation",
+      "intervention_response_context",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "blood product order",
+      "reversal agent order",
+      "drug dose recommendation",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "trauma coagulopathy",
+      "INR",
+      "platelets",
+      "fibrinogen",
+      "hypothermia",
+      "acidosis"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Coagulation monitoring and support",
+      "quote": "coagulopathy following trauma"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "trauma_source_control_review_004",
+    "source_id": "european_trauma_bleeding_2023_001",
+    "source_title": "The European Guideline on Management of Major Bleeding and Coagulopathy Following Trauma: Sixth Edition",
+    "domain": "trauma_major_bleeding",
+    "subdomain": "bleeding_control",
+    "population": "adult",
+    "card_type": "icu_operations_context",
+    "topic": "Bleeding source control is an unresolved issue when shock persists",
+    "clinical_context": "Use when bleeding source is unknown, imaging/procedure is pending, or shock continues despite resuscitation.",
+    "key_points": [
+      "Major bleeding summaries should preserve whether the bleeding source is controlled, suspected, or unresolved.",
+      "Clinical Summary can list source-control uncertainty as an unresolved problem.",
+      "Do not recommend a surgical, interventional radiology, or procedural action."
+    ],
+    "trigger_signals": [
+      "uncontrolled bleeding",
+      "unknown bleeding source",
+      "procedure pending",
+      "continued transfusion requirement",
+      "shock persists"
+    ],
+    "related_risk_types": [
+      "trauma_bleeding_risk",
+      "hemorrhagic_shock_risk",
+      "persistent_shock_risk",
+      "coagulopathy_risk"
+    ],
+    "used_by_agents": [
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent",
+      "RiskSentinelAgent"
+    ],
+    "allowed_use": [
+      "clinical summary",
+      "unresolved_issue_tracking",
+      "watch_item_generation",
+      "human review escalation wording"
+    ],
+    "forbidden_use": [
+      "procedure recommendation",
+      "surgical decision",
+      "interventional radiology decision",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "bleeding source control",
+      "uncontrolled hemorrhage",
+      "trauma",
+      "source control",
+      "persistent shock"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Bleeding control",
+      "quote": "control of bleeding"
+    },
+    "confidence": "medium",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "bleeding_response_tracking_005",
+    "source_id": "european_trauma_bleeding_2023_001",
+    "source_title": "The European Guideline on Management of Major Bleeding and Coagulopathy Following Trauma: Sixth Edition",
+    "domain": "trauma_major_bleeding",
+    "subdomain": "intervention_response",
+    "population": "adult",
+    "card_type": "guideline_context",
+    "topic": "Bleeding response summaries should track perfusion, hemoglobin, and product use",
+    "clinical_context": "Use after transfusion, procedure, hemostatic intervention, or resuscitation when shock markers or hemoglobin change.",
+    "key_points": [
+      "Intervention summaries should describe whether perfusion and bleeding markers improved, worsened, or remain uncertain.",
+      "Clinical Summary can link response to hemoglobin, lactate, vasopressor need, and transfusion trajectory.",
+      "Do not recommend additional transfusion or hemostatic therapy."
+    ],
+    "trigger_signals": [
+      "post transfusion response",
+      "hemoglobin trend",
+      "lactate trend",
+      "vasopressor after bleeding",
+      "ongoing product requirement",
+      "non_responsive"
+    ],
+    "related_risk_types": [
+      "hemorrhagic_shock_risk",
+      "trauma_bleeding_risk",
+      "persistent_shock_risk",
+      "coagulopathy_risk"
+    ],
+    "used_by_agents": [
+      "InterventionTrackerAgent",
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent"
+    ],
+    "allowed_use": [
+      "intervention_response_context",
+      "non_response_explanation",
+      "clinical summary",
+      "risk explanation"
+    ],
+    "forbidden_use": [
+      "transfusion order",
+      "hemostatic drug order",
+      "procedure recommendation",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "bleeding response",
+      "transfusion response",
+      "hemoglobin trend",
+      "lactate trend",
+      "hemorrhagic shock"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Resuscitation endpoints",
+      "quote": "major bleeding"
+    },
+    "confidence": "medium",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  }
+]

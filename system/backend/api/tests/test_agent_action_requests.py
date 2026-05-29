@@ -28,6 +28,9 @@ class AgentActionDeriveTest(unittest.TestCase):
         types = {s["request_type"] for s in specs}
         self.assertIn("mdt_consultation", types)
         self.assertIn("lab", types)
+        for spec in specs:
+            self.assertTrue(spec["payload"].get("request"))
+            self.assertTrue(spec["payload"].get("reason"))
 
     def test_risk_escalation_requests_mdt(self) -> None:
         resp = SimpleNamespace(
@@ -40,6 +43,9 @@ class AgentActionDeriveTest(unittest.TestCase):
         types = {s["request_type"] for s in specs}
         self.assertIn("mdt_consultation", types)
         self.assertIn("lab", types)
+        for spec in specs:
+            self.assertTrue(spec["payload"].get("request"))
+            self.assertTrue(spec["payload"].get("reason"))
 
 
 if __name__ == "__main__":

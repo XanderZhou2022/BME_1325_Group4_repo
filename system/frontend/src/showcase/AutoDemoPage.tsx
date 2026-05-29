@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { api } from "../api";
 import type { JsonObj } from "../types";
 import { buildFixedBedSlots } from "./autoDemoBeds";
+import { DEMO_MAX_BEDS, DEMO_MIN_ACTIVE_PATIENTS } from "./autoDemoConstants";
 import { buildLlmTraceRows } from "./autoDemoLlmTrace";
 import { buildStepNarrativeLines, resolveCurrentEventBedId } from "./autoDemoNarrative";
 import { inferPipelineStatuses } from "./autoDemoPipeline";
@@ -144,6 +145,11 @@ export default function AutoDemoPage() {
   const [mdtLoading, setMdtLoading] = useState(false);
   const [mdtError, setMdtError] = useState("");
   const [mdtResult, setMdtResult] = useState<JsonObj | null>(null);
+  const [familyDraftLoading, setFamilyDraftLoading] = useState(false);
+  const [familyDraftError, setFamilyDraftError] = useState("");
+  const [familyDraft, setFamilyDraft] = useState<JsonObj | null>(null);
+  const [patientActionLoading, setPatientActionLoading] = useState(false);
+  const [patientActionError, setPatientActionError] = useState("");
 
   const presentation = uiMode === "presentation";
 
@@ -216,6 +222,10 @@ export default function AutoDemoPage() {
   const fixedBedSlots = useMemo(() => buildFixedBedSlots(boardRows), [boardRows]);
 
   const activeAdmissions = useMemo(() => admissions.filter((a) => a.status === "active"), [admissions]);
+  const selectedIsActive = useMemo(
+    () => activeAdmissions.some((a) => a.admission_id === selectedAdmissionId),
+    [activeAdmissions, selectedAdmissionId]
+  );
 
   const stepEventItems = useMemo(
     () => buildStepEventItems(displayedStep as JsonObj | null, admissions),
@@ -230,6 +240,12 @@ export default function AutoDemoPage() {
   );
 
   const agentOps = useMemo(() => (displayedStep?.triggered_agents ?? []) as JsonObj[], [displayedStep]);
+
+  const wardNarrative = useMemo(() => {
+    const trace = displayedStep?.agent_workflow_trace ?? [];
+    const ward = trace.find((t) => String(t.agent_name ?? "") === "ward_coordinator");
+    return (ward?.judgment as JsonObj | undefined) ?? null;
+  }, [displayedStep?.agent_workflow_trace]);
 
   const filteredAgentOps = useMemo(() => {
     if (!selectedAgent) return agentOps;
@@ -375,6 +391,8 @@ export default function AutoDemoPage() {
       setSelectedRisks([]);
       setSelectedClinicalEvents([]);
       setSelectedTrackerEvents([]);
+      setFamilyDraft(null);
+      setFamilyDraftError("");
       return;
     }
     const [
@@ -413,12 +431,32 @@ export default function AutoDemoPage() {
     setSelectedRisks((risks as JsonObj[]) ?? []);
     setSelectedClinicalEvents((csEvents as JsonObj[]) ?? []);
     setSelectedTrackerEvents((itEvents as JsonObj[]) ?? []);
+    setFamilyDraft(null);
+    setFamilyDraftError("");
+  }
+
+  async function generateFamilyDraft() {
+    if (!selectedAdmissionId) return;
+    setFamilyDraftLoading(true);
+    setFamilyDraftError("");
+    try {
+      const res = await api.generateFamilyDraft(selectedAdmissionId);
+      setFamilyDraft(res);
+      const drafts = await api.getAgentOutputs(selectedAdmissionId, "compassion_family_communication", 5).catch(() => []);
+      if (drafts.length > 0) setSelectedAgent("compassion_family_communication");
+    } catch (e) {
+      setFamilyDraft(null);
+      setFamilyDraftError(e instanceof Error ? e.message : "生成家属沟通稿失败");
+    } finally {
+      setFamilyDraftLoading(false);
+    }
   }
 
   async function resetDemo() {
     setLoading(true);
     setWorkingSeconds(0);
     setError("");
+    setPatientActionError("");
     try {
       await api.demoAutoReset();
       setLastStep(null);
@@ -438,6 +476,7 @@ export default function AutoDemoPage() {
     setProgressLines([]);
     setPlannedSimAfter(null);
     setError("");
+    setPatientActionError("");
     try {
       const out = (await api.demoAutoNextStream((ev) => {
         const row = ev as DemoProgressEvent;
@@ -454,6 +493,37 @@ export default function AutoDemoPage() {
       setError(e instanceof Error ? e.message : "next step failed");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function addRandomPatient() {
+    setPatientActionLoading(true);
+    setPatientActionError("");
+    try {
+      const res = await api.demoAutoAddPatient();
+      const admission = (res.admission ?? {}) as JsonObj;
+      const admissionId = String(admission.admission_id ?? "");
+      await refreshAll(lastStep);
+      if (admissionId) setSelectedAdmissionId(admissionId);
+    } catch (e) {
+      setPatientActionError(e instanceof Error ? e.message : "add patient failed");
+    } finally {
+      setPatientActionLoading(false);
+    }
+  }
+
+  async function removeSelectedPatient() {
+    if (!selectedAdmissionId) return;
+    setPatientActionLoading(true);
+    setPatientActionError("");
+    try {
+      await api.demoAutoDischargePatient(selectedAdmissionId);
+      setSelectedAdmissionId("");
+      await refreshAll(lastStep);
+    } catch (e) {
+      setPatientActionError(e instanceof Error ? e.message : "remove patient failed");
+    } finally {
+      setPatientActionLoading(false);
     }
   }
 
@@ -483,6 +553,14 @@ export default function AutoDemoPage() {
           <button type="button" onClick={() => void resetDemo()} disabled={loading}>
             {loading ? "Working..." : "Reset Hospital"}
           </button>
+          <button
+            type="button"
+            onClick={() => void addRandomPatient()}
+            disabled={loading || patientActionLoading || (state?.active_admissions ?? 0) >= DEMO_MAX_BEDS}
+            title={(state?.active_admissions ?? 0) >= DEMO_MAX_BEDS ? "ICU 床位已满" : "随机新增一位演示患者"}
+          >
+            {patientActionLoading ? "Working..." : "Add Patient"}
+          </button>
           <button type="button" onClick={() => void nextStep()} disabled={loading}>
             {loading ? "Working..." : "Next Step (+5min)"}
           </button>
@@ -490,6 +568,7 @@ export default function AutoDemoPage() {
       </header>
 
       {error && <div className="scError">{error}</div>}
+      {patientActionError && <div className="scError">{patientActionError}</div>}
 
       {!loading && (state?.active_admissions ?? 0) === 0 && (
         <div className="adStepWaitBanner" role="status">
@@ -631,10 +710,12 @@ export default function AutoDemoPage() {
           {!displayedStep && <p className="adMuted">点击 Next Step 后，此处会列出本步全部子事件（收治/出院/体征/检验/干预）。</p>}
           {displayedStep && stepEventItems.length === 0 && <p className="adMuted">本步无子事件记录。</p>}
           <div className="adStepEventList">
-            {stepEventItems.map((ev) => (
+            {stepEventItems.map((ev) => {
+              const isAgentRequest = ev.type.startsWith("agent_request_");
+              return (
               <div
                 key={`${ev.index}-${ev.type}-${ev.admission_id}`}
-                className={`adStepEventCard ${ev.tone}`}
+                className={`adStepEventCard ${ev.tone} ${isAgentRequest ? "agentRequest" : ""}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => ev.admission_id && setSelectedAdmissionId(ev.admission_id)}
@@ -651,11 +732,23 @@ export default function AutoDemoPage() {
                 </div>
                 <ul className="adStepEventDetails">
                   {ev.details.map((line, li) => (
-                    <li key={li}>{line}</li>
+                    <li
+                      key={li}
+                      className={
+                        line.startsWith("请求：")
+                          ? "requestLine"
+                          : line.startsWith("理由：")
+                          ? "reasonLine"
+                          : ""
+                      }
+                    >
+                      {line}
+                    </li>
                   ))}
                 </ul>
               </div>
-            ))}
+            );
+            })}
           </div>
 
           {!presentation && <div className="adLlmSection">
@@ -737,6 +830,30 @@ export default function AutoDemoPage() {
             {wardQueueSource === "fallback" && (
               <p className="adMuted">Fallback ordering (no ward_coordinator snapshot in DB for this refresh).</p>
             )}
+            {wardNarrative && (
+              <div className="adNarrativeCard">
+                <h3>Ward coordinator 总结</h3>
+                {wardNarrative.ward_overview && <p>{String(wardNarrative.ward_overview)}</p>}
+                {wardNarrative.priority_reasoning && <p>{String(wardNarrative.priority_reasoning)}</p>}
+                {Array.isArray(wardNarrative.references_used) && wardNarrative.references_used.length > 0 && (
+                  <p className="adMuted">参考：{(wardNarrative.references_used as unknown[]).slice(0, 5).map(String).join("；")}</p>
+                )}
+                {Array.isArray(wardNarrative.next_step_plan) && wardNarrative.next_step_plan.length > 0 && (
+                  <ul className="adList">
+                    {(wardNarrative.next_step_plan as unknown[]).slice(0, 5).map((x, i) => (
+                      <li key={`plan-${i}`}>{String(x)}</li>
+                    ))}
+                  </ul>
+                )}
+                {Array.isArray(wardNarrative.focus_points) && wardNarrative.focus_points.length > 0 && (
+                  <ul className="adList">
+                    {(wardNarrative.focus_points as unknown[]).slice(0, 5).map((x, i) => (
+                      <li key={`focus-${i}`}>{String(x)}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
             {wardQueue.length === 0 && <p className="adMuted">No active patients to rank.</p>}
             <table className="scTable adQueueTable">
               <thead>
@@ -748,6 +865,7 @@ export default function AutoDemoPage() {
                   <th>Score</th>
                   <th>Level</th>
                   <th>Next attention</th>
+                  <th>排序理由</th>
                 </tr>
               </thead>
               <tbody>
@@ -766,6 +884,16 @@ export default function AutoDemoPage() {
                     <td>{fmtCell(q.priority_score)}</td>
                     <td>{fmtCell(q.priority_level)}</td>
                     <td>{fmtCell(q.suggested_attention ?? q.summary_hint)}</td>
+                    <td>
+                      <div className="adQueueReasonCell">
+                        {(Array.isArray(q.reason) ? q.reason : []).slice(0, 3).map((reason, i) => (
+                          <span className="adQueueReasonPill" key={`${q.admission_id}-reason-${i}`}>
+                            {String(reason)}
+                          </span>
+                        ))}
+                        {q.rationale && <span className="adQueueReasonText">{String(q.rationale).slice(0, 180)}</span>}
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -831,9 +959,61 @@ export default function AutoDemoPage() {
               >
                 {mdtLoading ? "MDT 会诊中…" : "申请 MDT 会诊"}
               </button>
+              <button
+                type="button"
+                className="scBtn"
+                disabled={!selectedAdmissionId || familyDraftLoading || loading}
+                title={selectedAdmissionId ? "生成中文家属沟通草稿，需医生审核后使用" : "请先选择患者"}
+                onClick={() => void generateFamilyDraft()}
+              >
+                {familyDraftLoading ? "生成中…" : "生成家属沟通稿"}
+              </button>
+              <button
+                type="button"
+                className="scBtn scBtnDanger"
+                disabled={
+                  !selectedAdmissionId ||
+                  !selectedIsActive ||
+                  loading ||
+                  patientActionLoading ||
+                  (state?.active_admissions ?? 0) <= DEMO_MIN_ACTIVE_PATIENTS
+                }
+                title={
+                  (state?.active_admissions ?? 0) <= DEMO_MIN_ACTIVE_PATIENTS
+                    ? `至少保留 ${DEMO_MIN_ACTIVE_PATIENTS} 位 ICU 患者`
+                    : "手动将选中患者移出 ICU"
+                }
+                onClick={() => void removeSelectedPatient()}
+              >
+                {patientActionLoading ? "移出中…" : "Remove Patient"}
+              </button>
             </div>
           )}
           {mdtError && <div className="adBanner adBannerWarn">{mdtError}</div>}
+          {familyDraftError && <div className="adBanner adBannerWarn">{familyDraftError}</div>}
+          {familyDraft && (
+            <div className="adAgentBlock">
+              <h4>家属沟通稿（需医生审核）</h4>
+              <div className="adBanner adBannerInfo">
+                这是一份给医生审核后再向家属沟通的中文草稿，不应直接发送或作为治疗承诺。
+              </div>
+              <p>{String(familyDraft.family_plain_language_draft ?? "")}</p>
+              {familyDraft.icu_diary_draft && (
+                <>
+                  <h4>ICU 日记草稿</h4>
+                  <p>{String(familyDraft.icu_diary_draft)}</p>
+                </>
+              )}
+              {Array.isArray(familyDraft.communication_cautions) && familyDraft.communication_cautions.length > 0 && (
+                <ul className="adList">
+                  {(familyDraft.communication_cautions as unknown[]).slice(0, 5).map((x, i) => (
+                    <li key={i}>{String(x)}</li>
+                  ))}
+                </ul>
+              )}
+              {!presentation && <pre className="adSmallPre">{JSON.stringify(familyDraft, null, 2)}</pre>}
+            </div>
+          )}
           {mdtResult && (
             <CollapsibleRaw title="MDT consultation result" defaultOpen={!presentation}>
               <div className="scKeyValue">

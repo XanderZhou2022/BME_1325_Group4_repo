@@ -62,6 +62,11 @@ class WardCoordinatorEvaluateResponse(BaseModel):
     alert_storm_summary: dict[str, int]
     debug_scoring: list[dict[str, Any]] = []
     ward_id: str = "icu_01"
+    ward_overview: str = ""
+    priority_reasoning: str = ""
+    references_used: list[str] = []
+    next_step_plan: list[str] = []
+    focus_points: list[str] = []
     global_watch_items: list[str] = []
     review_reminders: list[str] = []
     forbidden_use_reminder: list[str] = []

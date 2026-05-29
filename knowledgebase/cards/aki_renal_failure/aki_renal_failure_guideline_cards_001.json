@@ -1,0 +1,387 @@
+[
+  {
+    "card_id": "aki_definition_creatinine_001",
+    "source_id": "kdigo_aki_2012_001",
+    "source_title": "KDIGO Clinical Practice Guideline for Acute Kidney Injury",
+    "domain": "aki_renal_failure",
+    "subdomain": "definition",
+    "population": "adult",
+    "card_type": "guideline_context",
+    "topic": "Creatinine change as AKI context",
+    "clinical_context": "Use when creatinine rises from baseline or is repeatedly abnormal in structured laboratory data.",
+    "key_points": [
+      "KDIGO defines AKI using serum creatinine and urine output criteria.",
+      "Clinical Summary can describe creatinine trend as renal-risk context, not as an automatic diagnosis.",
+      "Baseline uncertainty should be carried forward as a review issue."
+    ],
+    "trigger_signals": [
+      "rising creatinine",
+      "creatinine increase",
+      "renal dysfunction",
+      "AKI risk",
+      "baseline creatinine unknown"
+    ],
+    "related_risk_types": [
+      "aki_risk",
+      "renal_replacement_risk",
+      "sepsis_risk",
+      "persistent_shock_risk"
+    ],
+    "used_by_agents": [
+      "BedsideMonitorAgent",
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "risk explanation",
+      "clinical summary",
+      "human review escalation wording",
+      "summary_context",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "automatic diagnosis",
+      "renal replacement decision",
+      "drug dose recommendation",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "AKI",
+      "creatinine",
+      "KDIGO",
+      "renal dysfunction",
+      "baseline creatinine"
+    ],
+    "evidence_location": {
+      "page_start": 19,
+      "page_end": 19,
+      "section_title": "Definition and staging of AKI",
+      "quote": "increase in SCr by >=0.3 mg/dl"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "aki_definition_urine_output_002",
+    "source_id": "kdigo_aki_2012_001",
+    "source_title": "KDIGO Clinical Practice Guideline for Acute Kidney Injury",
+    "domain": "aki_renal_failure",
+    "subdomain": "urine_output",
+    "population": "adult",
+    "card_type": "risk_background",
+    "topic": "Low urine output as AKI risk context",
+    "clinical_context": "Use when urine output is reduced, absent, or worsening over an observation window.",
+    "key_points": [
+      "KDIGO includes urine output criteria in AKI definition and staging.",
+      "Clinical Summary can surface low urine output as a renal perfusion and kidney-risk review signal.",
+      "Use repeated measurements and time window context when available."
+    ],
+    "trigger_signals": [
+      "decreased urine output",
+      "oliguria",
+      "anuria",
+      "low urine output",
+      "fluid balance concern"
+    ],
+    "related_risk_types": [
+      "aki_risk",
+      "renal_replacement_risk",
+      "persistent_shock_risk",
+      "sepsis_risk"
+    ],
+    "used_by_agents": [
+      "BedsideMonitorAgent",
+      "RiskSentinelAgent",
+      "InterventionTrackerAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "risk explanation",
+      "trend_explanation",
+      "intervention_response_context",
+      "clinical summary",
+      "human review escalation wording"
+    ],
+    "forbidden_use": [
+      "automatic diagnosis",
+      "fluid prescription",
+      "diuretic recommendation",
+      "renal replacement decision",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "urine output",
+      "oliguria",
+      "anuria",
+      "AKI",
+      "fluid balance"
+    ],
+    "evidence_location": {
+      "page_start": 19,
+      "page_end": 19,
+      "section_title": "Definition and staging of AKI",
+      "quote": "urine volume <0.5 ml/kg/h for 6 hours"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "aki_stage_context_003",
+    "source_id": "kdigo_aki_2012_001",
+    "source_title": "KDIGO Clinical Practice Guideline for Acute Kidney Injury",
+    "domain": "aki_renal_failure",
+    "subdomain": "staging_context",
+    "population": "adult",
+    "card_type": "scoring_context",
+    "topic": "AKI staging requires creatinine and urine-output context",
+    "clinical_context": "Use when structured data suggests worsening renal stage or severe kidney dysfunction.",
+    "key_points": [
+      "KDIGO staging uses creatinine increase and urine output duration/severity.",
+      "Clinical Summary may mention apparent stage context only if input data supports it.",
+      "If baseline or weight is unknown, state uncertainty rather than overclassifying."
+    ],
+    "trigger_signals": [
+      "AKI stage",
+      "creatinine doubled",
+      "severe oliguria",
+      "anuria",
+      "renal deterioration"
+    ],
+    "related_risk_types": [
+      "aki_risk",
+      "renal_replacement_risk"
+    ],
+    "used_by_agents": [
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "score explanation",
+      "clinical summary",
+      "risk explanation",
+      "watch_item_generation",
+      "human review escalation wording"
+    ],
+    "forbidden_use": [
+      "automatic diagnosis",
+      "renal replacement decision",
+      "drug dose recommendation",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "KDIGO stage",
+      "AKI staging",
+      "creatinine doubled",
+      "oliguria",
+      "renal deterioration"
+    ],
+    "evidence_location": {
+      "page_start": 19,
+      "page_end": 19,
+      "section_title": "Table 2: Staging of AKI",
+      "quote": "Staging of AKI"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "aki_nephrotoxin_review_004",
+    "source_id": "kdigo_aki_2012_001",
+    "source_title": "KDIGO Clinical Practice Guideline for Acute Kidney Injury",
+    "domain": "aki_renal_failure",
+    "subdomain": "medication_safety",
+    "population": "adult",
+    "card_type": "medication_safety_context",
+    "topic": "Medication review is important in AKI risk context",
+    "clinical_context": "Use when AKI risk coexists with nephrotoxin exposure, renally cleared medication, or recent contrast exposure.",
+    "key_points": [
+      "AKI context should prompt careful medication and exposure review by clinicians.",
+      "Clinical Summary can flag renal medication-safety review without recommending dose changes.",
+      "Coordinate with existing medication safety cards when available."
+    ],
+    "trigger_signals": [
+      "renally cleared medication",
+      "nephrotoxin exposure",
+      "contrast exposure",
+      "rising creatinine",
+      "renal dosing concern"
+    ],
+    "related_risk_types": [
+      "aki_risk",
+      "renal_replacement_risk"
+    ],
+    "used_by_agents": [
+      "RiskSentinelAgent",
+      "InterventionTrackerAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent"
+    ],
+    "allowed_use": [
+      "medication_safety_context",
+      "clinical summary",
+      "human review escalation wording",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "drug dose recommendation",
+      "medication order",
+      "automatic treatment decision",
+      "automatic diagnosis"
+    ],
+    "retrieval_keywords": [
+      "nephrotoxin",
+      "renal dosing",
+      "AKI medication safety",
+      "contrast",
+      "renally cleared"
+    ],
+    "evidence_location": {
+      "page_start": 26,
+      "page_end": 26,
+      "section_title": "Prevention and treatment of AKI",
+      "quote": "Discontinue all nephrotoxic agents when possible"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "aki_risk_monitoring_005",
+    "source_id": "kdigo_aki_2012_001",
+    "source_title": "KDIGO Clinical Practice Guideline for Acute Kidney Injury",
+    "domain": "aki_renal_failure",
+    "subdomain": "monitoring",
+    "population": "adult",
+    "card_type": "guideline_context",
+    "topic": "AKI risk monitoring depends on exposure and susceptibility",
+    "clinical_context": "Use when shock, sepsis, nephrotoxin exposure, or major physiologic instability increases AKI risk.",
+    "key_points": [
+      "KDIGO frames AKI risk around susceptibility and exposures.",
+      "Clinical Summary can combine shock, sepsis, and renal trends into a watch item.",
+      "This is context for review, not an automated monitoring protocol."
+    ],
+    "trigger_signals": [
+      "shock",
+      "sepsis",
+      "major surgery",
+      "nephrotoxin exposure",
+      "rising creatinine",
+      "decreased urine output"
+    ],
+    "related_risk_types": [
+      "aki_risk",
+      "sepsis_risk",
+      "persistent_shock_risk",
+      "renal_replacement_risk"
+    ],
+    "used_by_agents": [
+      "BedsideMonitorAgent",
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "risk explanation",
+      "clinical summary",
+      "watch_item_generation",
+      "human review escalation wording"
+    ],
+    "forbidden_use": [
+      "automatic diagnosis",
+      "automatic treatment decision",
+      "drug dose recommendation",
+      "renal replacement decision"
+    ],
+    "retrieval_keywords": [
+      "AKI risk",
+      "susceptibility",
+      "exposure",
+      "shock",
+      "sepsis",
+      "monitoring"
+    ],
+    "evidence_location": {
+      "page_start": 22,
+      "page_end": 22,
+      "section_title": "Risk assessment",
+      "quote": "susceptibilities and exposures"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "aki_rrt_context_006",
+    "source_id": "kdigo_aki_2012_001",
+    "source_title": "KDIGO Clinical Practice Guideline for Acute Kidney Injury",
+    "domain": "aki_renal_failure",
+    "subdomain": "renal_replacement_context",
+    "population": "adult",
+    "card_type": "escalation_principle",
+    "topic": "Severe AKI may require urgent renal expert review",
+    "clinical_context": "Use when severe renal dysfunction is paired with refractory electrolyte, acid-base, volume, or uremic concern in structured data.",
+    "key_points": [
+      "KDIGO discusses renal replacement therapy decisions in severe AKI contexts.",
+      "Clinical Summary can flag severe AKI features for clinician review.",
+      "Do not decide RRT initiation or modality."
+    ],
+    "trigger_signals": [
+      "severe AKI",
+      "renal replacement therapy",
+      "hyperkalemia concern",
+      "acidosis concern",
+      "volume overload",
+      "anuria"
+    ],
+    "related_risk_types": [
+      "aki_risk",
+      "renal_replacement_risk",
+      "respiratory_failure_risk",
+      "persistent_shock_risk"
+    ],
+    "used_by_agents": [
+      "RiskSentinelAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "human review escalation wording",
+      "clinical summary",
+      "watch_item_generation",
+      "risk explanation"
+    ],
+    "forbidden_use": [
+      "renal replacement decision",
+      "dialysis order",
+      "automatic treatment decision",
+      "automatic diagnosis"
+    ],
+    "retrieval_keywords": [
+      "renal replacement therapy",
+      "RRT",
+      "severe AKI",
+      "hyperkalemia",
+      "acidosis",
+      "volume overload"
+    ],
+    "evidence_location": {
+      "page_start": 89,
+      "page_end": 89,
+      "section_title": "Renal replacement therapy",
+      "quote": "Initiate RRT emergently when life-threatening changes exist"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  }
+]

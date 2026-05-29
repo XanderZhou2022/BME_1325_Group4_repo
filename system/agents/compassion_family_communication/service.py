@@ -68,7 +68,9 @@ def evaluate_compassion_draft(conn: Connection, req: CompassionDraftRequest) -> 
     input_payload = {
         "agent_name": "compassion_family_communication",
         "prompt_template_name": "compassion_family_draft_prompt.md",
+        "admission_id": req.admission_id,
         "patient_id": patient_id,
+        "bed_id": bed_id,
         "draft_type": req.draft_type,
         "clinical_summary": summary,
         "patient_memory": memory,

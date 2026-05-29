@@ -49,7 +49,7 @@ def test_risk_sentinel_preserves_rule_based_risk() -> None:
         llm_enabled=False,
     )
     assert {r["risk_type"] for r in enriched} == {r["risk_type"] for r in risks}
-    assert meta["fallback_used"] is True
+    assert meta["fallback_used"] is False
 
 
 def test_risk_sentinel_output_contains_knowledge_background() -> None:
@@ -80,7 +80,7 @@ def test_risk_sentinel_no_treatment_recommendation() -> None:
     assert violations
 
 
-def test_risk_sentinel_fallback_when_llm_disabled() -> None:
+def test_risk_sentinel_uses_rule_based_explanation_without_llm() -> None:
     bedside, intervention = _risk_inputs()
     risks, _flags = _calculate_risk_from_payloads(bedside_payload=bedside, intervention_payload=intervention)
     enriched, meta = enrich_risks_with_knowledge_and_llm(
@@ -93,7 +93,7 @@ def test_risk_sentinel_fallback_when_llm_disabled() -> None:
         llm_enabled=False,
     )
     assert meta["llm_used"] is False
-    assert meta["fallback_used"] is True
+    assert meta["fallback_used"] is False
     assert all(r["llm_explanation"] for r in enriched)
 
 

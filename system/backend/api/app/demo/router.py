@@ -15,7 +15,7 @@ from app.db import get_db
 
 from .progress import progress_scope
 from .schemas import DemoHospitalState, DemoNextResponse, DemoTimelineResponse
-from .service import get_demo_state, list_timeline, next_demo_step, reset_demo_auto
+from .service import add_random_demo_patient, discharge_demo_patient, get_demo_state, list_timeline, next_demo_step, reset_demo_auto
 
 router = APIRouter(prefix="/demo/auto", tags=["demo-auto"])
 
@@ -28,6 +28,16 @@ def reset(conn: Connection = Depends(get_db)) -> DemoHospitalState:
 @router.post("/next", response_model=DemoNextResponse)
 def next_step(conn: Connection = Depends(get_db)) -> DemoNextResponse:
     return next_demo_step(conn)
+
+
+@router.post("/admit-random")
+def admit_random(conn: Connection = Depends(get_db)) -> dict[str, Any]:
+    return add_random_demo_patient(conn)
+
+
+@router.post("/admissions/{admission_id}/discharge")
+def discharge_admission(admission_id: str, conn: Connection = Depends(get_db)) -> dict[str, Any]:
+    return discharge_demo_patient(conn, admission_id)
 
 
 @router.post("/next/stream")

@@ -1,0 +1,370 @@
+[
+  {
+    "card_id": "ards_oxygenation_context_001",
+    "source_id": "ats_esicm_sccm_ards_2023_001",
+    "source_title": "ATS/ESICM/SCCM Clinical Practice Guideline on ARDS",
+    "domain": "ards_respiratory_failure",
+    "subdomain": "oxygenation",
+    "population": "adult",
+    "card_type": "risk_background",
+    "topic": "Worsening oxygenation as respiratory failure context",
+    "clinical_context": "Use when SpO2, PaO2, FiO2, PaO2/FiO2 ratio, or escalating oxygen support suggests worsening respiratory status.",
+    "key_points": [
+      "ARDS and acute respiratory failure summaries should organize oxygenation trend, support level, and trajectory.",
+      "A low or worsening oxygenation index should be framed as clinician-review context, not as a standalone diagnosis.",
+      "Use this card to connect respiratory trends with watch items."
+    ],
+    "trigger_signals": [
+      "worsening oxygenation",
+      "low PaO2/FiO2",
+      "increasing FiO2",
+      "falling SpO2",
+      "respiratory failure"
+    ],
+    "related_risk_types": [
+      "respiratory_failure_risk",
+      "ards_risk",
+      "sepsis_risk"
+    ],
+    "used_by_agents": [
+      "BedsideMonitorAgent",
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "risk explanation",
+      "clinical summary",
+      "trend_explanation",
+      "watch_item_generation",
+      "human review escalation wording"
+    ],
+    "forbidden_use": [
+      "automatic diagnosis",
+      "ventilator order",
+      "oxygen device order",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "ARDS",
+      "acute respiratory failure",
+      "oxygenation",
+      "PaO2 FiO2",
+      "SpO2"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Clinical practice guideline scope",
+      "quote": "acute respiratory distress syndrome"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "ards_low_tidal_volume_context_002",
+    "source_id": "ats_esicm_sccm_ards_2023_001",
+    "source_title": "ATS/ESICM/SCCM Clinical Practice Guideline on ARDS",
+    "domain": "ards_respiratory_failure",
+    "subdomain": "ventilation_strategy_context",
+    "population": "adult",
+    "card_type": "guideline_context",
+    "topic": "Lung-protective ventilation context",
+    "clinical_context": "Use when the patient is mechanically ventilated with ARDS or severe hypoxemic respiratory failure context.",
+    "key_points": [
+      "The guideline addresses lung-protective ventilation strategies in ARDS.",
+      "Clinical Summary can mention ventilation strategy review when respiratory failure is active.",
+      "Do not calculate or recommend ventilator settings."
+    ],
+    "trigger_signals": [
+      "mechanical ventilation",
+      "ARDS concern",
+      "high plateau pressure",
+      "ventilator change",
+      "hypoxemic respiratory failure"
+    ],
+    "related_risk_types": [
+      "respiratory_failure_risk",
+      "ards_risk",
+      "mechanical_ventilation_risk"
+    ],
+    "used_by_agents": [
+      "RiskSentinelAgent",
+      "InterventionTrackerAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "clinical summary",
+      "intervention_response_context",
+      "risk explanation",
+      "human review escalation wording"
+    ],
+    "forbidden_use": [
+      "ventilator setting recommendation",
+      "automatic treatment decision",
+      "automatic diagnosis"
+    ],
+    "retrieval_keywords": [
+      "lung protective ventilation",
+      "low tidal volume",
+      "ARDS",
+      "mechanical ventilation",
+      "plateau pressure"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Recommendations",
+      "quote": "low tidal volume ventilation"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "ards_prone_position_context_003",
+    "source_id": "ats_esicm_sccm_ards_2023_001",
+    "source_title": "ATS/ESICM/SCCM Clinical Practice Guideline on ARDS",
+    "domain": "ards_respiratory_failure",
+    "subdomain": "severe_ards_context",
+    "population": "adult",
+    "card_type": "escalation_principle",
+    "topic": "Prone positioning as severe ARDS review context",
+    "clinical_context": "Use when severe hypoxemia or ARDS concern persists despite escalating respiratory support.",
+    "key_points": [
+      "The guideline includes prone positioning for appropriate severe ARDS contexts.",
+      "Clinical Summary can flag severe hypoxemia as needing respiratory strategy review.",
+      "Do not recommend proning directly or determine eligibility."
+    ],
+    "trigger_signals": [
+      "severe hypoxemia",
+      "low PaO2/FiO2",
+      "increasing FiO2",
+      "PEEP escalation",
+      "ARDS concern"
+    ],
+    "related_risk_types": [
+      "respiratory_failure_risk",
+      "ards_risk",
+      "mechanical_ventilation_risk"
+    ],
+    "used_by_agents": [
+      "RiskSentinelAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "human review escalation wording",
+      "clinical summary",
+      "watch_item_generation",
+      "risk explanation"
+    ],
+    "forbidden_use": [
+      "positioning order",
+      "ventilator order",
+      "automatic treatment decision",
+      "automatic diagnosis"
+    ],
+    "retrieval_keywords": [
+      "prone positioning",
+      "severe ARDS",
+      "refractory hypoxemia",
+      "PaO2 FiO2",
+      "PEEP"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Recommendations",
+      "quote": "prone positioning"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "ards_peep_context_004",
+    "source_id": "ats_esicm_sccm_ards_2023_001",
+    "source_title": "ATS/ESICM/SCCM Clinical Practice Guideline on ARDS",
+    "domain": "ards_respiratory_failure",
+    "subdomain": "peep_context",
+    "population": "adult",
+    "card_type": "guideline_context",
+    "topic": "PEEP changes should be summarized as respiratory support context",
+    "clinical_context": "Use when PEEP is increased, oxygenation worsens after ventilator changes, or respiratory support needs are escalating.",
+    "key_points": [
+      "The guideline addresses PEEP strategies in ARDS.",
+      "Clinical Summary may describe PEEP escalation as evidence of changing respiratory support needs.",
+      "Do not suggest a PEEP target or titration plan."
+    ],
+    "trigger_signals": [
+      "PEEP escalation",
+      "ventilator change",
+      "worsening oxygenation after ventilator change",
+      "high FiO2",
+      "ARDS concern"
+    ],
+    "related_risk_types": [
+      "respiratory_failure_risk",
+      "ards_risk",
+      "mechanical_ventilation_risk"
+    ],
+    "used_by_agents": [
+      "InterventionTrackerAgent",
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent"
+    ],
+    "allowed_use": [
+      "intervention_response_context",
+      "clinical summary",
+      "risk explanation",
+      "human review escalation wording"
+    ],
+    "forbidden_use": [
+      "ventilator setting recommendation",
+      "automatic treatment decision",
+      "automatic diagnosis"
+    ],
+    "retrieval_keywords": [
+      "PEEP",
+      "ventilator adjustment",
+      "oxygenation response",
+      "ARDS",
+      "mechanical ventilation"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Recommendations",
+      "quote": "higher PEEP without lung recruitment maneuvers"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "ards_recruitment_maneuver_caution_005",
+    "source_id": "ats_esicm_sccm_ards_2023_001",
+    "source_title": "ATS/ESICM/SCCM Clinical Practice Guideline on ARDS",
+    "domain": "ards_respiratory_failure",
+    "subdomain": "ventilation_caution",
+    "population": "adult",
+    "card_type": "risk_background",
+    "topic": "Recruitment maneuver context requires clinician judgment",
+    "clinical_context": "Use when severe ARDS, refractory hypoxemia, or recruitment maneuver discussion appears in structured notes.",
+    "key_points": [
+      "The guideline discusses recruitment maneuvers with important cautions.",
+      "Clinical Summary should avoid converting this context into an action recommendation.",
+      "Use as a reminder that ventilator rescue strategies require clinician judgment."
+    ],
+    "trigger_signals": [
+      "refractory hypoxemia",
+      "recruitment maneuver",
+      "severe ARDS",
+      "ventilator rescue strategy"
+    ],
+    "related_risk_types": [
+      "respiratory_failure_risk",
+      "ards_risk",
+      "mechanical_ventilation_risk"
+    ],
+    "used_by_agents": [
+      "RiskSentinelAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "clinical summary",
+      "risk explanation",
+      "human review escalation wording",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "ventilator maneuver recommendation",
+      "automatic treatment decision",
+      "automatic diagnosis"
+    ],
+    "retrieval_keywords": [
+      "recruitment maneuver",
+      "ARDS",
+      "refractory hypoxemia",
+      "ventilator rescue",
+      "caution"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Recommendations",
+      "quote": "prolonged recruitment maneuver"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "ards_ecmo_referral_context_006",
+    "source_id": "ats_esicm_sccm_ards_2023_001",
+    "source_title": "ATS/ESICM/SCCM Clinical Practice Guideline on ARDS",
+    "domain": "ards_respiratory_failure",
+    "subdomain": "refractory_respiratory_failure",
+    "population": "adult",
+    "card_type": "escalation_principle",
+    "topic": "Refractory severe respiratory failure may need expert review",
+    "clinical_context": "Use when severe hypoxemia persists despite high respiratory support or when ECMO-capable review is mentioned.",
+    "key_points": [
+      "The guideline discusses venovenous ECMO in selected severe ARDS contexts.",
+      "Clinical Summary can flag refractory respiratory failure for expert review without recommending ECMO.",
+      "Use this only as high-level escalation context."
+    ],
+    "trigger_signals": [
+      "refractory hypoxemia",
+      "severe ARDS",
+      "ECMO consideration",
+      "high oxygen support",
+      "persistent respiratory failure"
+    ],
+    "related_risk_types": [
+      "respiratory_failure_risk",
+      "ards_risk",
+      "mechanical_ventilation_risk"
+    ],
+    "used_by_agents": [
+      "RiskSentinelAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "human review escalation wording",
+      "clinical summary",
+      "watch_item_generation",
+      "risk explanation"
+    ],
+    "forbidden_use": [
+      "ECMO referral decision",
+      "automatic treatment decision",
+      "automatic diagnosis",
+      "resource allocation decision"
+    ],
+    "retrieval_keywords": [
+      "ECMO",
+      "severe ARDS",
+      "refractory respiratory failure",
+      "hypoxemia",
+      "expert review"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Recommendations",
+      "quote": "venovenous extracorporeal membrane oxygenation"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  }
+]

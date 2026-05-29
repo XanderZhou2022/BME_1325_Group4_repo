@@ -1,0 +1,327 @@
+[
+  {
+    "card_id": "cardiogenic_shock_hypoperfusion_001",
+    "source_id": "aha_cardiogenic_shock_2017_001",
+    "source_title": "Contemporary Management of Cardiogenic Shock: A Scientific Statement From the American Heart Association",
+    "domain": "cardiogenic_shock_acs",
+    "subdomain": "shock_recognition",
+    "population": "adult",
+    "card_type": "risk_background",
+    "topic": "Cardiogenic shock combines hypotension and hypoperfusion context",
+    "clinical_context": "Use when hypotension, poor perfusion, rising lactate, low urine output, pulmonary edema, or cardiac dysfunction appears in structured data.",
+    "key_points": [
+      "Cardiogenic shock summaries should organize hemodynamics, perfusion markers, respiratory congestion, and suspected cardiac trigger.",
+      "A shock pattern should be framed as urgent clinician-review context, not an automatic diagnosis.",
+      "Use this card when persistent shock may be cardiac rather than septic, hemorrhagic, or mixed."
+    ],
+    "trigger_signals": [
+      "persistent hypotension",
+      "poor perfusion",
+      "rising lactate",
+      "low urine output",
+      "pulmonary edema",
+      "cardiac dysfunction"
+    ],
+    "related_risk_types": [
+      "cardiogenic_shock_risk",
+      "persistent_shock_risk",
+      "respiratory_failure_risk",
+      "aki_risk"
+    ],
+    "used_by_agents": [
+      "BedsideMonitorAgent",
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "risk explanation",
+      "clinical summary",
+      "human review escalation wording",
+      "summary_context",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "automatic diagnosis",
+      "vasopressor order",
+      "inotrope order",
+      "catheterization decision",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "cardiogenic shock",
+      "hypoperfusion",
+      "persistent hypotension",
+      "lactate",
+      "pulmonary edema"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Definition and classification",
+      "quote": "critical end-organ hypoperfusion"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "acs_ischemic_signal_002",
+    "source_id": "aha_acc_acs_guideline_2025_001",
+    "source_title": "ACC/AHA Guideline for the Management of Patients With Acute Coronary Syndromes",
+    "domain": "cardiogenic_shock_acs",
+    "subdomain": "acs_recognition",
+    "population": "adult",
+    "card_type": "guideline_context",
+    "topic": "ACS context depends on symptoms, ECG, and biomarkers",
+    "clinical_context": "Use when chest pain equivalent, ischemic ECG change, troponin rise, arrhythmia, or shock after suspected myocardial ischemia appears.",
+    "key_points": [
+      "ACS summaries should keep symptoms, ECG evolution, biomarker trends, and hemodynamic status together.",
+      "Clinical Summary may flag possible ischemic context for review without diagnosing ACS.",
+      "Use existing structured facts only; do not infer symptoms or ECG changes."
+    ],
+    "trigger_signals": [
+      "chest pain",
+      "ischemic ECG change",
+      "ST elevation",
+      "troponin rise",
+      "arrhythmia",
+      "shock after chest pain"
+    ],
+    "related_risk_types": [
+      "acs_risk",
+      "cardiogenic_shock_risk",
+      "arrhythmia_risk",
+      "persistent_shock_risk"
+    ],
+    "used_by_agents": [
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "clinical summary",
+      "risk explanation",
+      "human review escalation wording",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "automatic diagnosis",
+      "antithrombotic order",
+      "reperfusion decision",
+      "catheterization decision",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "acute coronary syndrome",
+      "ACS",
+      "troponin",
+      "ECG",
+      "ST elevation",
+      "ischemia"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Guideline scope",
+      "quote": "acute coronary syndromes"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "cardiogenic_shock_team_review_003",
+    "source_id": "aha_cardiogenic_shock_2017_001",
+    "source_title": "Contemporary Management of Cardiogenic Shock: A Scientific Statement From the American Heart Association",
+    "domain": "cardiogenic_shock_acs",
+    "subdomain": "escalation_workflow",
+    "population": "adult",
+    "card_type": "escalation_principle",
+    "topic": "Cardiogenic shock often benefits from coordinated expert review",
+    "clinical_context": "Use when shock persists despite initial measures, mechanical circulatory support is mentioned, or multiple services are involved.",
+    "key_points": [
+      "The AHA statement discusses systems of care and team-based shock management.",
+      "Ward and Clinical Summary outputs can flag persistent shock for coordinated clinician review.",
+      "Do not recommend a device, transfer, or procedure."
+    ],
+    "trigger_signals": [
+      "persistent cardiogenic shock",
+      "mechanical circulatory support consideration",
+      "shock team",
+      "transfer consideration",
+      "refractory hypotension"
+    ],
+    "related_risk_types": [
+      "cardiogenic_shock_risk",
+      "persistent_shock_risk",
+      "arrhythmia_risk"
+    ],
+    "used_by_agents": [
+      "RiskSentinelAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "human review escalation wording",
+      "clinical summary",
+      "priority_rationale",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "device recommendation",
+      "transfer decision",
+      "procedure recommendation",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "shock team",
+      "cardiogenic shock",
+      "mechanical circulatory support",
+      "transfer",
+      "refractory shock"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Systems of care",
+      "quote": "regional systems of care"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "cardiac_arrhythmia_instability_004",
+    "source_id": "aha_acc_acs_guideline_2025_001",
+    "source_title": "ACC/AHA Guideline for the Management of Patients With Acute Coronary Syndromes",
+    "domain": "cardiogenic_shock_acs",
+    "subdomain": "arrhythmia_context",
+    "population": "adult",
+    "card_type": "risk_background",
+    "topic": "Arrhythmia with ischemia or shock is a high-attention signal",
+    "clinical_context": "Use when tachyarrhythmia, bradyarrhythmia, ventricular arrhythmia, syncope, shock, or ischemic context appears.",
+    "key_points": [
+      "Arrhythmia can complicate ACS and shock trajectories.",
+      "Clinical Summary should describe rhythm instability alongside hemodynamics and oxygenation.",
+      "Do not recommend cardioversion, pacing, or antiarrhythmic medication."
+    ],
+    "trigger_signals": [
+      "ventricular arrhythmia",
+      "tachyarrhythmia",
+      "bradyarrhythmia",
+      "syncope",
+      "shock with arrhythmia",
+      "ischemic ECG change"
+    ],
+    "related_risk_types": [
+      "arrhythmia_risk",
+      "acs_risk",
+      "cardiogenic_shock_risk",
+      "persistent_shock_risk"
+    ],
+    "used_by_agents": [
+      "BedsideMonitorAgent",
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "risk explanation",
+      "trend_explanation",
+      "clinical summary",
+      "human review escalation wording"
+    ],
+    "forbidden_use": [
+      "cardioversion decision",
+      "pacing decision",
+      "antiarrhythmic order",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "arrhythmia",
+      "ACS",
+      "shock",
+      "ventricular tachycardia",
+      "bradyarrhythmia",
+      "rhythm instability"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Complications",
+      "quote": "acute coronary syndromes"
+    },
+    "confidence": "medium",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "cardiac_intervention_response_005",
+    "source_id": "aha_cardiogenic_shock_2017_001",
+    "source_title": "Contemporary Management of Cardiogenic Shock: A Scientific Statement From the American Heart Association",
+    "domain": "cardiogenic_shock_acs",
+    "subdomain": "intervention_response",
+    "population": "adult",
+    "card_type": "guideline_context",
+    "topic": "Hemodynamic response should be summarized after cardiac interventions",
+    "clinical_context": "Use after vasopressor, inotrope, diuretic, reperfusion, ventilation, or device-related events when MAP, lactate, urine output, or oxygenation changes.",
+    "key_points": [
+      "Cardiogenic shock trajectories require repeated reassessment of perfusion and congestion.",
+      "Intervention response summaries should describe observed changes only.",
+      "Do not recommend titration or device escalation."
+    ],
+    "trigger_signals": [
+      "vasopressor escalation",
+      "inotrope use",
+      "diuretic response",
+      "post PCI shock",
+      "lactate trend",
+      "urine output trend"
+    ],
+    "related_risk_types": [
+      "cardiogenic_shock_risk",
+      "persistent_shock_risk",
+      "aki_risk",
+      "respiratory_failure_risk"
+    ],
+    "used_by_agents": [
+      "InterventionTrackerAgent",
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent"
+    ],
+    "allowed_use": [
+      "intervention_response_context",
+      "non_response_explanation",
+      "clinical summary",
+      "risk explanation"
+    ],
+    "forbidden_use": [
+      "drug dose recommendation",
+      "device recommendation",
+      "automatic treatment decision",
+      "automatic diagnosis"
+    ],
+    "retrieval_keywords": [
+      "cardiogenic shock response",
+      "hemodynamics",
+      "lactate",
+      "urine output",
+      "congestion",
+      "intervention response"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Management principles",
+      "quote": "hemodynamic support"
+    },
+    "confidence": "medium",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  }
+]

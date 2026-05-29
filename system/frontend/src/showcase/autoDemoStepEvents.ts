@@ -82,6 +82,8 @@ function formatMdtFulfilled(sub: JsonObj): string[] {
   const updates = Array.isArray(bridge.required_updates) ? bridge.required_updates : [];
   const lines = [
     `请求 ID：${String(sub.request_id ?? "—")}`,
+    `请求：${String(sub.request ?? "Request new MDT consultation")}`,
+    `理由：${String(sub.reason ?? "—")}`,
     `触发 Agent：${String(sub.requested_by_agent ?? "—")}`,
     `会诊 ID：${String(sub.consultation_id ?? bridge.consultation_id ?? "—")}`,
     `状态：${String(judgment.status_level ?? bridge.mdt_output_type ?? sub.mdt_output_type ?? "已完成")}`,
@@ -101,6 +103,9 @@ function formatMdtFulfilled(sub: JsonObj): string[] {
 function formatMdtFailed(sub: JsonObj): string[] {
   return [
     `请求 ID：${String(sub.request_id ?? "—")}`,
+    `请求：${String(sub.request ?? "Request new MDT consultation")}`,
+    `理由：${String(sub.reason ?? "—")}`,
+    `触发 Agent：${String(sub.requested_by_agent ?? "—")}`,
     `MDT 会诊失败：${String(sub.error ?? "未知错误")}`,
   ];
 }
@@ -108,6 +113,8 @@ function formatMdtFailed(sub: JsonObj): string[] {
 function formatGenericAgentRequest(sub: JsonObj): string[] {
   const lines: string[] = [];
   if (sub.request_id) lines.push(`请求 ID：${String(sub.request_id)}`);
+  if (sub.request) lines.push(`请求：${String(sub.request)}`);
+  if (sub.reason) lines.push(`理由：${String(sub.reason)}`);
   if (sub.requested_by_agent) lines.push(`触发 Agent：${String(sub.requested_by_agent)}`);
   if (sub.lab_type) lines.push(`检验项目：${String(sub.lab_type)}`);
   if (sub.error) lines.push(`错误：${String(sub.error)}`);
@@ -279,6 +286,8 @@ export function buildStepEventItems(
         title: "Agent 请求检验已完成",
         details: [
           `请求 ID：${String(sub.request_id ?? "—")}`,
+          `请求：${String(sub.request ?? `Request new lab test: ${String(sub.lab_type ?? "—")}`)}`,
+          `理由：${String(sub.reason ?? "—")}`,
           `触发 Agent：${String(sub.requested_by_agent ?? "—")}`,
           `检验项目：${String(sub.lab_type ?? "—")}`,
           ...formatDispatch(sub.dispatch_result as JsonObj | undefined),

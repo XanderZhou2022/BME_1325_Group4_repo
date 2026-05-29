@@ -16,9 +16,6 @@ from app.services.agent_action_requests import (
 from app.services.ids import new_id
 from types import SimpleNamespace
 from knowledge.retriever import retrieve_cards
-from llm.client import generate_structured_output
-from llm.prompt_loader import load_prompt_template
-from llm.schemas import RiskSentinelLLMOutput
 
 from .schemas import RiskImage, RiskSentinelEvaluateRequest, RiskSentinelEvaluateResponse, RiskSeverity
 
@@ -243,6 +240,34 @@ def _compact_context(payload: dict[str, Any], max_items: int = 6) -> dict[str, A
     return out
 
 
+def _rule_based_risk_explanation(
+    risk: dict[str, Any],
+    *,
+    cards: list[dict[str, Any]],
+) -> dict[str, Any]:
+    risk_type = str(risk.get("risk_type") or "unknown_risk")
+    risk_level = str(risk.get("risk_level") or "low")
+    signals = _extract_trigger_signals(risk)
+    signal_text = ", ".join(signals[:5]) if signals else "structured rule evidence"
+    action = str(risk.get("recommended_action") or "Review this rule-triggered signal with clinical staff.")
+    card_ids = [str(card.get("card_id")) for card in cards if card.get("card_id")]
+    return {
+        "risk_type": risk_type,
+        "risk_level": risk_level,
+        "explanation": (
+            f"Rule-based {risk_type} is currently {risk_level}. "
+            f"Trigger signals include {signal_text}. This is a decision-support memory of observed patterns, not a diagnosis."
+        ),
+        "escalation_rationale": (
+            f"Keep this risk visible for clinician review because the rule score reached {risk_level}; "
+            f"suggested next attention: {action}"
+        ),
+        "supporting_card_ids": card_ids[:3],
+        "forbidden_use_reminder": SAFE_FORBIDDEN_REMINDER,
+        "human_review_required": True,
+    }
+
+
 def enrich_risks_with_knowledge_and_llm(
     *,
     patient_id: str,
@@ -273,45 +298,7 @@ def enrich_risks_with_knowledge_and_llm(
         query=" ".join(risk_types + trigger_signals),
     )
     cards = retrieval["retrieved_cards"]
-    prompt = load_prompt_template("risk_sentinel_knowledge_prompt.md")
-    input_payload = {
-        "agent_name": "risk_sentinel",
-        "prompt_template_name": "risk_sentinel_knowledge_prompt.md",
-        "patient_id": patient_id,
-        "time_window": "last_6h",
-        "rule_based_risks": [
-            {
-                "risk_type": str(r.get("risk_type")),
-                "risk_level": str(r.get("risk_level")),
-                "confidence": float(r.get("confidence", 0)),
-                "rule_evidence": r.get("evidence") or [],
-                "trigger_signals": _extract_trigger_signals(r),
-            }
-            for r in risks
-        ],
-        "patient_context": {
-            "recent_vital_summary": _compact_context(bedside_payload),
-            "recent_intervention_summary": _compact_context(intervention_payload),
-            "memory_summary": _compact_context(memory_payload),
-        },
-        "retrieved_knowledge_cards": cards,
-        "global_constraints": [
-            "Do not make a diagnosis.",
-            "Do not recommend treatment.",
-            "Use knowledge cards only as background.",
-            "All outputs require clinician review.",
-        ],
-        "global_forbidden_use": ["diagnosis", "treatment_recommendation", "automatic_medical_decision", "icu_admission_or_discharge_decision"],
-    }
-    llm_result = generate_structured_output(
-        "risk_sentinel_explanation",
-        prompt,
-        input_payload,
-        RiskSentinelLLMOutput,
-        llm_enabled=llm_enabled,
-    )
-    llm_output = llm_result.output.model_dump(mode="json")
-    explanations = {item["risk_type"]: item for item in llm_output.get("risk_explanations", [])}
+    explanations = {str(risk["risk_type"]): _rule_based_risk_explanation(risk, cards=cards) for risk in risks}
 
     enriched: list[dict[str, Any]] = []
     for risk in risks:
@@ -327,10 +314,10 @@ def enrich_risks_with_knowledge_and_llm(
 
     return enriched, {
         "retrieved_cards": cards,
-        "llm_used": llm_result.llm_used,
-        "fallback_used": llm_result.fallback_used,
-        "audit_log_id": llm_result.audit_log_id,
-        "overall_review_reminder": llm_output.get("overall_review_reminder", "Risk Sentinel outputs are decision-support signals only and require clinician review."),
+        "llm_used": False,
+        "fallback_used": False,
+        "audit_log_id": None,
+        "overall_review_reminder": "Risk Sentinel outputs are rule-based decision-support signals only and require clinician review.",
         "human_review_required": True,
     }
 
@@ -529,6 +516,7 @@ def evaluate_risk_sentinel(conn: Connection, req: RiskSentinelEvaluateRequest) -
             _risk_stub = SimpleNamespace(
                 escalation_level=_escalation,
                 overall_risk_level=overall_risk_level,
+                active_risks=risks,
                 recommended_next_attention=payload["recommended_next_attention"],
                 new_or_worsening_flags=payload["new_or_worsening_flags"],
             )

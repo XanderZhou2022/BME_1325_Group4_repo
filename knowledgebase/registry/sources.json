@@ -194,15 +194,288 @@
       "use_now": true,
       "human_review_required": true,
       "registry_last_updated": "2026-05-08"
+    },
+    {
+      "source_id": "surviving_sepsis_campaign_2021_001",
+      "title": "Surviving Sepsis Campaign: International Guidelines for Management of Sepsis and Septic Shock 2021",
+      "domain": "sepsis_shock",
+      "population": "adult",
+      "source_type": "clinical_guideline",
+      "priority": "P1",
+      "used_by_agents": [
+        "BedsideMonitorAgent",
+        "RiskSentinelAgent",
+        "InterventionTrackerAgent",
+        "PatientMemoryAgent",
+        "ClinicalSummaryAgent",
+        "WardCoordinatorAgent"
+      ],
+      "notes": "Adult sepsis and septic shock guideline context for recognition, risk explanation, escalation wording, and clinician review only.",
+      "filename": "",
+      "relative_path": "",
+      "external_url": "https://www.sccm.org/Clinical-Resources/Guidelines/Guidelines/Surviving-Sepsis-Guidelines-2021",
+      "use_now": true,
+      "human_review_required": true,
+      "registry_last_updated": "2026-05-29"
+    },
+    {
+      "source_id": "ats_esicm_sccm_ards_2023_001",
+      "title": "ATS/ESICM/SCCM Clinical Practice Guideline on ARDS",
+      "domain": "ards_respiratory_failure",
+      "population": "adult",
+      "source_type": "clinical_guideline",
+      "priority": "P1",
+      "used_by_agents": [
+        "BedsideMonitorAgent",
+        "RiskSentinelAgent",
+        "InterventionTrackerAgent",
+        "PatientMemoryAgent",
+        "ClinicalSummaryAgent",
+        "WardCoordinatorAgent"
+      ],
+      "notes": "ARDS and respiratory failure guideline context for oxygenation, ventilation, proning, and escalation summary with clinician review only.",
+      "filename": "",
+      "relative_path": "",
+      "external_url": "https://www.atsjournals.org/doi/full/10.1164/rccm.202311-2011ST",
+      "use_now": true,
+      "human_review_required": true,
+      "registry_last_updated": "2026-05-29"
+    },
+    {
+      "source_id": "kdigo_aki_2012_001",
+      "title": "KDIGO Clinical Practice Guideline for Acute Kidney Injury",
+      "domain": "aki_renal_failure",
+      "population": "adult",
+      "source_type": "clinical_guideline",
+      "priority": "P1",
+      "used_by_agents": [
+        "BedsideMonitorAgent",
+        "RiskSentinelAgent",
+        "InterventionTrackerAgent",
+        "PatientMemoryAgent",
+        "ClinicalSummaryAgent",
+        "WardCoordinatorAgent"
+      ],
+      "notes": "AKI definition, staging, monitoring, and renal replacement therapy context for summary and human review only.",
+      "filename": "",
+      "relative_path": "",
+      "external_url": "https://kdigo.org/wp-content/uploads/2016/10/KDIGO-2012-AKI-Guideline-English.pdf",
+      "use_now": true,
+      "human_review_required": true,
+      "registry_last_updated": "2026-05-29"
+    },
+    {
+      "source_id": "aha_cardiogenic_shock_2017_001",
+      "title": "Contemporary Management of Cardiogenic Shock: A Scientific Statement From the American Heart Association",
+      "domain": "cardiogenic_shock_acs",
+      "population": "adult",
+      "source_type": "scientific_statement",
+      "priority": "P1",
+      "used_by_agents": [
+        "BedsideMonitorAgent",
+        "RiskSentinelAgent",
+        "InterventionTrackerAgent",
+        "PatientMemoryAgent",
+        "ClinicalSummaryAgent",
+        "WardCoordinatorAgent"
+      ],
+      "notes": "Cardiogenic shock recognition, hemodynamic profile, revascularization and shock-team context for clinician review only.",
+      "filename": "",
+      "relative_path": "",
+      "external_url": "https://www.ahajournals.org/doi/10.1161/CIR.0000000000000525",
+      "use_now": true,
+      "human_review_required": true,
+      "registry_last_updated": "2026-05-29"
+    },
+    {
+      "source_id": "aha_acc_acs_guideline_2025_001",
+      "title": "ACC/AHA Guideline for the Management of Patients With Acute Coronary Syndromes",
+      "domain": "cardiogenic_shock_acs",
+      "population": "adult",
+      "source_type": "clinical_guideline",
+      "priority": "P1",
+      "used_by_agents": [
+        "RiskSentinelAgent",
+        "InterventionTrackerAgent",
+        "PatientMemoryAgent",
+        "ClinicalSummaryAgent",
+        "WardCoordinatorAgent"
+      ],
+      "notes": "Acute coronary syndrome context, ischemic symptoms, ECG/troponin trends, and shock escalation wording with clinician review only.",
+      "filename": "",
+      "relative_path": "",
+      "external_url": "https://www.ahajournals.org/doi/10.1161/CIR.0000000000001309",
+      "use_now": true,
+      "human_review_required": true,
+      "registry_last_updated": "2026-05-29"
+    },
+    {
+      "source_id": "aha_asa_acute_ischemic_stroke_2019_001",
+      "title": "AHA/ASA Guidelines for the Early Management of Patients With Acute Ischemic Stroke",
+      "domain": "neurocritical_stroke_seizure",
+      "population": "adult",
+      "source_type": "clinical_guideline",
+      "priority": "P1",
+      "used_by_agents": [
+        "BedsideMonitorAgent",
+        "RiskSentinelAgent",
+        "PatientMemoryAgent",
+        "ClinicalSummaryAgent",
+        "WardCoordinatorAgent"
+      ],
+      "notes": "Acute ischemic stroke recognition, neurologic change, imaging and time-sensitive review context; not used for automated thrombolysis decisions.",
+      "filename": "",
+      "relative_path": "",
+      "external_url": "https://www.ahajournals.org/doi/10.1161/STR.0000000000000211",
+      "use_now": true,
+      "human_review_required": true,
+      "registry_last_updated": "2026-05-29"
+    },
+    {
+      "source_id": "aha_asa_ich_2022_001",
+      "title": "AHA/ASA Guideline for the Management of Patients With Spontaneous Intracerebral Hemorrhage",
+      "domain": "neurocritical_stroke_seizure",
+      "population": "adult",
+      "source_type": "clinical_guideline",
+      "priority": "P1",
+      "used_by_agents": [
+        "RiskSentinelAgent",
+        "PatientMemoryAgent",
+        "ClinicalSummaryAgent",
+        "WardCoordinatorAgent"
+      ],
+      "notes": "Intracerebral hemorrhage ICU context, neurologic deterioration, blood pressure, anticoagulant reversal, and seizure review reminders.",
+      "filename": "",
+      "relative_path": "",
+      "external_url": "https://www.ahajournals.org/doi/10.1161/STR.0000000000000407",
+      "use_now": true,
+      "human_review_required": true,
+      "registry_last_updated": "2026-05-29"
+    },
+    {
+      "source_id": "ncs_status_epilepticus_2012_001",
+      "title": "Guidelines for the Evaluation and Management of Status Epilepticus",
+      "domain": "neurocritical_stroke_seizure",
+      "population": "mixed",
+      "source_type": "clinical_guideline",
+      "priority": "P1",
+      "used_by_agents": [
+        "BedsideMonitorAgent",
+        "RiskSentinelAgent",
+        "InterventionTrackerAgent",
+        "PatientMemoryAgent",
+        "ClinicalSummaryAgent",
+        "WardCoordinatorAgent"
+      ],
+      "notes": "Status epilepticus recognition, treatment-phase context, EEG/airway review prompts; no medication ordering or dosing.",
+      "filename": "",
+      "relative_path": "",
+      "external_url": "https://link.springer.com/article/10.1007/s12028-012-9695-z",
+      "use_now": true,
+      "human_review_required": true,
+      "registry_last_updated": "2026-05-29"
+    },
+    {
+      "source_id": "ada_hyperglycemic_crises_2024_001",
+      "title": "Hyperglycemic Crises in Adults With Diabetes: A Consensus Report",
+      "domain": "metabolic_hyperglycemic_crisis",
+      "population": "adult",
+      "source_type": "consensus_report",
+      "priority": "P1",
+      "used_by_agents": [
+        "BedsideMonitorAgent",
+        "RiskSentinelAgent",
+        "InterventionTrackerAgent",
+        "PatientMemoryAgent",
+        "ClinicalSummaryAgent",
+        "WardCoordinatorAgent"
+      ],
+      "notes": "DKA/HHS diagnostic context, fluid-electrolyte-insulin monitoring context, and resolution/watch-item language for clinician review only.",
+      "filename": "",
+      "relative_path": "",
+      "external_url": "https://diabetesjournals.org/care/article/47/8/1257/156667/Hyperglycemic-Crises-in-Adults-With-Diabetes-A",
+      "use_now": true,
+      "human_review_required": true,
+      "registry_last_updated": "2026-05-29"
+    },
+    {
+      "source_id": "ese_esicm_hyponatremia_2014_001",
+      "title": "Clinical Practice Guideline on Diagnosis and Treatment of Hyponatraemia",
+      "domain": "electrolyte_disorders",
+      "population": "adult",
+      "source_type": "clinical_guideline",
+      "priority": "P1",
+      "used_by_agents": [
+        "BedsideMonitorAgent",
+        "RiskSentinelAgent",
+        "InterventionTrackerAgent",
+        "PatientMemoryAgent",
+        "ClinicalSummaryAgent",
+        "WardCoordinatorAgent"
+      ],
+      "notes": "Hyponatremia severity, neurologic symptoms, correction safety, and monitoring context for clinician review only.",
+      "filename": "",
+      "relative_path": "",
+      "external_url": "https://academic.oup.com/ejendo/article/170/3/G1/6668028",
+      "use_now": true,
+      "human_review_required": true,
+      "registry_last_updated": "2026-05-29"
+    },
+    {
+      "source_id": "aha_hyperkalemia_resuscitation_2020_001",
+      "title": "American Heart Association Guidelines for Cardiopulmonary Resuscitation and Emergency Cardiovascular Care: Hyperkalemia",
+      "domain": "electrolyte_disorders",
+      "population": "adult",
+      "source_type": "clinical_guideline",
+      "priority": "P1",
+      "used_by_agents": [
+        "BedsideMonitorAgent",
+        "RiskSentinelAgent",
+        "InterventionTrackerAgent",
+        "PatientMemoryAgent",
+        "ClinicalSummaryAgent",
+        "WardCoordinatorAgent"
+      ],
+      "notes": "Hyperkalemia emergency and arrhythmia-risk context for summary and escalation review only; no dose recommendations.",
+      "filename": "",
+      "relative_path": "",
+      "external_url": "https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-basic-and-advanced-life-support",
+      "use_now": true,
+      "human_review_required": true,
+      "registry_last_updated": "2026-05-29"
+    },
+    {
+      "source_id": "european_trauma_bleeding_2023_001",
+      "title": "The European Guideline on Management of Major Bleeding and Coagulopathy Following Trauma: Sixth Edition",
+      "domain": "trauma_major_bleeding",
+      "population": "adult",
+      "source_type": "clinical_guideline",
+      "priority": "P1",
+      "used_by_agents": [
+        "BedsideMonitorAgent",
+        "RiskSentinelAgent",
+        "InterventionTrackerAgent",
+        "PatientMemoryAgent",
+        "ClinicalSummaryAgent",
+        "WardCoordinatorAgent"
+      ],
+      "notes": "Trauma hemorrhage, coagulopathy, massive bleeding, transfusion protocol and source-control review context for clinician review only.",
+      "filename": "",
+      "relative_path": "",
+      "external_url": "https://ccforum.biomedcentral.com/articles/10.1186/s13054-023-04327-7",
+      "use_now": true,
+      "human_review_required": true,
+      "registry_last_updated": "2026-05-29"
     }
   ],
   "warnings": {
     "missing_expected_pdfs": [],
     "unregistered_pdfs": [],
     "known_core_guideline_gaps": [
-      "sepsis/shock disease-specific guideline",
-      "ARDS/respiratory failure disease-specific guideline",
-      "AKI disease-specific guideline"
+      "acute liver failure and pancreatitis ICU guidance",
+      "toxicology/overdose ICU guidance",
+      "obstetric critical care guidance",
+      "burn critical care guidance"
     ]
   }
 }

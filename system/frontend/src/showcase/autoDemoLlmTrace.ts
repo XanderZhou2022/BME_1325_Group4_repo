@@ -14,7 +14,7 @@ export type LlmTraceRow = {
   response_preview: string;
 };
 
-const NO_LLM_AGENTS = new Set(["bedside_monitor", "intervention_tracker"]);
+const NO_LLM_AGENTS = new Set(["bedside_monitor", "intervention_tracker", "patient_memory", "risk_sentinel"]);
 
 function previewFromLlm(llm: JsonObj): string {
   const fields = (llm.generated_text_fields ?? {}) as JsonObj;

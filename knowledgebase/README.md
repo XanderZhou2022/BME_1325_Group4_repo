@@ -16,9 +16,9 @@ This knowledgebase must not be used for automatic diagnosis, automatic treatment
 
 All clinical, ethical, and family communication content is human-in-the-loop. Cards set `human_review_required=true`; CompassionAgent cards additionally require clinician approval and are not for direct family delivery.
 
-Current materials cover ICU workflow and operations, rapid response and deterioration recognition, medication safety, PADIS/sedation/delirium context, adult end-of-life and ethics, ICU design, pediatric critical care context, and APACHE II-style scoring background.
+Current materials cover ICU workflow and operations, rapid response and deterioration recognition, sepsis/septic shock context, ARDS/acute respiratory failure context, AKI/renal failure context, cardiogenic shock/ACS context, stroke/status epilepticus context, DKA/HHS context, severe electrolyte disorder context, trauma/major bleeding context, medication safety, PADIS/sedation/delirium context, adult end-of-life and ethics, ICU design, pediatric critical care context, and APACHE II-style scoring background.
 
-Known source gaps remain: this repository should add core sepsis/shock, ARDS/respiratory failure, and AKI guidelines to better cover `persistent_shock_risk`, `respiratory_failure_risk`, and `aki_risk`. Existing general deterioration cards may support escalation background for those risk types, but they are not direct disease-specific risk sources.
+Known source gaps remain: this repository should add acute liver failure and pancreatitis ICU guidance, toxicology/overdose ICU guidance, obstetric critical care guidance, burn critical care guidance, and more detailed ICU infection-specific guidance to better cover future admission scenarios. Disease-specific sepsis/shock, ARDS/respiratory failure, AKI, cardiac, neurocritical, metabolic/electrolyte, and trauma/bleeding cards now provide initial coverage for common ICU risks, but all clinical use remains human-in-the-loop.
 
 Run the current pipeline:
 

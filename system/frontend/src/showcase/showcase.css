@@ -316,6 +316,40 @@
   border-left: 3px solid #f59e0b;
 }
 
+.adStepEventCard.agentRequest {
+  border-color: #f59e0b;
+  background: #fffbeb;
+  color: #172033;
+}
+
+.adStepEventCard.agentRequest .adStepEventTitle {
+  color: #92400e;
+}
+
+.adStepEventCard.agentRequest .adStepEventDetails {
+  color: #172033;
+}
+
+.adStepEventDetails li.requestLine,
+.adStepEventDetails li.reasonLine {
+  list-style: none;
+  margin: 4px 0 4px -18px;
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+
+.adStepEventDetails li.requestLine {
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 800;
+}
+
+.adStepEventDetails li.reasonLine {
+  background: #fef3c7;
+  color: #92400e;
+  font-weight: 800;
+}
+
 .adStepEventHead {
   display: flex;
   flex-wrap: wrap;
@@ -782,6 +816,32 @@
   font-size: 12px;
 }
 
+.adQueueReasonCell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 180px;
+  max-width: 320px;
+}
+
+.adQueueReasonPill {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  border: 1px solid #f59e0b;
+  border-radius: 999px;
+  background: #fffbeb;
+  color: #92400e;
+  padding: 2px 8px;
+  font-weight: 700;
+  white-space: normal;
+}
+
+.adQueueReasonText {
+  color: #475467;
+  line-height: 1.35;
+}
+
 .adDetails {
   margin-top: 6px;
   border: 1px solid #273449;
@@ -955,6 +1015,7 @@
 }
 
 .scTopActions button,
+.scBtn,
 .scBtnPrimary {
   background: #1167b1;
   border: 1px solid #1167b1;
@@ -963,12 +1024,28 @@
   font-weight: 700;
 }
 
+.scBtn {
+  color: #fff;
+  padding: 8px 12px;
+}
+
+.scBtn:not(.scBtnPrimary) {
+  background: #344054;
+  border-color: #344054;
+}
+
+.scBtn.scBtnDanger {
+  background: #b42318;
+  border-color: #b42318;
+}
+
 .scTopActions button:last-child {
   background: #178a68;
   border-color: #178a68;
 }
 
-.scTopActions button:disabled {
+.scTopActions button:disabled,
+.scBtn:disabled {
   background: #98a2b3;
   border-color: #98a2b3;
   cursor: not-allowed;
@@ -1347,6 +1424,9 @@
 }
 
 .adMdtActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   margin: 10px 0 12px;
 }
 

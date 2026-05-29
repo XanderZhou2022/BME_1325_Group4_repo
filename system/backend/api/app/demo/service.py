@@ -6,6 +6,7 @@ from decimal import Decimal
 from typing import Any, cast
 
 import psycopg
+from fastapi import HTTPException
 from psycopg import Connection
 from psycopg.rows import dict_row
 from psycopg.types.json import Json
@@ -27,7 +28,8 @@ from .schemas import DemoDbEffects, DemoHospitalState, DemoNextResponse, DemoRis
 
 SIM_TAG = "demo_auto"
 SIM_STEP_MINUTES = 5
-DEMO_MAX_BEDS = 5
+DEMO_MAX_BEDS = 10
+DEMO_MIN_ACTIVE_PATIENTS = 5
 
 
 def _json_safe(value: Any) -> Any:
@@ -209,7 +211,18 @@ def _agent_judgment_from_payload(agent_name: str, payload: dict[str, Any]) -> di
         "patient_memory": ["status", "short_term_summary", "active_problems", "unresolved_issues", "key_events", "memory_context_for_risk", "short_term_narrative"],
         "risk_sentinel": ["overall_risk_level", "active_risks", "new_or_worsening_flags", "recommended_next_attention", "overall_review_reminder"],
         "clinical_summary": ["urgency_level", "one_line_status", "problem_list", "active_problem_list", "watch_items", "review_reminders"],
-        "ward_coordinator": ["ward_load_indicator", "priority_queue", "global_watch_items", "review_reminders", "rationale"],
+        "ward_coordinator": [
+            "ward_load_indicator",
+            "priority_queue",
+            "ward_overview",
+            "priority_reasoning",
+            "references_used",
+            "next_step_plan",
+            "focus_points",
+            "global_watch_items",
+            "review_reminders",
+            "rationale",
+        ],
         "compassion_family_communication": ["communication_cautions", "what_not_to_say", "requires_clinician_approval_before_delivery"],
     }
     picked: dict[str, Any] = {}
@@ -402,7 +415,7 @@ def _seed_demo_beds(conn: Connection) -> None:
                 """
                 INSERT INTO beds (bed_id, bed_code, room_code, bed_type, status, notes)
                 VALUES (%s, %s, 'DEMO', 'icu', 'empty', 'auto demo')
-                ON CONFLICT (bed_id) DO UPDATE SET status = 'empty', updated_at = NOW()
+                ON CONFLICT (bed_id) DO NOTHING
                 """,
                 (bid, bid.upper()),
             )
@@ -511,6 +524,33 @@ def _discharge_random(conn: Connection, admission: dict[str, Any], sim_time: dat
     return {"admission_id": admission["admission_id"], "status": "discharged"}
 
 
+def _clinical_discharge_candidates(conn: Connection, admissions: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Conservative demo rule: discharge only stable patients without active risks."""
+    if not admissions:
+        return []
+    conn.row_factory = dict_row
+    ids = [str(a["admission_id"]) for a in admissions]
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT admission_id, care_phase, active_risks
+            FROM patient_state_current
+            WHERE admission_id = ANY(%s::text[])
+            """,
+            (ids,),
+        )
+        states = {str(r["admission_id"]): dict(r) for r in cur.fetchall()}
+    candidates: list[dict[str, Any]] = []
+    for adm in admissions:
+        aid = str(adm["admission_id"])
+        state = states.get(aid, {})
+        phase = str(state.get("care_phase") or adm.get("severity_on_admission") or "stable")
+        active_risks = state.get("active_risks") or []
+        if phase == "stable" and not active_risks and adm.get("severity_on_admission") != "critical":
+            candidates.append(adm)
+    return candidates
+
+
 def _write_random_event(
     conn: Connection,
     admission: dict[str, Any],
@@ -591,6 +631,9 @@ def _fulfill_pending_agent_requests_isolated(admission: dict[str, Any], sim_time
                 "admission_id": item.get("admission_id"),
                 "request_type": item.get("type"),
                 "request_id": item.get("request_id"),
+                "request": item.get("request"),
+                "reason": item.get("reason"),
+                "requested_by_agent": item.get("requested_by_agent"),
             }
         )
     return results
@@ -700,7 +743,78 @@ def reset_demo_auto(conn: Connection) -> DemoHospitalState:
                 (now,),
             )
             _seed_demo_beds(conn)
+            for i in range(DEMO_MIN_ACTIVE_PATIENTS):
+                _create_patient_bed_admission(
+                    conn,
+                    now,
+                    0,
+                    sub_tag=f"r{i + 1}",
+                    bed_id=f"demo_b_{i + 1:02d}",
+                )
     return get_demo_state(conn)
+
+
+def add_random_demo_patient(conn: Connection) -> dict[str, Any]:
+    _ensure_demo_tables(conn)
+    with conn.transaction():
+        sim_time, step_index = _get_or_create_state(conn)
+        _set_state(conn, sim_time, step_index)
+        active = _active_admissions(conn)
+        if len(active) >= DEMO_MAX_BEDS:
+            raise HTTPException(status_code=409, detail="No empty demo ICU bed is available.")
+        _seed_demo_beds(conn)
+        bed = _available_demo_bed(conn, step_index=max(step_index, 1), slot=len(active))
+        tag = f"m{step_index + 1}_{int(_now_utc().timestamp() * 1000)}"
+        wr = _create_patient_bed_admission(conn, sim_time, step_index + 1, sub_tag=tag, bed_id=bed)
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO demo_auto_timeline (id, step_index, sim_time, event_type, admission_id, payload, result, created_at)
+                VALUES (%s, %s, %s, 'admission_create', %s, %s::jsonb, %s::jsonb, NOW())
+                """,
+                (
+                    new_id("dtl"),
+                    step_index,
+                    sim_time,
+                    wr["admission_id"],
+                    Json({"manual": True, "source": "frontend_add_patient"}),
+                    Json(_json_safe(wr)),
+                ),
+            )
+    return {"admission": _json_safe(wr), "state": get_demo_state(conn)}
+
+
+def discharge_demo_patient(conn: Connection, admission_id: str) -> dict[str, Any]:
+    _ensure_demo_tables(conn)
+    with conn.transaction():
+        sim_time, step_index = _get_or_create_state(conn)
+        _set_state(conn, sim_time, step_index)
+        active = _active_admissions(conn)
+        if len(active) <= DEMO_MIN_ACTIVE_PATIENTS:
+            raise HTTPException(
+                status_code=409,
+                detail=f"Cannot discharge below the demo minimum of {DEMO_MIN_ACTIVE_PATIENTS} ICU patients.",
+            )
+        target = next((a for a in active if str(a["admission_id"]) == admission_id), None)
+        if not target:
+            raise HTTPException(status_code=404, detail="Active demo admission not found.")
+        wr = _discharge_random(conn, target, sim_time)
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO demo_auto_timeline (id, step_index, sim_time, event_type, admission_id, payload, result, created_at)
+                VALUES (%s, %s, %s, 'admission_discharge', %s, %s::jsonb, %s::jsonb, NOW())
+                """,
+                (
+                    new_id("dtl"),
+                    step_index,
+                    sim_time,
+                    admission_id,
+                    Json({"manual": True, "source": "frontend_remove_patient"}),
+                    Json(_json_safe(wr)),
+                ),
+            )
+    return {"discharge": _json_safe(wr), "state": get_demo_state(conn)}
 
 
 def get_demo_state(conn: Connection) -> DemoHospitalState:
@@ -761,7 +875,8 @@ def next_demo_step(conn: Connection) -> DemoNextResponse:
     2. Parallel fulfill pending lab/MDT requests per patient (patient-level agents only).
     3. Parallel clinical event + per-patient agent chain (ward_coordinator deferred).
     4. Single ward_coordinator evaluation for the whole ICU.
-    Ward capacity is capped at **DEMO_MAX_BEDS** (5) demo beds (`demo_b_01` … `demo_b_05`).
+    Ward capacity is capped at **DEMO_MAX_BEDS** (10) demo beds (`demo_b_01` … `demo_b_10`),
+    with at least **DEMO_MIN_ACTIVE_PATIENTS** active ICU patients after every tick.
     """
     _ensure_demo_tables(conn)
     step_wall_started_at = datetime.now(timezone.utc)
@@ -782,6 +897,7 @@ def next_demo_step(conn: Connection) -> DemoNextResponse:
         sim_after = sim_before + timedelta(minutes=SIM_STEP_MINUTES)
         step_index = prev_index + 1
         before_all = _counts(conn)
+        _seed_demo_beds(conn)
 
         active_start = _active_admissions(conn)
         progress_emit(
@@ -800,28 +916,38 @@ def next_demo_step(conn: Connection) -> DemoNextResponse:
         sub_events: list[dict[str, Any]] = []
         discharged_ids: list[str] = []
 
-        max_dis = min(2, len(active_start)) if active_start else 0
+        discharge_candidates = _clinical_discharge_candidates(conn, active_start)
+        safe_discharge_room = max(0, len(active_start) - DEMO_MIN_ACTIVE_PATIENTS)
+        max_dis = min(2, safe_discharge_room, len(discharge_candidates))
         nd = random.randint(0, max_dis) if max_dis > 0 else 0
         for _ in range(nd):
             active_now = _active_admissions(conn)
-            pool = [a for a in active_now if a["admission_id"] not in discharged_ids]
+            candidate_ids = {str(a["admission_id"]) for a in _clinical_discharge_candidates(conn, active_now)}
+            pool = [
+                a
+                for a in active_now
+                if a["admission_id"] not in discharged_ids and str(a["admission_id"]) in candidate_ids
+            ]
             if not pool:
                 break
             tgt = random.choice(pool)
             discharged_ids.append(cast(str, tgt["admission_id"]))
             wr = _discharge_random(conn, tgt, sim_after)
-            sub_events.append({"type": "admission_discharge", "admission_id": tgt["admission_id"], "write_result": _json_safe(wr)})
+            sub_events.append({
+                "type": "admission_discharge",
+                "admission_id": tgt["admission_id"],
+                "reason": "clinical_stable_no_active_risks",
+                "write_result": _json_safe(wr),
+            })
 
         active_after_dis = _active_admissions(conn)
         admit_slots = max(0, DEMO_MAX_BEDS - len(active_after_dis))
-        na = random.randint(0, 2)
-        if not active_start:
-            na = max(na, 1)
+        needed_min = max(0, DEMO_MIN_ACTIVE_PATIENTS - len(active_after_dis))
+        na = max(needed_min, random.randint(0, 2))
         na = min(na, admit_slots)
-        admit_tags = ["", "a", "b"]
         for k in range(na):
             bed = _available_demo_bed(conn, step_index=step_index, slot=k)
-            sub_tag = admit_tags[k] if k < len(admit_tags) else f"x{k}"
+            sub_tag = f"a{k + 1}"
             wr = _create_patient_bed_admission(conn, sim_after, step_index, sub_tag=sub_tag, bed_id=bed)
             sub_events.append({"type": "admission_create", "admission_id": wr["admission_id"], "write_result": _json_safe(wr)})
 
@@ -869,27 +995,37 @@ def next_demo_step(conn: Connection) -> DemoNextResponse:
         sub_events.extend(request_fulfillment)
 
     random.shuffle(active_clinical)
-    clinical_jobs = [
-        (adm, sim_after, random.choice(["vital_sign", "lab", "intervention"])) for adm in active_clinical
-    ]
+    clinical_jobs: list[tuple[dict[str, Any], datetime, list[str]]] = []
+    for adm in active_clinical:
+        event_types = ["vital_sign"]
+        if random.random() < 0.35:
+            event_types.append("lab")
+        if random.random() < 0.30:
+            event_types.append("intervention")
+        clinical_jobs.append((adm, sim_after, event_types))
 
     progress_emit(
         {
             "type": "phase",
-            "message": f"阶段 3/4：为 {len(active_clinical)} 位在院患者并行写入临床事件并运行患者级 Agent 链…",
+            "message": f"阶段 3/4：为 {len(active_clinical)} 位在院患者写入新体征，并按需追加检验/干预事件后运行患者级 Agent 链…",
         }
     )
 
     captured_emit = get_progress_emit()
 
-    def _clinical_job(job: tuple[dict[str, Any], datetime, str]) -> dict[str, Any]:
-        adm, sim_t, et = job
-        if captured_emit:
-            with progress_scope(captured_emit):
-                return _run_clinical_event_isolated(adm, sim_t, et)
-        return _run_clinical_event_isolated(adm, sim_t, et)
+    def _clinical_job(job: tuple[dict[str, Any], datetime, list[str]]) -> list[dict[str, Any]]:
+        adm, sim_t, event_types = job
+        events: list[dict[str, Any]] = []
+        for et in event_types:
+            if captured_emit:
+                with progress_scope(captured_emit):
+                    events.append(_run_clinical_event_isolated(adm, sim_t, et))
+            else:
+                events.append(_run_clinical_event_isolated(adm, sim_t, et))
+        return events
 
-    sub_events.extend(parallel_map(clinical_jobs, _clinical_job))
+    for patient_events in parallel_map(clinical_jobs, _clinical_job):
+        sub_events.extend(patient_events)
 
     progress_emit({"type": "phase", "message": "阶段 4/4：全病房统一运行 ward_coordinator…"})
     ward_sub = _run_ward_coordinator_batch_isolated()

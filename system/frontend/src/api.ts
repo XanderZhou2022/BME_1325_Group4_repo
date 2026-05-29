@@ -111,6 +111,12 @@ export const api = {
     return request<JsonObj[]>(`/admissions/${encodeURIComponent(admissionId)}/agent_events${q}`);
   },
 
+  generateFamilyDraft: (admissionId: string, draftType = "daily_family_update_zh") =>
+    request<JsonObj>("/agents/compassion-family/draft", {
+      method: "POST",
+      body: JSON.stringify({ admission_id: admissionId, draft_type: draftType }),
+    }),
+
   getOrchestratorRuns: (limit = 20) =>
     request<JsonObj[]>(`/orchestrator/runs?limit=${limit}`),
 
@@ -119,6 +125,9 @@ export const api = {
 
   demoAutoReset: () => request<JsonObj>("/demo/auto/reset", { method: "POST" }),
   demoAutoNext: () => request<JsonObj>("/demo/auto/next", { method: "POST" }),
+  demoAutoAddPatient: () => request<JsonObj>("/demo/auto/admit-random", { method: "POST" }),
+  demoAutoDischargePatient: (admissionId: string) =>
+    request<JsonObj>(`/demo/auto/admissions/${encodeURIComponent(admissionId)}/discharge`, { method: "POST" }),
   demoAutoState: () => request<JsonObj>("/demo/auto/state"),
   demoAutoTimeline: (limit = 100) => request<JsonObj>(`/demo/auto/timeline?limit=${limit}`),
 

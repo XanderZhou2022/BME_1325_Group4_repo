@@ -121,10 +121,13 @@ def _memory_fallback(input_payload: dict[str, Any]) -> dict[str, Any]:
 
 def _ward_fallback(input_payload: dict[str, Any]) -> dict[str, Any]:
     cards = _card_ids(input_payload)
+    icu_status = input_payload.get("icu_status") if isinstance(input_payload.get("icu_status"), dict) else {}
+    queue = [item for item in input_payload.get("priority_queue", []) if isinstance(item, dict)]
+    immediate = [str(item.get("bed_id")) for item in queue if str(item.get("priority_level")) == "immediate"]
+    urgent = [str(item.get("bed_id")) for item in queue if str(item.get("priority_level")) == "urgent"]
+    ref_titles = [str(c.get("title") or c.get("card_id")) for c in input_payload.get("retrieved_knowledge_cards", []) if isinstance(c, dict)]
     rationales = []
-    for item in input_payload.get("priority_queue", []):
-        if not isinstance(item, dict):
-            continue
+    for item in queue:
         rationales.append(
             {
                 "bed_id": str(item.get("bed_id", "")),
@@ -139,6 +142,25 @@ def _ward_fallback(input_payload: dict[str, Any]) -> dict[str, Any]:
     return {
         "ward_id": str(input_payload.get("ward_id", "icu_01")),
         "generated_at": str(input_payload.get("generated_at", "")),
+        "ward_overview": (
+            f"当前 ICU 共有 {icu_status.get('occupied_beds', len(queue))} 位在院患者，"
+            f"其中 critical {icu_status.get('critical_patients', 0)} 位，高风险 {icu_status.get('high_risk_patients', 0)} 位，"
+            f"近 1 小时新恶化 {icu_status.get('new_deteriorations', 0)} 位。整体需要继续严密观察。"
+        ),
+        "priority_reasoning": (
+            "当前排布依据规则化优先级评分：风险等级、活动风险数量、近期恶化、干预后反应和未解决关键问题共同决定排序。"
+        ),
+        "references_used": ref_titles[:5] or cards[:5],
+        "next_step_plan": [
+            "优先复核 immediate/urgent 床位的最新生命体征、风险输出和未解决问题。",
+            "在下一轮病区评估中确认高优先级患者是否出现新的恶化或稳定趋势。",
+            "所有排序仅作为临床复核线索，不替代医生决策。",
+        ],
+        "focus_points": [
+            "重点关注 immediate 床位：" + ", ".join(immediate) if immediate else "暂无 immediate 床位，但仍需关注高风险患者。",
+            "重点关注 urgent 床位：" + ", ".join(urgent) if urgent else "暂无 urgent 床位。",
+            "关注新恶化和未解决关键问题，因为它们会改变病区优先级。",
+        ],
         "priority_rationales": rationales,
         "global_watch_items": ["Review high-priority queue items using clinical judgment."],
         "review_reminders": ["Ward Coordinator explanations do not allocate beds or decide admission/discharge."],
@@ -152,19 +174,33 @@ def _ward_fallback(input_payload: dict[str, Any]) -> dict[str, Any]:
 
 def _family_fallback(input_payload: dict[str, Any]) -> dict[str, Any]:
     cards = _card_ids(input_payload)
+    summary = input_payload.get("clinical_summary") if isinstance(input_payload.get("clinical_summary"), dict) else {}
+    risk = input_payload.get("risk_sentinel_high_level") if isinstance(input_payload.get("risk_sentinel_high_level"), dict) else {}
+    status = str(summary.get("one_line_status") or "目前 ICU 团队正在持续观察病情变化")
+    watch_items = summary.get("watch_items") if isinstance(summary.get("watch_items"), list) else []
+    active_risks = risk.get("active_risks") if isinstance(risk.get("active_risks"), list) else []
+    care_focus = "、".join(str(x) for x in watch_items[:3]) if watch_items else "生命体征、检查结果和对治疗支持的反应"
+    risk_text = "、".join(str((x or {}).get("risk_type") or x) for x in active_risks[:3]) if active_risks else "需要继续观察的风险信号"
     return {
         "patient_id": str(input_payload.get("patient_id", "")),
         "draft_type": str(input_payload.get("draft_type", "daily_family_update_draft")),
-        "clinician_review_version": "Draft generated for clinician review only.",
-        "family_plain_language_draft": "A clinician should review the latest ICU summary before any family update is shared.",
-        "icu_diary_draft": "Today the ICU team continued to follow changes documented in the clinical record.",
-        "communication_cautions": ["Do not deliver this draft without clinician approval."],
-        "what_not_to_say": ["Do not state prognosis or treatment decisions unless explicitly clinician-approved."],
+        "clinician_review_version": "以下内容仅供医生审核后用于家属沟通，请勿直接发送。",
+        "family_plain_language_draft": (
+            f"家属您好，先和您说明一下目前的情况：{status}。"
+            f"现在 ICU 团队重点关注的是{care_focus}。"
+            f"目前看到的主要风险信号包括{risk_text}，所以仍需要严密监测。"
+            "接下来的目标是尽量让各项指标朝稳定方向变化；我们希望情况逐步好转，"
+            "但现在还不能做确定承诺，需要根据后续生命体征、化验和治疗反应继续判断。"
+            "这段话需要主管医生审核后再向家属说明。"
+        ),
+        "icu_diary_draft": "今天 ICU 团队继续密切观察病情变化，重点看生命体征、检查结果以及治疗支持后的反应，希望身体指标逐步趋于稳定。",
+        "communication_cautions": ["需医生审核后再沟通。", "不要承诺一定好转。", "不要加入输入资料之外的新治疗方案。"],
+        "what_not_to_say": ["不要说预后已经确定。", "不要说治疗一定有效。", "不要直接给出未经医生确认的治疗决策。"],
         "supporting_card_ids": cards[:5],
         "forbidden_use_reminder": [
-            "Do not deliver directly to family without clinician approval.",
-            "Do not use as prognosis statement.",
-            "Do not use as treatment decision.",
+            "未经医生审核不要直接交给家属。",
+            "不要作为确定预后说明。",
+            "不要作为治疗决策或医嘱。",
         ],
         "requires_clinician_approval_before_delivery": True,
         "human_review_required": True,
