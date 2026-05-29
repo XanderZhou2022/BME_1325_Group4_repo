@@ -10,14 +10,17 @@
  * @packageDocumentation
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { layoutWithDemoBedsOnly } from '@viewer/data/bedMapping';
 import { ThreeFloorPlan } from '@viewer/components/ThreeFloorPlan';
 import { loadMapLayout } from '@viewer/parser/loadMapLayout';
 import type { MapLayout } from '@viewer/parser/types';
 import { MAP_CATALOGUE, getCatalogueEntry, type MapCatalogueEntry } from '@viewer/data/maps';
 import { ICUDataOverlay } from '@viewer/components/ICUDataOverlay';
 import { ICUDashboard } from '@viewer/components/ICUDashboard';
+import { ViewerDashboardPanel } from '@viewer/components/ViewerDashboardPanel';
 import { useICUData } from '@viewer/hooks/useICUData';
+import { DEMO_MAX_BEDS } from '@dashboard/showcase/autoDemoConstants';
 
 type LoadingState =
   | { kind: 'idle' }
@@ -41,7 +44,13 @@ export function MapViewer() {
 
   // Load ICU data (mocked for now, simulates bedside_monitor and frontend)
   // Increased to 20 to match the new 5x4 layout
-  const { bedMonitors, mainConsole } = useICUData(10);
+  const { bedMonitors, beds, mainConsole } = useICUData(DEMO_MAX_BEDS);
+
+  const displayLayout = useMemo(() => {
+    if (state.kind !== 'ready') return null;
+    if (state.layout.mapId === 'icu_layout') return layoutWithDemoBedsOnly(state.layout);
+    return state.layout;
+  }, [state]);
 
   // Load the selected map.
   useEffect(() => {
@@ -124,20 +133,15 @@ export function MapViewer() {
           </label>
 
           {state.kind === 'ready' && state.layout.mapId === 'icu_layout' && (
-            <div style={{ marginTop: '16px' }}>
-              <button
-                type="button"
-                className="map-list-item"
-                onClick={() => window.location.href = 'http://localhost:5173'}
-                style={{ width: '100%', padding: '8px', textAlign: 'center', cursor: 'pointer' }}
-              >
-                📊 Open ICU Dashboard
-              </button>
-            </div>
+            <ViewerDashboardPanel
+              consoleData={mainConsole}
+              beds={beds}
+              onOpenDashboard={() => { window.location.href = '/auto'; }}
+            />
           )}
 
-          {state.kind === 'ready' ? (
-            <ParserStats layout={state.layout} />
+          {state.kind === 'ready' && displayLayout ? (
+            <ParserStats layout={displayLayout} />
           ) : null}
         </aside>
 
@@ -153,7 +157,7 @@ export function MapViewer() {
               <pre>{state.error}</pre>
             </div>
           ) : null}
-          {state.kind === 'ready' ? (
+          {state.kind === 'ready' && displayLayout ? (
             viewMode === 'dashboard' && state.layout.mapId === 'icu_layout' ? (
               <ICUDashboard
                 monitors={bedMonitors}
@@ -163,16 +167,16 @@ export function MapViewer() {
             ) : (
               <ThreeFloorPlan
                 key={state.layout.mapId}
-                layout={state.layout}
+                layout={displayLayout}
                 showZoneLabels={showZoneLabels}
                 showSpawnOverlay={showSpawnOverlay}
               >
                 {state.layout.mapId === 'icu_layout' && (
                   <ICUDataOverlay
-                    layout={state.layout}
-                    monitors={bedMonitors}
+                    layout={displayLayout}
+                    beds={beds}
                     consoleData={mainConsole}
-                    onConsoleClick={() => window.location.href = 'http://localhost:5173'}
+                    onConsoleClick={() => { window.location.href = '/auto'; }}
                   />
                 )}
               </ThreeFloorPlan>

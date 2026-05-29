@@ -28,7 +28,7 @@ import * as THREE from 'three';
 import { TextureLoader } from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import type { MapLayout, EquipmentPlacement, ZoneRegion } from '@viewer/parser/types';
-import { CANVAS_BACKGROUND_COLOR } from '@viewer/theme/colors';
+import { CANVAS_BACKGROUND_COLOR, ZONE_COLORS } from '@viewer/theme/colors';
 
 /** Props for {@link ThreeFloorPlan}. */
 export interface ThreeFloorPlanProps {
@@ -101,6 +101,16 @@ const MODEL_SCALE: Record<string, number> = {
  */
 const DECORATION_HANDLED_TYPES = new Set(['waiting_room_chair']);
 
+/** Simple colours for procedural furniture when FBX assets are absent. */
+const EQUIPMENT_COLORS: Record<string, string> = {
+  bed: '#60A5FA',
+  chair: '#A78BFA',
+  wheelchair: '#34D399',
+  medical_equipment: '#F472B6',
+  computer: '#38BDF8',
+  diagnostic_table: '#FBBF24'
+};
+
 /* ZONE_COLORS and CANVAS_BACKGROUND_COLOR imported from @viewer/theme/colors */
 
 /* -------------------------------------------------------------------------- */
@@ -147,8 +157,6 @@ function ZoneFloor({ zone }: { zone: ZoneRegion }) {
     return s;
   }, [zone.tilePositions]);
 
-  if (!floorModel) return null;
-
   const minX = zone.bounds.minX;
   const minZ = zone.bounds.minY;
   const maxX = zone.bounds.maxX + 1;
@@ -163,17 +171,31 @@ function ZoneFloor({ zone }: { zone: ZoneRegion }) {
     }
   }
 
+  const zoneColor = ZONE_COLORS[zone.zoneId] ?? '#9CA3AF';
+
   return (
     <>
-      {tiles.map(({ x, z, key }) => (
-        <primitive
-          key={key}
-          object={floorModel.clone(true)}
-          position={[x + 0.5, FLOOR_Y, z + 0.5]}
-          rotation={[-Math.PI / 2, 0, 0]}
-          scale={[FBX_SCALE, FBX_SCALE, FBX_SCALE]}
-        />
-      ))}
+      {tiles.map(({ x, z, key }) =>
+        floorModel ? (
+          <primitive
+            key={key}
+            object={floorModel.clone(true)}
+            position={[x + 0.5, FLOOR_Y, z + 0.5]}
+            rotation={[-Math.PI / 2, 0, 0]}
+            scale={[FBX_SCALE, FBX_SCALE, FBX_SCALE]}
+          />
+        ) : (
+          <mesh
+            key={key}
+            position={[x + 0.5, FLOOR_Y + 0.01, z + 0.5]}
+            rotation={[-Math.PI / 2, 0, 0]}
+            receiveShadow
+          >
+            <planeGeometry args={[0.98, 0.98]} />
+            <meshStandardMaterial color={zoneColor} roughness={0.92} metalness={0} />
+          </mesh>
+        )
+      )}
     </>
   );
 }
@@ -191,8 +213,6 @@ function ZoneFloor({ zone }: { zone: ZoneRegion }) {
  */
 function Walls({ layout }: { layout: MapLayout }) {
   const wallModel = useFBXModel('/models/hospital/wall_small_ward.fbx');
-
-  if (!wallModel) return null;
 
   const wallPlacements: Array<{
     key: string;
@@ -231,15 +251,28 @@ function Walls({ layout }: { layout: MapLayout }) {
 
   return (
     <>
-      {wallPlacements.map(({ key, x, z, rotY }) => (
-        <primitive
-          key={key}
-          object={wallModel.clone(true)}
-          position={[x, FLOOR_Y, z]}
-          rotation={[-Math.PI / 2, 0, rotY]}
-          scale={[FBX_SCALE, FBX_SCALE, FBX_SCALE]}
-        />
-      ))}
+      {wallPlacements.map(({ key, x, z, rotY }) =>
+        wallModel ? (
+          <primitive
+            key={key}
+            object={wallModel.clone(true)}
+            position={[x, FLOOR_Y, z]}
+            rotation={[-Math.PI / 2, 0, rotY]}
+            scale={[FBX_SCALE, FBX_SCALE, FBX_SCALE]}
+          />
+        ) : (
+          <mesh
+            key={key}
+            position={[x, 1.2, z]}
+            rotation={[0, rotY, 0]}
+            castShadow
+            receiveShadow
+          >
+            <boxGeometry args={[1, 2.4, 0.12]} />
+            <meshStandardMaterial color="#E8EAED" roughness={0.85} metalness={0} />
+          </mesh>
+        )
+      )}
     </>
   );
 }
@@ -363,14 +396,27 @@ function FurnitureModel({
   const model = useFBXModel(modelUrl);
   const scale = MODEL_SCALE[piece.type] ?? 0.012;
 
-  if (!model) return null;
+  if (model) {
+    return (
+      <primitive
+        object={model}
+        position={[piece.tileX + 0.5, FLOOR_Y, piece.tileY + 0.5]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        scale={[scale, scale, scale]}
+      />
+    );
+  }
+
+  const color = EQUIPMENT_COLORS[piece.type] ?? '#94A3B8';
   return (
-    <primitive
-      object={model}
-      position={[piece.tileX + 0.5, FLOOR_Y, piece.tileY + 0.5]}
-      rotation={[-Math.PI / 2, 0, 0]}
-      scale={[scale, scale, scale]}
-    />
+    <mesh
+      position={[piece.tileX + 0.5, 0.35, piece.tileY + 0.5]}
+      castShadow
+      receiveShadow
+    >
+      <boxGeometry args={[0.7, 0.7, 0.7]} />
+      <meshStandardMaterial color={color} roughness={0.7} metalness={0.05} />
+    </mesh>
   );
 }
 

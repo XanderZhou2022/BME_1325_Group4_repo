@@ -43,7 +43,7 @@ export const MAP_CATALOGUE: MapCatalogueEntry[] = [
   {
     id: 'icu_layout',
     displayName: 'ICU Ward Layout',
-    description: '6-bed Intensive Care Unit with bedside monitors & main console.',
+    description: '10-bed ICU ward (aligned with Auto Demo Dashboard).',
     load: {
       mapId: 'icu_layout',
       tiledJsonUrl: icuJsonUrl,

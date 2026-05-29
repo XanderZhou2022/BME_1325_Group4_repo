@@ -1,13 +1,13 @@
 import React from 'react';
-import type { BedsideMonitorData, MainConsoleData } from '@viewer/hooks/useICUData';
+import type { BedsideMonitorData, MainConsoleData, ViewerBedData } from '@viewer/hooks/useICUData';
 
 interface ICUDashboardProps {
-  monitors: BedsideMonitorData[];
+  monitors: BedsideMonitorData[] | ViewerBedData[];
   consoleData: MainConsoleData | null;
   onBack?: () => void;
 }
 
-const StatusColor = { stable: '#22c55e', warning: '#f59e0b', critical: '#ef4444' } as const;
+const StatusColor = { stable: '#22c55e', warning: '#f59e0b', critical: '#ef4444', empty: '#64748b' } as const;
 
 export const ICUDashboard: React.FC<ICUDashboardProps> = ({ monitors, consoleData, onBack }) => {
   return (
@@ -59,7 +59,13 @@ export const ICUDashboard: React.FC<ICUDashboardProps> = ({ monitors, consoleDat
               <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{m.bedId}</span>
               <span style={{ color: StatusColor[m.status], fontWeight: 'bold' }}>{m.status.toUpperCase()}</span>
             </div>
-            <div style={{ fontSize: '14px', color: '#94a3b8', marginBottom: '10px' }}>{m.patientName}</div>
+            <div style={{ fontSize: '14px', color: '#94a3b8', marginBottom: '10px' }}>
+              {'patientName' in m && m.patientName
+                ? m.patientName
+                : m.patientId
+                  ? `患者 ${m.patientId}`
+                  : '空床'}
+            </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px', textAlign: 'center' }}>
               <div>
                 <div style={{ fontSize: '12px', color: '#94a3b8' }}>HR</div>
