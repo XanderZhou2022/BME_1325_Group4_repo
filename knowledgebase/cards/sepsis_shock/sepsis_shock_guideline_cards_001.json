@@ -1,0 +1,387 @@
+[
+  {
+    "card_id": "sepsis_shock_screening_001",
+    "source_id": "surviving_sepsis_campaign_2021_001",
+    "source_title": "Surviving Sepsis Campaign: International Guidelines for Management of Sepsis and Septic Shock 2021",
+    "domain": "sepsis_shock",
+    "subdomain": "recognition",
+    "population": "adult",
+    "card_type": "risk_background",
+    "topic": "Sepsis screening requires structured context",
+    "clinical_context": "Use when infection is suspected with hypotension, fever or hypothermia, tachycardia, tachypnea, lactate elevation, or organ dysfunction signals.",
+    "key_points": [
+      "Sepsis recognition should be based on a structured clinical context rather than a single abnormal vital sign.",
+      "The guideline distinguishes screening tools from final clinical diagnosis.",
+      "Use this card to support clinician-facing summary language about possible sepsis physiology and need for review."
+    ],
+    "trigger_signals": [
+      "suspected infection",
+      "fever",
+      "hypothermia",
+      "tachycardia",
+      "tachypnea",
+      "hypotension",
+      "altered mental status",
+      "lactate elevation"
+    ],
+    "related_risk_types": [
+      "sepsis_risk",
+      "septic_shock_risk",
+      "persistent_shock_risk",
+      "aki_risk",
+      "respiratory_failure_risk"
+    ],
+    "used_by_agents": [
+      "BedsideMonitorAgent",
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "risk explanation",
+      "clinical summary",
+      "human review escalation wording",
+      "summary_context",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "automatic diagnosis",
+      "antibiotic order",
+      "vasopressor order",
+      "fluid prescription",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "sepsis",
+      "suspected infection",
+      "screening",
+      "organ dysfunction",
+      "lactate",
+      "hypotension"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Screening and early treatment",
+      "quote": "screening for sepsis among acutely ill, high-risk patients"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "sepsis_shock_lactate_002",
+    "source_id": "surviving_sepsis_campaign_2021_001",
+    "source_title": "Surviving Sepsis Campaign: International Guidelines for Management of Sepsis and Septic Shock 2021",
+    "domain": "sepsis_shock",
+    "subdomain": "perfusion_marker",
+    "population": "adult",
+    "card_type": "guideline_context",
+    "topic": "Lactate as perfusion and risk context",
+    "clinical_context": "Use when lactate is elevated, rising, unavailable despite shock concern, or paired with hypotension and organ dysfunction.",
+    "key_points": [
+      "Lactate can support risk context in suspected sepsis and shock.",
+      "A rising or persistently elevated lactate should be summarized as a review trigger, not as proof of a diagnosis.",
+      "Use this card to connect hemodynamic trends with need for human assessment."
+    ],
+    "trigger_signals": [
+      "lactate elevation",
+      "rising lactate",
+      "persistent hypotension",
+      "poor perfusion",
+      "shock physiology"
+    ],
+    "related_risk_types": [
+      "sepsis_risk",
+      "septic_shock_risk",
+      "persistent_shock_risk",
+      "aki_risk"
+    ],
+    "used_by_agents": [
+      "RiskSentinelAgent",
+      "InterventionTrackerAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "risk explanation",
+      "clinical summary",
+      "intervention_response_context",
+      "human review escalation wording",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "automatic diagnosis",
+      "fluid prescription",
+      "vasopressor order",
+      "drug dose recommendation",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "lactate",
+      "hypoperfusion",
+      "septic shock",
+      "persistent shock",
+      "perfusion"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Initial resuscitation",
+      "quote": "measuring blood lactate in adults suspected of having sepsis"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "sepsis_shock_antimicrobial_timing_003",
+    "source_id": "surviving_sepsis_campaign_2021_001",
+    "source_title": "Surviving Sepsis Campaign: International Guidelines for Management of Sepsis and Septic Shock 2021",
+    "domain": "sepsis_shock",
+    "subdomain": "infection_management_context",
+    "population": "adult",
+    "card_type": "escalation_principle",
+    "topic": "Suspected septic shock is time-sensitive",
+    "clinical_context": "Use when suspected infection is paired with shock-level physiology or rapid deterioration.",
+    "key_points": [
+      "The guideline treats suspected sepsis with shock as time-sensitive.",
+      "Clinical Summary may flag antimicrobial timing as a clinician-review issue without recommending a specific drug.",
+      "Use only as escalation wording and audit context."
+    ],
+    "trigger_signals": [
+      "suspected infection with shock",
+      "septic shock concern",
+      "rapid deterioration",
+      "vasopressor use",
+      "persistent hypotension"
+    ],
+    "related_risk_types": [
+      "sepsis_risk",
+      "septic_shock_risk",
+      "persistent_shock_risk"
+    ],
+    "used_by_agents": [
+      "RiskSentinelAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "human review escalation wording",
+      "clinical summary",
+      "watch_item_generation",
+      "risk explanation"
+    ],
+    "forbidden_use": [
+      "antibiotic selection",
+      "antibiotic order",
+      "automatic diagnosis",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "antimicrobial timing",
+      "septic shock",
+      "time sensitive",
+      "infection",
+      "escalation"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Antimicrobial timing",
+      "quote": "administer antimicrobials immediately, ideally within 1 h"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "sepsis_shock_fluid_response_004",
+    "source_id": "surviving_sepsis_campaign_2021_001",
+    "source_title": "Surviving Sepsis Campaign: International Guidelines for Management of Sepsis and Septic Shock 2021",
+    "domain": "sepsis_shock",
+    "subdomain": "hemodynamic_response",
+    "population": "adult",
+    "card_type": "guideline_context",
+    "topic": "Fluid response should be reassessed dynamically",
+    "clinical_context": "Use when hypotension or perfusion markers persist after a documented fluid intervention.",
+    "key_points": [
+      "The guideline emphasizes reassessment during resuscitation.",
+      "Clinical Summary can describe non-response or partial response after fluids as a review item.",
+      "This card must not be used to recommend a bolus amount or fluid type."
+    ],
+    "trigger_signals": [
+      "fluid bolus",
+      "partially_responsive",
+      "non_responsive",
+      "persistent hypotension after fluids",
+      "rising lactate after intervention"
+    ],
+    "related_risk_types": [
+      "sepsis_risk",
+      "septic_shock_risk",
+      "persistent_shock_risk",
+      "aki_risk"
+    ],
+    "used_by_agents": [
+      "InterventionTrackerAgent",
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent"
+    ],
+    "allowed_use": [
+      "intervention_response_context",
+      "non_response_explanation",
+      "clinical summary",
+      "human review escalation wording"
+    ],
+    "forbidden_use": [
+      "fluid prescription",
+      "drug dose recommendation",
+      "automatic treatment decision",
+      "automatic diagnosis"
+    ],
+    "retrieval_keywords": [
+      "fluid response",
+      "dynamic reassessment",
+      "hypotension",
+      "sepsis resuscitation",
+      "non-response"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Initial resuscitation",
+      "quote": "dynamic measures to guide fluid resuscitation"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "sepsis_shock_vasopressor_context_005",
+    "source_id": "surviving_sepsis_campaign_2021_001",
+    "source_title": "Surviving Sepsis Campaign: International Guidelines for Management of Sepsis and Septic Shock 2021",
+    "domain": "sepsis_shock",
+    "subdomain": "vasopressor_context",
+    "population": "adult",
+    "card_type": "risk_background",
+    "topic": "Vasopressor use signals shock-level review context",
+    "clinical_context": "Use when vasopressor initiation, escalation, or persistent low MAP appears in structured events.",
+    "key_points": [
+      "Vasopressor use is a meaningful context signal for shock severity and monitoring.",
+      "Clinical Summary may mention vasopressor escalation or MAP non-response as a review point.",
+      "Do not recommend agent selection, target dose, or titration."
+    ],
+    "trigger_signals": [
+      "vasopressor use",
+      "vasopressor escalation",
+      "persistent low MAP",
+      "shock persistence",
+      "mean arterial pressure"
+    ],
+    "related_risk_types": [
+      "septic_shock_risk",
+      "persistent_shock_risk",
+      "aki_risk"
+    ],
+    "used_by_agents": [
+      "RiskSentinelAgent",
+      "InterventionTrackerAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "risk explanation",
+      "intervention_response_context",
+      "clinical summary",
+      "human review escalation wording"
+    ],
+    "forbidden_use": [
+      "vasopressor order",
+      "drug dose recommendation",
+      "automatic treatment decision",
+      "automatic diagnosis"
+    ],
+    "retrieval_keywords": [
+      "vasopressor",
+      "MAP",
+      "septic shock",
+      "shock persistence",
+      "norepinephrine"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Vasoactive medications",
+      "quote": "norepinephrine as the first-line agent"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "sepsis_shock_source_control_006",
+    "source_id": "surviving_sepsis_campaign_2021_001",
+    "source_title": "Surviving Sepsis Campaign: International Guidelines for Management of Sepsis and Septic Shock 2021",
+    "domain": "sepsis_shock",
+    "subdomain": "source_control_context",
+    "population": "adult",
+    "card_type": "guideline_context",
+    "topic": "Source control can be a summary watch item",
+    "clinical_context": "Use when suspected infection persists, cultures or imaging are pending, or shock does not improve despite early measures.",
+    "key_points": [
+      "Source control is part of sepsis management context.",
+      "Clinical Summary can list unresolved source-control review as a watch item when supported by existing structured facts.",
+      "The card does not identify an infection source or recommend a procedure."
+    ],
+    "trigger_signals": [
+      "suspected infection source",
+      "source control pending",
+      "persistent fever",
+      "persistent shock",
+      "culture pending"
+    ],
+    "related_risk_types": [
+      "sepsis_risk",
+      "septic_shock_risk",
+      "persistent_shock_risk"
+    ],
+    "used_by_agents": [
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "clinical summary",
+      "watch_item_generation",
+      "human review escalation wording",
+      "unresolved_issue_tracking"
+    ],
+    "forbidden_use": [
+      "procedure recommendation",
+      "automatic diagnosis",
+      "antibiotic order",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "source control",
+      "infection source",
+      "sepsis",
+      "unresolved issue",
+      "watch item"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Source control",
+      "quote": "rapidly identifying or excluding a specific anatomical diagnosis"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  }
+]

@@ -1,0 +1,331 @@
+[
+  {
+    "card_id": "hyperkalemia_ecg_arrhythmia_001",
+    "source_id": "aha_hyperkalemia_resuscitation_2020_001",
+    "source_title": "American Heart Association Guidelines for Cardiopulmonary Resuscitation and Emergency Cardiovascular Care: Hyperkalemia",
+    "domain": "electrolyte_disorders",
+    "subdomain": "hyperkalemia",
+    "population": "adult",
+    "card_type": "escalation_principle",
+    "topic": "Hyperkalemia with ECG or rhythm change is high-attention context",
+    "clinical_context": "Use when potassium is high with ECG changes, bradycardia, ventricular arrhythmia, cardiac arrest risk, AKI, or dialysis context.",
+    "key_points": [
+      "Severe hyperkalemia can be associated with life-threatening rhythm instability.",
+      "Clinical Summary can flag potassium plus ECG/rhythm context for urgent clinician review.",
+      "Do not order calcium, insulin, dialysis, or any dose."
+    ],
+    "trigger_signals": [
+      "hyperkalemia",
+      "ECG change",
+      "bradycardia",
+      "ventricular arrhythmia",
+      "AKI",
+      "dialysis patient"
+    ],
+    "related_risk_types": [
+      "hyperkalemia_risk",
+      "severe_electrolyte_risk",
+      "arrhythmia_risk",
+      "aki_risk",
+      "renal_replacement_risk"
+    ],
+    "used_by_agents": [
+      "BedsideMonitorAgent",
+      "RiskSentinelAgent",
+      "InterventionTrackerAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "human review escalation wording",
+      "clinical summary",
+      "risk explanation",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "electrolyte replacement order",
+      "calcium order",
+      "insulin order",
+      "dialysis decision",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "hyperkalemia",
+      "ECG changes",
+      "arrhythmia",
+      "AKI",
+      "dialysis"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Hyperkalemia",
+      "quote": "hyperkalemia"
+    },
+    "confidence": "medium",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "hyponatremia_neurologic_symptoms_002",
+    "source_id": "ese_esicm_hyponatremia_2014_001",
+    "source_title": "Clinical Practice Guideline on Diagnosis and Treatment of Hyponatraemia",
+    "domain": "electrolyte_disorders",
+    "subdomain": "hyponatremia",
+    "population": "adult",
+    "card_type": "risk_background",
+    "topic": "Hyponatremia severity depends on symptoms and acuity",
+    "clinical_context": "Use when low sodium is paired with seizure, confusion, coma, rapid sodium fall, or uncertain chronicity.",
+    "key_points": [
+      "Hyponatremia summaries should include sodium value, trend, symptom context, and chronicity uncertainty.",
+      "Neurologic symptoms with hyponatremia should remain visible for clinician review.",
+      "Do not recommend correction rate or hypertonic saline."
+    ],
+    "trigger_signals": [
+      "hyponatremia",
+      "seizure",
+      "confusion",
+      "coma",
+      "rapid sodium fall",
+      "unknown chronicity"
+    ],
+    "related_risk_types": [
+      "hyponatremia_risk",
+      "severe_electrolyte_risk",
+      "status_epilepticus_risk",
+      "stroke_risk"
+    ],
+    "used_by_agents": [
+      "BedsideMonitorAgent",
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "risk explanation",
+      "clinical summary",
+      "human review escalation wording",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "sodium correction recommendation",
+      "hypertonic saline order",
+      "drug dose recommendation",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "hyponatremia",
+      "low sodium",
+      "seizure",
+      "confusion",
+      "correction safety"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Guideline scope",
+      "quote": "diagnosis and treatment of hyponatraemia"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "electrolyte_trend_response_003",
+    "source_id": "ese_esicm_hyponatremia_2014_001",
+    "source_title": "Clinical Practice Guideline on Diagnosis and Treatment of Hyponatraemia",
+    "domain": "electrolyte_disorders",
+    "subdomain": "trend_monitoring",
+    "population": "adult",
+    "card_type": "guideline_context",
+    "topic": "Electrolyte response summaries should track direction and speed",
+    "clinical_context": "Use after electrolyte replacement, fluid changes, insulin therapy, diuresis, dialysis, or correction plans when repeat labs exist.",
+    "key_points": [
+      "Electrolyte safety depends on trend, symptoms, and treatment context.",
+      "Intervention response summaries should describe observed lab direction and symptoms.",
+      "Do not recommend correction targets or rates."
+    ],
+    "trigger_signals": [
+      "sodium correction",
+      "potassium correction",
+      "repeat electrolyte",
+      "rapid electrolyte change",
+      "new neurologic symptom",
+      "arrhythmia after correction"
+    ],
+    "related_risk_types": [
+      "severe_electrolyte_risk",
+      "hyponatremia_risk",
+      "hyperkalemia_risk",
+      "arrhythmia_risk",
+      "status_epilepticus_risk"
+    ],
+    "used_by_agents": [
+      "InterventionTrackerAgent",
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent"
+    ],
+    "allowed_use": [
+      "intervention_response_context",
+      "clinical summary",
+      "risk explanation",
+      "human review escalation wording"
+    ],
+    "forbidden_use": [
+      "electrolyte replacement order",
+      "correction rate recommendation",
+      "drug dose recommendation",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "electrolyte trend",
+      "sodium correction",
+      "potassium correction",
+      "repeat labs",
+      "correction safety"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Monitoring and correction",
+      "quote": "hyponatraemia"
+    },
+    "confidence": "medium",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "electrolyte_renal_interaction_004",
+    "source_id": "aha_hyperkalemia_resuscitation_2020_001",
+    "source_title": "American Heart Association Guidelines for Cardiopulmonary Resuscitation and Emergency Cardiovascular Care: Hyperkalemia",
+    "domain": "electrolyte_disorders",
+    "subdomain": "renal_interaction",
+    "population": "adult",
+    "card_type": "medication_safety_context",
+    "topic": "Renal dysfunction increases electrolyte and medication safety complexity",
+    "clinical_context": "Use when AKI or renal replacement context coexists with potassium abnormality, renally cleared drugs, or arrhythmia risk.",
+    "key_points": [
+      "Electrolyte disorders in renal dysfunction should be summarized with kidney trend and medication context.",
+      "Clinical Summary can flag renal-electrolyte-medication safety review.",
+      "Do not recommend dialysis timing or medication dose adjustment."
+    ],
+    "trigger_signals": [
+      "AKI with hyperkalemia",
+      "renal replacement therapy",
+      "renally cleared medication",
+      "potassium abnormality",
+      "arrhythmia risk"
+    ],
+    "related_risk_types": [
+      "aki_risk",
+      "renal_replacement_risk",
+      "hyperkalemia_risk",
+      "severe_electrolyte_risk",
+      "arrhythmia_risk"
+    ],
+    "used_by_agents": [
+      "RiskSentinelAgent",
+      "InterventionTrackerAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent"
+    ],
+    "allowed_use": [
+      "medication_safety_context",
+      "clinical summary",
+      "risk explanation",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "dialysis decision",
+      "drug dose recommendation",
+      "electrolyte replacement order",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "renal dysfunction",
+      "hyperkalemia",
+      "AKI",
+      "medication safety",
+      "dialysis"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Hyperkalemia",
+      "quote": "hyperkalemia"
+    },
+    "confidence": "medium",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "electrolyte_neuro_cardiac_watch_005",
+    "source_id": "ese_esicm_hyponatremia_2014_001",
+    "source_title": "Clinical Practice Guideline on Diagnosis and Treatment of Hyponatraemia",
+    "domain": "electrolyte_disorders",
+    "subdomain": "cross_system_risk",
+    "population": "adult",
+    "card_type": "risk_background",
+    "topic": "Severe electrolyte abnormalities can bridge neurologic and cardiac risk",
+    "clinical_context": "Use when sodium or potassium abnormality appears with seizure, altered mental status, ECG change, or arrhythmia.",
+    "key_points": [
+      "Electrolyte abnormalities may present through neurologic or cardiac instability.",
+      "Clinical Summary should connect lab abnormality with observed symptoms rather than treating the lab in isolation.",
+      "All severe electrolyte summaries require clinician review."
+    ],
+    "trigger_signals": [
+      "severe electrolyte abnormality",
+      "seizure",
+      "altered mental status",
+      "ECG change",
+      "arrhythmia",
+      "syncope"
+    ],
+    "related_risk_types": [
+      "severe_electrolyte_risk",
+      "hyponatremia_risk",
+      "hyperkalemia_risk",
+      "arrhythmia_risk",
+      "status_epilepticus_risk"
+    ],
+    "used_by_agents": [
+      "BedsideMonitorAgent",
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "risk explanation",
+      "clinical summary",
+      "human review escalation wording",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "automatic diagnosis",
+      "electrolyte replacement order",
+      "drug dose recommendation",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "severe electrolyte disorder",
+      "seizure",
+      "arrhythmia",
+      "hyponatremia",
+      "hyperkalemia",
+      "ECG"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Severe symptoms",
+      "quote": "severe symptoms"
+    },
+    "confidence": "medium",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  }
+]

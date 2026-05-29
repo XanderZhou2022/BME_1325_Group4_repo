@@ -30,7 +30,7 @@ export function buildStepNarrativeLines(lastStep: DemoNextFull | null): string[]
     const p = (lastStep.event_request_payload ?? {}) as Record<string, unknown>;
     const subs = p.sub_events as unknown[] | undefined;
     const n = Array.isArray(subs) ? subs.length : 0;
-    lines.push(`Ward batch tick: ${n} sub-event(s). Anchor admission for risk snapshot: ${aid || "N/A"}.`);
+    lines.push(`Ward batch tick (出入院 → 并行患者 → 全病房 Agent): ${n} sub-event(s). Anchor: ${aid || "N/A"}.`);
     if (Array.isArray(subs) && subs.length > 0) {
       const types: Record<string, number> = {};
       for (const s of subs) {
@@ -38,6 +38,16 @@ export function buildStepNarrativeLines(lastStep: DemoNextFull | null): string[]
           const t = str((s as Record<string, unknown>).type);
           types[t] = (types[t] ?? 0) + 1;
         }
+      }
+      const reqTypes = Object.entries(types).filter(([k]) => k.startsWith('agent_request'));
+      if (reqTypes.length) {
+        lines.push(`Agent requests fulfilled: ${reqTypes.map(([k, v]) => `${k}×${v}`).join(', ')}.`);
+      }
+      if (types["ward_coordinator_batch"]) {
+        lines.push("Ward coordinator ran once for the whole ICU after all patients were processed.");
+      }
+      if (types["admissions_batch_complete"]) {
+        lines.push("All admissions/discharges for this step completed before patient agents.");
       }
       lines.push(`Mix: ${Object.entries(types)
         .map(([k, v]) => `${k}×${v}`)

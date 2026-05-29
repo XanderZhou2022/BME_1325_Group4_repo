@@ -242,6 +242,27 @@ class AuditLogOut(BaseModel):
     output: dict[str, Any]
 
 
+class LlmAuditLogOut(BaseModel):
+    audit_log_id: str
+    timestamp: datetime
+    task_name: str
+    agent_name: str | None = None
+    patient_id: str | None = None
+    admission_id: str | None = None
+    prompt_template: str | None = None
+    model: str | None = None
+    llm_enabled: bool = False
+    schema_valid: bool | None = None
+    safety_valid: bool | None = None
+    fallback_used: bool = False
+    error: str | None = None
+    retrieved_card_ids: list[str] = Field(default_factory=list)
+    input_payload: dict[str, Any] = Field(default_factory=dict)
+    raw_output: str | None = None
+    parsed_output: dict[str, Any] | None = None
+    record: dict[str, Any] = Field(default_factory=dict)
+
+
 class AgentOutputOut(BaseModel):
     output_id: str
     admission_id: str
@@ -358,3 +379,45 @@ class TableRowPreview(BaseModel):
     table_name: str
     total_rows: int
     rows: list[dict[str, Any]]
+
+
+class MdtConsultationLimits(BaseModel):
+    labs: int = Field(default=20, ge=1, le=100)
+    interventions: int = Field(default=20, ge=1, le=100)
+    risks: int = Field(default=10, ge=1, le=50)
+
+
+class MdtConsultationTriggerIn(BaseModel):
+    reason: str = "ICU manual MDT consultation"
+    questions_for_mdt: list[str] = Field(default_factory=list)
+    use_api: bool = False
+    limits: MdtConsultationLimits = Field(default_factory=MdtConsultationLimits)
+
+
+class MdtConsultationResultOut(BaseModel):
+    admission_id: str
+    patient_id: str
+    consultation_id: str
+    finalized: bool
+    mdt_output_type: str
+    mdt_judgment: dict[str, Any] = Field(default_factory=dict)
+    treatment_and_surgical_plan: list[Any] = Field(default_factory=list)
+    recommendations: list[str] = Field(default_factory=list)
+    required_updates: list[dict[str, Any]] = Field(default_factory=list)
+    next_steps: list[str] = Field(default_factory=list)
+    case_summary: str = ""
+    safety_boundary: str = ""
+    output_id: str
+    simi_health_ok: bool = True
+
+
+class MdtLatestOut(BaseModel):
+    output_id: str
+    admission_id: str
+    patient_id: str
+    bed_id: str
+    agent_name: str
+    schema_version: str
+    output_type: str
+    generated_at: datetime
+    payload: dict[str, Any] = Field(default_factory=dict)

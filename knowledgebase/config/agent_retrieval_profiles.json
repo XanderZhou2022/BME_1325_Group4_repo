@@ -2,6 +2,14 @@
   "risk_sentinel": {
     "allowed_domains": [
       "clinical_deterioration",
+      "sepsis_shock",
+      "ards_respiratory_failure",
+      "aki_renal_failure",
+      "cardiogenic_shock_acs",
+      "neurocritical_stroke_seizure",
+      "metabolic_hyperglycemic_crisis",
+      "electrolyte_disorders",
+      "trauma_major_bleeding",
       "computational_concepts",
       "medication_safety",
       "triage_resource_allocation"
@@ -33,6 +41,14 @@
   "clinical_summary": {
     "allowed_domains": [
       "clinical_deterioration",
+      "sepsis_shock",
+      "ards_respiratory_failure",
+      "aki_renal_failure",
+      "cardiogenic_shock_acs",
+      "neurocritical_stroke_seizure",
+      "metabolic_hyperglycemic_crisis",
+      "electrolyte_disorders",
+      "trauma_major_bleeding",
       "medication_safety",
       "padis_sedation_delirium",
       "triage_resource_allocation",
@@ -70,6 +86,13 @@
   "bedside_monitor": {
     "allowed_domains": [
       "clinical_deterioration",
+      "sepsis_shock",
+      "ards_respiratory_failure",
+      "cardiogenic_shock_acs",
+      "neurocritical_stroke_seizure",
+      "metabolic_hyperglycemic_crisis",
+      "electrolyte_disorders",
+      "trauma_major_bleeding",
       "padis_sedation_delirium",
       "computational_concepts"
     ],
@@ -98,6 +121,13 @@
   "intervention_tracker": {
     "allowed_domains": [
       "clinical_deterioration",
+      "sepsis_shock",
+      "ards_respiratory_failure",
+      "aki_renal_failure",
+      "cardiogenic_shock_acs",
+      "metabolic_hyperglycemic_crisis",
+      "electrolyte_disorders",
+      "trauma_major_bleeding",
       "medication_safety",
       "padis_sedation_delirium",
       "computational_concepts"
@@ -130,6 +160,14 @@
   "patient_memory": {
     "allowed_domains": [
       "clinical_deterioration",
+      "sepsis_shock",
+      "ards_respiratory_failure",
+      "aki_renal_failure",
+      "cardiogenic_shock_acs",
+      "neurocritical_stroke_seizure",
+      "metabolic_hyperglycemic_crisis",
+      "electrolyte_disorders",
+      "trauma_major_bleeding",
       "padis_sedation_delirium",
       "family_communication",
       "end_of_life_ethics",
@@ -167,6 +205,14 @@
     "allowed_domains": [
       "triage_resource_allocation",
       "clinical_deterioration",
+      "sepsis_shock",
+      "ards_respiratory_failure",
+      "aki_renal_failure",
+      "cardiogenic_shock_acs",
+      "neurocritical_stroke_seizure",
+      "metabolic_hyperglycemic_crisis",
+      "electrolyte_disorders",
+      "trauma_major_bleeding",
       "end_of_life_ethics",
       "computational_concepts",
       "general_icu_operations"

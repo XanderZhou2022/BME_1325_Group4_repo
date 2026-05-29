@@ -1,12 +1,21 @@
 from __future__ import annotations
 
+import json
+from queue import Queue
+from threading import Thread
+from typing import Any
+
+import psycopg
 from fastapi import APIRouter, Depends
+from fastapi.responses import StreamingResponse
 from psycopg import Connection
 
+from app.config import get_settings
 from app.db import get_db
 
+from .progress import progress_scope
 from .schemas import DemoHospitalState, DemoNextResponse, DemoTimelineResponse
-from .service import get_demo_state, list_timeline, next_demo_step, reset_demo_auto
+from .service import add_random_demo_patient, discharge_demo_patient, get_demo_state, list_timeline, next_demo_step, reset_demo_auto
 
 router = APIRouter(prefix="/demo/auto", tags=["demo-auto"])
 
@@ -19,6 +28,49 @@ def reset(conn: Connection = Depends(get_db)) -> DemoHospitalState:
 @router.post("/next", response_model=DemoNextResponse)
 def next_step(conn: Connection = Depends(get_db)) -> DemoNextResponse:
     return next_demo_step(conn)
+
+
+@router.post("/admit-random")
+def admit_random(conn: Connection = Depends(get_db)) -> dict[str, Any]:
+    return add_random_demo_patient(conn)
+
+
+@router.post("/admissions/{admission_id}/discharge")
+def discharge_admission(admission_id: str, conn: Connection = Depends(get_db)) -> dict[str, Any]:
+    return discharge_demo_patient(conn, admission_id)
+
+
+@router.post("/next/stream")
+def next_step_stream() -> StreamingResponse:
+    """NDJSON stream: progress events, then `{type: result, data: ...}` or `{type: error}`."""
+
+    q: Queue[dict[str, Any] | None] = Queue()
+
+    def enqueue(ev: dict[str, Any]) -> None:
+        q.put(ev)
+
+    def worker() -> None:
+        try:
+            settings = get_settings()
+            with progress_scope(enqueue):
+                with psycopg.connect(settings.pg_dsn) as conn:
+                    resp = next_demo_step(conn)
+            q.put({"type": "result", "data": resp.model_dump(mode="json")})
+        except Exception as exc:
+            q.put({"type": "error", "message": str(exc)})
+        finally:
+            q.put(None)
+
+    Thread(target=worker, daemon=True).start()
+
+    def generate():
+        while True:
+            item = q.get()
+            if item is None:
+                break
+            yield json.dumps(item, ensure_ascii=False) + "\n"
+
+    return StreamingResponse(generate(), media_type="application/x-ndjson")
 
 
 @router.get("/state", response_model=DemoHospitalState)

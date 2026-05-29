@@ -1,0 +1,319 @@
+[
+  {
+    "card_id": "stroke_neurologic_change_001",
+    "source_id": "aha_asa_acute_ischemic_stroke_2019_001",
+    "source_title": "AHA/ASA Guidelines for the Early Management of Patients With Acute Ischemic Stroke",
+    "domain": "neurocritical_stroke_seizure",
+    "subdomain": "acute_stroke_recognition",
+    "population": "adult",
+    "card_type": "risk_background",
+    "topic": "Acute focal neurologic change is time-sensitive context",
+    "clinical_context": "Use when new weakness, aphasia, gaze deviation, altered mental status, sudden neurologic decline, or stroke alert appears.",
+    "key_points": [
+      "Acute stroke summaries should preserve time of onset/last known well when available.",
+      "Neurologic deterioration should be framed as time-sensitive clinician-review context.",
+      "Do not decide thrombolysis, thrombectomy, or imaging eligibility."
+    ],
+    "trigger_signals": [
+      "new focal deficit",
+      "aphasia",
+      "hemiparesis",
+      "gaze deviation",
+      "sudden neurologic decline",
+      "stroke alert"
+    ],
+    "related_risk_types": [
+      "stroke_risk",
+      "status_epilepticus_risk",
+      "respiratory_failure_risk"
+    ],
+    "used_by_agents": [
+      "BedsideMonitorAgent",
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "risk explanation",
+      "clinical summary",
+      "human review escalation wording",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "automatic diagnosis",
+      "thrombolysis decision",
+      "thrombectomy decision",
+      "imaging order",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "acute ischemic stroke",
+      "focal deficit",
+      "last known well",
+      "neurologic deterioration",
+      "stroke alert"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Early management",
+      "quote": "early management of patients with acute ischemic stroke"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "ich_deterioration_context_002",
+    "source_id": "aha_asa_ich_2022_001",
+    "source_title": "AHA/ASA Guideline for the Management of Patients With Spontaneous Intracerebral Hemorrhage",
+    "domain": "neurocritical_stroke_seizure",
+    "subdomain": "intracerebral_hemorrhage",
+    "population": "adult",
+    "card_type": "guideline_context",
+    "topic": "ICH context requires neurologic and physiologic trend review",
+    "clinical_context": "Use when intracranial hemorrhage, worsening GCS, new neurologic decline, severe hypertension, or anticoagulant exposure appears.",
+    "key_points": [
+      "ICH summaries should track neurologic exam, blood pressure context, anticoagulant exposure, and respiratory protection signals.",
+      "Clinical Summary can flag ICH-related deterioration for clinician review.",
+      "Do not recommend blood pressure targets or reversal agents."
+    ],
+    "trigger_signals": [
+      "intracerebral hemorrhage",
+      "worsening GCS",
+      "new neurologic decline",
+      "severe hypertension",
+      "anticoagulant exposure",
+      "airway concern"
+    ],
+    "related_risk_types": [
+      "intracranial_hemorrhage_risk",
+      "stroke_risk",
+      "respiratory_failure_risk"
+    ],
+    "used_by_agents": [
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "clinical summary",
+      "risk explanation",
+      "human review escalation wording",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "blood pressure target recommendation",
+      "reversal agent order",
+      "neurosurgical decision",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "intracerebral hemorrhage",
+      "ICH",
+      "GCS",
+      "neurologic decline",
+      "anticoagulation reversal"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Guideline scope",
+      "quote": "spontaneous intracerebral hemorrhage"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "status_epilepticus_time_sensitive_003",
+    "source_id": "ncs_status_epilepticus_2012_001",
+    "source_title": "Guidelines for the Evaluation and Management of Status Epilepticus",
+    "domain": "neurocritical_stroke_seizure",
+    "subdomain": "status_epilepticus",
+    "population": "mixed",
+    "card_type": "escalation_principle",
+    "topic": "Status epilepticus is a time-sensitive neurologic emergency",
+    "clinical_context": "Use when ongoing seizure, recurrent seizure without recovery, postictal airway concern, or refractory seizure appears.",
+    "key_points": [
+      "Status epilepticus requires urgent evaluation and staged management by clinicians.",
+      "Clinical Summary can surface seizure duration, recurrence, airway, and hemodynamic context.",
+      "Do not recommend antiseizure medication selection or dosing."
+    ],
+    "trigger_signals": [
+      "ongoing seizure",
+      "recurrent seizure",
+      "no return to baseline",
+      "refractory seizure",
+      "airway concern",
+      "postictal respiratory depression"
+    ],
+    "related_risk_types": [
+      "status_epilepticus_risk",
+      "respiratory_failure_risk",
+      "stroke_risk"
+    ],
+    "used_by_agents": [
+      "BedsideMonitorAgent",
+      "RiskSentinelAgent",
+      "InterventionTrackerAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "human review escalation wording",
+      "clinical summary",
+      "risk explanation",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "antiseizure medication order",
+      "drug dose recommendation",
+      "intubation decision",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "status epilepticus",
+      "refractory seizure",
+      "ongoing seizure",
+      "EEG",
+      "airway"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Guideline objective",
+      "quote": "evaluation and management of status epilepticus"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "neuro_airway_gcs_context_004",
+    "source_id": "aha_asa_ich_2022_001",
+    "source_title": "AHA/ASA Guideline for the Management of Patients With Spontaneous Intracerebral Hemorrhage",
+    "domain": "neurocritical_stroke_seizure",
+    "subdomain": "airway_consciousness",
+    "population": "adult",
+    "card_type": "risk_background",
+    "topic": "Declining consciousness links neurologic and respiratory risk",
+    "clinical_context": "Use when GCS falls, airway protection is uncertain, aspiration risk is noted, or respiratory support changes after neurologic decline.",
+    "key_points": [
+      "Neurocritical summaries should link mental status trend with airway and ventilation concerns.",
+      "Clinical Summary can flag worsening consciousness as both neurologic and respiratory review context.",
+      "Do not decide intubation or sedation strategy."
+    ],
+    "trigger_signals": [
+      "declining GCS",
+      "reduced consciousness",
+      "airway protection concern",
+      "aspiration risk",
+      "new ventilation support"
+    ],
+    "related_risk_types": [
+      "stroke_risk",
+      "intracranial_hemorrhage_risk",
+      "status_epilepticus_risk",
+      "respiratory_failure_risk"
+    ],
+    "used_by_agents": [
+      "BedsideMonitorAgent",
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent"
+    ],
+    "allowed_use": [
+      "risk explanation",
+      "clinical summary",
+      "trend_explanation",
+      "human review escalation wording"
+    ],
+    "forbidden_use": [
+      "intubation decision",
+      "sedation recommendation",
+      "automatic diagnosis",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "GCS",
+      "airway protection",
+      "consciousness",
+      "neurocritical care",
+      "respiratory failure"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Acute care",
+      "quote": "intracerebral hemorrhage"
+    },
+    "confidence": "medium",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "seizure_response_tracking_005",
+    "source_id": "ncs_status_epilepticus_2012_001",
+    "source_title": "Guidelines for the Evaluation and Management of Status Epilepticus",
+    "domain": "neurocritical_stroke_seizure",
+    "subdomain": "intervention_response",
+    "population": "mixed",
+    "card_type": "guideline_context",
+    "topic": "Seizure response summaries should track recurrence and recovery",
+    "clinical_context": "Use after antiseizure medication, airway intervention, EEG monitoring, or recurrent seizure events.",
+    "key_points": [
+      "Status epilepticus care is time- and phase-sensitive.",
+      "Intervention summaries should describe seizure cessation, recurrence, mental status recovery, and respiratory effects.",
+      "Do not recommend next-line medication or dosing."
+    ],
+    "trigger_signals": [
+      "seizure stopped",
+      "seizure recurrence",
+      "post medication respiratory depression",
+      "EEG monitoring",
+      "no neurologic recovery"
+    ],
+    "related_risk_types": [
+      "status_epilepticus_risk",
+      "respiratory_failure_risk"
+    ],
+    "used_by_agents": [
+      "InterventionTrackerAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "RiskSentinelAgent"
+    ],
+    "allowed_use": [
+      "intervention_response_context",
+      "clinical summary",
+      "risk explanation",
+      "human review escalation wording"
+    ],
+    "forbidden_use": [
+      "antiseizure medication order",
+      "drug dose recommendation",
+      "automatic treatment decision",
+      "automatic diagnosis"
+    ],
+    "retrieval_keywords": [
+      "seizure response",
+      "status epilepticus",
+      "EEG",
+      "recurrence",
+      "mental status recovery"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Treatment phases",
+      "quote": "status epilepticus"
+    },
+    "confidence": "medium",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  }
+]

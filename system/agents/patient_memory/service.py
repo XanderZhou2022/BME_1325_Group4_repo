@@ -10,9 +10,6 @@ from psycopg.types.json import Json
 
 from app.services.ids import new_id
 from knowledge.retriever import retrieve_cards
-from llm.client import generate_structured_output
-from llm.prompt_loader import load_prompt_template
-from llm.schemas import PatientMemoryNarrativeOutput
 
 from .schemas import (
     LongTermMemory,
@@ -232,6 +229,47 @@ def _build_three_layer_memory(
     return short, mid, long, active_problems, unresolved, key_events, response_patterns
 
 
+def _rule_based_memory_narrative(
+    *,
+    patient_id: str,
+    time_window: str,
+    important_events: list[dict[str, Any]],
+    active_problems: list[str],
+    unresolved: list[str],
+    response_patterns: list[str],
+    long_summary: str,
+    cards: list[dict[str, Any]],
+) -> dict[str, Any]:
+    key_events = [str(e.get("event_summary") or "") for e in important_events[:8] if e.get("event_summary")]
+    if key_events:
+        narrative = f"{time_window}: " + "; ".join(key_events[:5]) + "."
+    elif active_problems:
+        narrative = f"{time_window}: no high-importance event text was captured, but active memory problems remain: {', '.join(active_problems[:5])}."
+    else:
+        narrative = f"{time_window}: no high-importance events were captured. {long_summary}"
+
+    communication_context: list[str] = []
+    if key_events:
+        communication_context.append("Recent course has notable events that should be reviewed before any family-facing update.")
+    if unresolved:
+        communication_context.append("Unresolved issues remain: " + ", ".join(unresolved[:5]) + ".")
+    if response_patterns:
+        communication_context.append("Recent intervention response pattern: " + "; ".join(response_patterns[:3]) + ".")
+
+    return {
+        "patient_id": patient_id,
+        "time_window": time_window,
+        "short_term_narrative": narrative,
+        "key_events": key_events,
+        "unresolved_issues": unresolved,
+        "intervention_response_memory": response_patterns,
+        "communication_relevant_context": communication_context,
+        "supporting_card_ids": [str(c.get("card_id")) for c in cards if c.get("card_id")],
+        "forbidden_use_reminder": MEMORY_REMINDER,
+        "human_review_required": True,
+    }
+
+
 def _enrich_memory_narrative(
     *,
     patient_id: str,
@@ -242,7 +280,6 @@ def _enrich_memory_narrative(
     response_patterns: list[str],
     long_summary: str,
     time_window: str,
-    llm_enabled: bool | None = None,
 ) -> dict[str, Any]:
     query_parts = active_problems + unresolved + [str(e.get("event_summary") or "") for e in important_events[:5]]
     retrieval = retrieve_cards(
@@ -252,28 +289,16 @@ def _enrich_memory_narrative(
         query=" ".join(query_parts),
     )
     cards = retrieval["retrieved_cards"]
-    prompt = load_prompt_template("patient_memory_narrative_prompt.md")
-    input_payload = {
-        "agent_name": "patient_memory",
-        "prompt_template_name": "patient_memory_narrative_prompt.md",
-        "patient_id": patient_id,
-        "time_window": time_window,
-        "recent_events": important_events[:20],
-        "previous_memory": long_summary,
-        "active_problems": active_problems,
-        "unresolved_issues": unresolved,
-        "response_patterns": response_patterns,
-        "retrieved_knowledge_cards": cards,
-        "global_forbidden_use": ["diagnosis", "treatment_recommendation", "prognosis_claim", "automatic_medical_decision"],
-    }
-    result = generate_structured_output(
-        "patient_memory_narrative",
-        prompt,
-        input_payload,
-        PatientMemoryNarrativeOutput,
-        llm_enabled=llm_enabled,
+    output = _rule_based_memory_narrative(
+        patient_id=patient_id,
+        time_window=time_window,
+        important_events=important_events,
+        active_problems=active_problems,
+        unresolved=unresolved,
+        response_patterns=response_patterns,
+        long_summary=long_summary,
+        cards=cards,
     )
-    output = result.output.model_dump(mode="json")
     return {
         "short_term_narrative": output["short_term_narrative"],
         "key_events": output.get("key_events") or [str(e.get("event_summary") or "") for e in important_events[:5]],
@@ -283,9 +308,9 @@ def _enrich_memory_narrative(
         "knowledge_context": cards,
         "forbidden_use_reminder": output.get("forbidden_use_reminder") or MEMORY_REMINDER,
         "knowledge_used": bool(cards),
-        "llm_used": result.llm_used,
-        "fallback_used": result.fallback_used,
-        "audit_log_id": result.audit_log_id,
+        "llm_used": False,
+        "fallback_used": False,
+        "audit_log_id": None,
         "human_review_required": True,
     }
 

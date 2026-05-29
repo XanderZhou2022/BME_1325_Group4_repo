@@ -72,6 +72,11 @@ class WardPriorityRationaleItem(BaseModel):
 class WardCoordinatorLLMOutput(BaseModel):
     ward_id: str
     generated_at: str
+    ward_overview: str
+    priority_reasoning: str
+    references_used: list[str]
+    next_step_plan: list[str]
+    focus_points: list[str]
     priority_rationales: list[WardPriorityRationaleItem]
     global_watch_items: list[str]
     review_reminders: list[str]

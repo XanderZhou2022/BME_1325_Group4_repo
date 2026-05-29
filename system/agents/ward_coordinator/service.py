@@ -139,10 +139,35 @@ def _compute_priority_score(
     return score, reasons
 
 
+def _rule_based_ward_rationale(
+    *,
+    item: WardPriorityItem,
+    cards: list[dict[str, Any]],
+) -> dict[str, Any]:
+    reason_text = "; ".join(item.reason[:5]) if item.reason else "structured ward priority scoring"
+    risk_text = ", ".join(item.active_risks[:5]) if item.active_risks else "no active risk labels"
+    return {
+        "bed_id": item.bed_id,
+        "priority_rank": item.rank,
+        "rule_based_priority_score": item.priority_score,
+        "rationale": (
+            f"Rank {item.rank} is based on a {item.priority_level} priority score of {item.priority_score}. "
+            f"Contributing reasons: {reason_text}. Active risk context: {risk_text}. Clinician review is required."
+        ),
+        "supporting_risk_types": item.active_risks,
+        "supporting_card_ids": [str(card.get("card_id")) for card in cards if card.get("card_id")][:5],
+        "human_review_required": True,
+    }
+
+
 def _enrich_ward_queue(
     *,
     queue: list[WardPriorityItem],
     generated_at: datetime,
+    icu_status: ICUStatus,
+    ward_load_indicator: str,
+    merged_alerts: list[MergedAlertGroup],
+    pending_actions: list[str],
     llm_enabled: bool | None = None,
 ) -> dict[str, Any]:
     risk_types = list(dict.fromkeys(rt for item in queue for rt in item.active_risks))
@@ -161,17 +186,34 @@ def _enrich_ward_queue(
         "prompt_template_name": "ward_coordinator_rationale_prompt.md",
         "ward_id": "icu_01",
         "generated_at": generated_at.isoformat(),
+        "icu_status": icu_status.model_dump(mode="json"),
+        "ward_load_indicator": ward_load_indicator,
+        "merged_alerts": [m.model_dump(mode="json") for m in merged_alerts],
+        "pending_actions": pending_actions,
         "priority_queue": [
             {
+                "admission_id": item.admission_id,
+                "patient_id": item.patient_id,
                 "bed_id": item.bed_id,
+                "care_phase": item.care_phase,
                 "priority_rank": item.rank,
+                "priority_level": item.priority_level,
                 "rule_based_priority_score": item.priority_score,
                 "active_risks": item.active_risks,
                 "reasons": item.reason,
+                "summary_hint": item.summary_hint,
+                "suggested_attention": item.suggested_attention,
             }
             for item in queue
         ],
         "retrieved_knowledge_cards": cards,
+        "requested_sections": [
+            "概述 ICU 内所有患者整体情况",
+            "解释当前排序原因",
+            "说明参考了哪些规则/知识卡",
+            "列出下一步计划",
+            "指出重点关注对象及原因",
+        ],
         "global_forbidden_use": ["automatic_bed_assignment", "icu_admission_or_discharge_decision", "withholding_treatment_decision", "treatment_recommendation"],
     }
     result = generate_structured_output(
@@ -183,6 +225,15 @@ def _enrich_ward_queue(
     )
     output = result.output.model_dump(mode="json")
     rationales = {str(item["bed_id"]): item for item in output.get("priority_rationales", [])}
+    immediate = [item.bed_id for item in queue if item.priority_level == "immediate"]
+    urgent = [item.bed_id for item in queue if item.priority_level == "urgent"]
+    global_watch_items = list(output.get("global_watch_items") or [])
+    if immediate:
+        global_watch_items.append("Immediate-priority beds require clinician review: " + ", ".join(immediate[:5]) + ".")
+    if urgent:
+        global_watch_items.append("Urgent-priority beds should remain visible in the next ward review: " + ", ".join(urgent[:5]) + ".")
+    if not global_watch_items:
+        global_watch_items.append("Review the priority queue with routine clinical judgment.")
     for item in queue:
         rat = rationales.get(item.bed_id, {})
         item.rationale = rat.get("rationale") or "This bed is ranked by structured rule scoring and requires clinician review."
@@ -190,7 +241,12 @@ def _enrich_ward_queue(
         item.human_review_required = True
     return {
         "knowledge_context": cards,
-        "global_watch_items": output.get("global_watch_items") or [],
+        "ward_overview": output.get("ward_overview") or "",
+        "priority_reasoning": output.get("priority_reasoning") or "",
+        "references_used": output.get("references_used") or [str(c.get("title") or c.get("card_id")) for c in cards[:5]],
+        "next_step_plan": output.get("next_step_plan") or [],
+        "focus_points": output.get("focus_points") or global_watch_items,
+        "global_watch_items": global_watch_items,
         "review_reminders": output.get("review_reminders") or ["Ward Coordinator output requires clinician review."],
         "forbidden_use_reminder": output.get("forbidden_use_reminder") or WARD_REMINDER,
         "knowledge_used": bool(cards),
@@ -319,7 +375,6 @@ def evaluate_ward(conn: Connection, req: WardCoordinatorEvaluateRequest) -> Ward
     for idx, item in enumerate(queue, start=1):
         item.rank = idx
     top = queue[: req.top_k]
-    ward_meta = _enrich_ward_queue(queue=top, generated_at=now)
 
     merged_alerts = [
         MergedAlertGroup(alert_group=group, beds=sorted(list(beds)), count=len(beds))
@@ -341,6 +396,14 @@ def evaluate_ward(conn: Connection, req: WardCoordinatorEvaluateRequest) -> Ward
         high_risk_patients=high_risk_patients,
         new_deteriorations=new_deteriorations,
     )
+    ward_meta = _enrich_ward_queue(
+        queue=top,
+        generated_at=now,
+        icu_status=icu_status,
+        ward_load_indicator=load,
+        merged_alerts=merged_alerts,
+        pending_actions=pending,
+    )
     top_line = f"Top priority bed {top[0].bed_id}" if top else "No active bed priority"
     ward_summary = (
         f"ICU has {icu_status.critical_patients} critical and {icu_status.high_risk_patients} high-risk patients; "
@@ -357,6 +420,11 @@ def evaluate_ward(conn: Connection, req: WardCoordinatorEvaluateRequest) -> Ward
         ward_load_indicator=load,
         alert_storm_summary=alert_summary,
         debug_scoring=score_debug,
+        ward_overview=ward_meta["ward_overview"],
+        priority_reasoning=ward_meta["priority_reasoning"],
+        references_used=ward_meta["references_used"],
+        next_step_plan=ward_meta["next_step_plan"],
+        focus_points=ward_meta["focus_points"],
         global_watch_items=ward_meta["global_watch_items"],
         review_reminders=ward_meta["review_reminders"],
         forbidden_use_reminder=ward_meta["forbidden_use_reminder"],
@@ -382,6 +450,11 @@ def evaluate_ward(conn: Connection, req: WardCoordinatorEvaluateRequest) -> Ward
             "alert_storm_summary": out.alert_storm_summary,
             "generated_at": out.generated_at.isoformat(),
             "ward_id": out.ward_id,
+            "ward_overview": out.ward_overview,
+            "priority_reasoning": out.priority_reasoning,
+            "references_used": out.references_used,
+            "next_step_plan": out.next_step_plan,
+            "focus_points": out.focus_points,
             "global_watch_items": out.global_watch_items,
             "review_reminders": out.review_reminders,
             "forbidden_use_reminder": out.forbidden_use_reminder,

@@ -9,6 +9,11 @@ from psycopg import Connection
 from psycopg.rows import dict_row
 from psycopg.types.json import Json
 
+from app.services.agent_action_requests import (
+    build_knowledge_guided_review_steps,
+    derive_requests_from_clinical_summary,
+    register_agent_action_requests,
+)
 from app.services.ids import new_id
 from knowledge.retriever import retrieve_cards
 from llm.client import generate_structured_output
@@ -248,6 +253,7 @@ def enrich_summary_with_knowledge_and_llm(
     summary.active_risks = llm_output.get("active_risks", risk_types)
     summary.watch_items = llm_output.get("watch_items", [])
     summary.review_reminders = llm_output.get("review_reminders", [])
+    summary.clinician_review_next_steps = build_knowledge_guided_review_steps(cards)
     summary.forbidden_use_reminder = llm_output.get("forbidden_use_reminder", SUMMARY_FORBIDDEN_REMINDER)
     summary.knowledge_context = cards
     summary.llm_used = llm_result.llm_used
@@ -386,6 +392,7 @@ def evaluate_clinical_summary(conn: Connection, admission_id: str, summary_type:
         "active_risks": summary.active_risks,
         "watch_items": summary.watch_items,
         "review_reminders": summary.review_reminders,
+        "clinician_review_next_steps": summary.clinician_review_next_steps,
         "forbidden_use_reminder": summary.forbidden_use_reminder,
         "knowledge_context": summary.knowledge_context,
         "llm_used": summary.llm_used,
@@ -393,6 +400,18 @@ def evaluate_clinical_summary(conn: Connection, admission_id: str, summary_type:
         "audit_log_id": summary.audit_log_id,
         "human_review_required": True,
     }
+
+    output_id = new_id("out")
+    action_specs = derive_requests_from_clinical_summary(summary, output_id=output_id)
+    payload["action_requests"] = register_agent_action_requests(
+        conn,
+        admission_id=admission_id,
+        patient_id=summary.patient_id,
+        bed_id=summary.bed_id,
+        requested_by_agent="clinical_summary",
+        specs=action_specs,
+        source_output_id=output_id,
+    )
 
     with conn.transaction():
         with conn.cursor() as cur:
@@ -412,7 +431,6 @@ def evaluate_clinical_summary(conn: Connection, admission_id: str, summary_type:
                 ON CONFLICT (agent_name) DO UPDATE SET enabled = TRUE, updated_at = NOW()
                 """
             )
-            output_id = new_id("out")
             event_id = new_id("aevt")
             now = datetime.now(timezone.utc)
             cur.execute(

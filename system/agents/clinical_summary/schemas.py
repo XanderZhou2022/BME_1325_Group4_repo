@@ -96,6 +96,7 @@ class ClinicalSummaryResponse(BaseModel):
     active_risks: List[str] = []
     watch_items: List[str] = []
     review_reminders: List[str] = []
+    clinician_review_next_steps: List[str] = []
     forbidden_use_reminder: List[str] = []
     knowledge_context: List[Dict[str, Any]] = []
     llm_used: bool = False

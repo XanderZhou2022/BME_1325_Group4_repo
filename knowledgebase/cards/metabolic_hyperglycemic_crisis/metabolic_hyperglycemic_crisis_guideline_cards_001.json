@@ -1,0 +1,330 @@
+[
+  {
+    "card_id": "dka_hhs_diagnostic_context_001",
+    "source_id": "ada_hyperglycemic_crises_2024_001",
+    "source_title": "Hyperglycemic Crises in Adults With Diabetes: A Consensus Report",
+    "domain": "metabolic_hyperglycemic_crisis",
+    "subdomain": "dka_hhs_recognition",
+    "population": "adult",
+    "card_type": "risk_background",
+    "topic": "DKA/HHS context combines glucose, ketones, osmolality, and acid-base status",
+    "clinical_context": "Use when severe hyperglycemia, acidosis, ketones, high osmolality, dehydration, or altered mental status appears.",
+    "key_points": [
+      "Hyperglycemic crisis summaries should organize glucose, acid-base, ketone, osmolality, volume, and mental status context.",
+      "Clinical Summary can flag possible DKA/HHS physiology for clinician review.",
+      "Do not diagnose DKA/HHS or prescribe insulin or fluids."
+    ],
+    "trigger_signals": [
+      "severe hyperglycemia",
+      "ketones",
+      "anion gap acidosis",
+      "high osmolality",
+      "dehydration",
+      "altered mental status"
+    ],
+    "related_risk_types": [
+      "dka_risk",
+      "hhs_risk",
+      "severe_electrolyte_risk",
+      "aki_risk"
+    ],
+    "used_by_agents": [
+      "BedsideMonitorAgent",
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "risk explanation",
+      "clinical summary",
+      "human review escalation wording",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "automatic diagnosis",
+      "insulin order",
+      "fluid prescription",
+      "electrolyte replacement order",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "DKA",
+      "HHS",
+      "hyperglycemic crisis",
+      "ketones",
+      "anion gap",
+      "osmolality"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Consensus report scope",
+      "quote": "hyperglycemic crises in adults with diabetes"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "dka_potassium_monitoring_002",
+    "source_id": "ada_hyperglycemic_crises_2024_001",
+    "source_title": "Hyperglycemic Crises in Adults With Diabetes: A Consensus Report",
+    "domain": "metabolic_hyperglycemic_crisis",
+    "subdomain": "electrolyte_monitoring",
+    "population": "adult",
+    "card_type": "guideline_context",
+    "topic": "Potassium trend is central in DKA/HHS summaries",
+    "clinical_context": "Use when hyperglycemic crisis is paired with potassium abnormality, insulin therapy, arrhythmia risk, or renal dysfunction.",
+    "key_points": [
+      "Hyperglycemic crisis care requires close electrolyte monitoring, especially potassium.",
+      "Clinical Summary can flag potassium trend as a watch item when DKA/HHS context exists.",
+      "Do not recommend potassium dose, insulin changes, or replacement timing."
+    ],
+    "trigger_signals": [
+      "potassium abnormality",
+      "insulin infusion",
+      "DKA",
+      "HHS",
+      "arrhythmia risk",
+      "renal dysfunction"
+    ],
+    "related_risk_types": [
+      "dka_risk",
+      "hhs_risk",
+      "severe_electrolyte_risk",
+      "hyperkalemia_risk",
+      "arrhythmia_risk",
+      "aki_risk"
+    ],
+    "used_by_agents": [
+      "RiskSentinelAgent",
+      "InterventionTrackerAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent"
+    ],
+    "allowed_use": [
+      "clinical summary",
+      "intervention_response_context",
+      "risk explanation",
+      "human review escalation wording"
+    ],
+    "forbidden_use": [
+      "electrolyte replacement order",
+      "insulin order",
+      "drug dose recommendation",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "DKA potassium",
+      "HHS potassium",
+      "insulin",
+      "electrolyte monitoring",
+      "arrhythmia"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Treatment monitoring",
+      "quote": "monitoring glucose, electrolytes, and volume status"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "hhs_mental_status_osmolality_003",
+    "source_id": "ada_hyperglycemic_crises_2024_001",
+    "source_title": "Hyperglycemic Crises in Adults With Diabetes: A Consensus Report",
+    "domain": "metabolic_hyperglycemic_crisis",
+    "subdomain": "hhs_context",
+    "population": "adult",
+    "card_type": "risk_background",
+    "topic": "HHS summaries should connect osmolality, dehydration, and mental status",
+    "clinical_context": "Use when severe hyperglycemia, hyperosmolality, dehydration, AKI, or altered mental status appears without prominent ketoacidosis.",
+    "key_points": [
+      "HHS context often involves marked dehydration and neurologic change.",
+      "Clinical Summary can connect mental status and volume/renal risk as a review item.",
+      "Do not distinguish DKA/HHS unless structured facts support the wording."
+    ],
+    "trigger_signals": [
+      "hyperosmolality",
+      "severe dehydration",
+      "altered mental status",
+      "very high glucose",
+      "AKI risk",
+      "HHS"
+    ],
+    "related_risk_types": [
+      "hhs_risk",
+      "aki_risk",
+      "severe_electrolyte_risk",
+      "stroke_risk"
+    ],
+    "used_by_agents": [
+      "BedsideMonitorAgent",
+      "RiskSentinelAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "risk explanation",
+      "clinical summary",
+      "human review escalation wording",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "automatic diagnosis",
+      "fluid prescription",
+      "insulin order",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "HHS",
+      "hyperosmolar",
+      "dehydration",
+      "altered mental status",
+      "hyperglycemia",
+      "AKI"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Clinical presentation",
+      "quote": "diabetic ketoacidosis and hyperosmolar hyperglycemic state"
+    },
+    "confidence": "high",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "dka_hhs_resolution_watch_004",
+    "source_id": "ada_hyperglycemic_crises_2024_001",
+    "source_title": "Hyperglycemic Crises in Adults With Diabetes: A Consensus Report",
+    "domain": "metabolic_hyperglycemic_crisis",
+    "subdomain": "trajectory",
+    "population": "adult",
+    "card_type": "guideline_context",
+    "topic": "Hyperglycemic crisis response requires trajectory review",
+    "clinical_context": "Use after fluid, insulin, electrolyte, or nutrition transitions when glucose, anion gap, ketones, osmolality, or mental status changes.",
+    "key_points": [
+      "Response summaries should track glucose and metabolic markers over time.",
+      "Clinical Summary can distinguish improving, partially responsive, or concerning metabolic trajectory using existing data.",
+      "Do not determine resolution or transition readiness."
+    ],
+    "trigger_signals": [
+      "anion gap closing",
+      "persistent acidosis",
+      "glucose trend",
+      "ketone trend",
+      "osmolality trend",
+      "transition concern"
+    ],
+    "related_risk_types": [
+      "dka_risk",
+      "hhs_risk",
+      "severe_electrolyte_risk",
+      "aki_risk"
+    ],
+    "used_by_agents": [
+      "InterventionTrackerAgent",
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "RiskSentinelAgent"
+    ],
+    "allowed_use": [
+      "intervention_response_context",
+      "clinical summary",
+      "risk explanation",
+      "watch_item_generation"
+    ],
+    "forbidden_use": [
+      "insulin transition decision",
+      "fluid prescription",
+      "electrolyte replacement order",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "DKA resolution",
+      "anion gap",
+      "ketone clearance",
+      "glucose trend",
+      "HHS response"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Resolution and transition",
+      "quote": "resolution of DKA and HHS"
+    },
+    "confidence": "medium",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  },
+  {
+    "card_id": "hyperglycemic_crisis_precipitant_005",
+    "source_id": "ada_hyperglycemic_crises_2024_001",
+    "source_title": "Hyperglycemic Crises in Adults With Diabetes: A Consensus Report",
+    "domain": "metabolic_hyperglycemic_crisis",
+    "subdomain": "precipitating_factors",
+    "population": "adult",
+    "card_type": "icu_operations_context",
+    "topic": "Precipitating factors should remain visible in DKA/HHS summaries",
+    "clinical_context": "Use when infection, ACS, stroke, missed insulin, medication trigger, or other stressor may be related to hyperglycemic crisis.",
+    "key_points": [
+      "Hyperglycemic crises often require review of precipitating factors.",
+      "Clinical Summary can list unresolved triggers as watch items if present in structured data.",
+      "Do not infer a precipitant that is not documented."
+    ],
+    "trigger_signals": [
+      "infection trigger",
+      "missed insulin",
+      "ACS trigger",
+      "stroke trigger",
+      "steroid exposure",
+      "unresolved precipitant"
+    ],
+    "related_risk_types": [
+      "dka_risk",
+      "hhs_risk",
+      "sepsis_risk",
+      "acs_risk",
+      "stroke_risk"
+    ],
+    "used_by_agents": [
+      "PatientMemoryAgent",
+      "ClinicalSummaryAgent",
+      "WardCoordinatorAgent"
+    ],
+    "allowed_use": [
+      "clinical summary",
+      "unresolved_issue_tracking",
+      "watch_item_generation",
+      "human review escalation wording"
+    ],
+    "forbidden_use": [
+      "automatic diagnosis",
+      "treatment_recommendation",
+      "insulin order",
+      "automatic treatment decision"
+    ],
+    "retrieval_keywords": [
+      "DKA precipitant",
+      "HHS precipitant",
+      "infection",
+      "missed insulin",
+      "ACS",
+      "stroke"
+    ],
+    "evidence_location": {
+      "page_start": 1,
+      "page_end": 1,
+      "section_title": "Precipitating factors",
+      "quote": "precipitating causes"
+    },
+    "confidence": "medium",
+    "human_review_required": true,
+    "last_updated": "2026-05-29"
+  }
+]

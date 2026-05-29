@@ -18,6 +18,7 @@ from app.schemas import (
     AdmissionStatusUpdate,
     TableRowPreview,
     AuditLogOut,
+    LlmAuditLogOut,
     BedOut,
     EventOut,
     EventWriteResult,
@@ -47,6 +48,7 @@ from app.orchestrator.event_dispatcher import dispatch_event_chain
 from app.services.hospital_bus import publish_contract_event
 from app.services.idempotency import get_cached_response, store_response
 from app.services.ids import new_icu_admission_id, new_transfer_id
+from llm.audit import get_llm_audit, list_llm_audit_logs
 
 router = APIRouter(prefix="/api/v1")
 
@@ -70,6 +72,7 @@ from agents.risk_sentinel.router import router as risk_sentinel_router
 from agents.compassion_family_communication.router import router as compassion_family_router
 from app.orchestrator.router import router as orchestrator_router
 from app.demo.router import router as demo_auto_router
+from app.mdt.router import router as mdt_consultation_router
 
 router.include_router(bedside_monitor_router)
 router.include_router(intervention_tracker_router)
@@ -80,6 +83,7 @@ router.include_router(risk_sentinel_router)
 router.include_router(compassion_family_router)
 router.include_router(orchestrator_router)
 router.include_router(demo_auto_router)
+router.include_router(mdt_consultation_router)
 
 
 # === Write-side: events driving state ===
@@ -431,6 +435,72 @@ def list_snapshots(
         )
         rows = cur.fetchall()
     return [PatientStateSnapshotOut(**r) for r in rows]
+
+
+@router.get("/llm-audit/{audit_log_id}", response_model=LlmAuditLogOut)
+def get_llm_audit_log(
+    audit_log_id: str,
+    conn: Connection = Depends(get_db),
+) -> LlmAuditLogOut:
+    record = get_llm_audit(audit_log_id, conn=conn)
+    if not record:
+        raise HTTPException(status_code=404, detail="llm audit log not found")
+    return LlmAuditLogOut(
+        audit_log_id=str(record.get("audit_log_id") or audit_log_id),
+        timestamp=record.get("timestamp") or datetime.now(timezone.utc),
+        task_name=str(record.get("task_name") or ""),
+        agent_name=record.get("agent_name"),
+        patient_id=record.get("patient_id"),
+        admission_id=record.get("admission_id") or (record.get("input_payload") or {}).get("admission_id"),
+        prompt_template=record.get("prompt_template"),
+        model=record.get("model"),
+        llm_enabled=bool(record.get("llm_enabled")),
+        schema_valid=record.get("schema_valid"),
+        safety_valid=record.get("safety_valid"),
+        fallback_used=bool(record.get("fallback_used")),
+        error=record.get("error"),
+        retrieved_card_ids=list(record.get("retrieved_card_ids") or []),
+        input_payload=record.get("input_payload") if isinstance(record.get("input_payload"), dict) else {},
+        raw_output=record.get("raw_output") if isinstance(record.get("raw_output"), str) else None,
+        parsed_output=record.get("parsed_output") if isinstance(record.get("parsed_output"), dict) else None,
+        record=record,
+    )
+
+
+@router.get(
+    "/admissions/{admission_id}/llm-audit",
+    response_model=list[LlmAuditLogOut],
+)
+def list_admission_llm_audit_logs(
+    admission_id: str,
+    limit: int = 50,
+    conn: Connection = Depends(get_db),
+) -> list[LlmAuditLogOut]:
+    limit = max(1, min(limit, 200))
+    records = list_llm_audit_logs(conn, admission_id=admission_id, limit=limit)
+    return [
+        LlmAuditLogOut(
+            audit_log_id=str(r.get("audit_log_id") or ""),
+            timestamp=r.get("timestamp") or datetime.now(timezone.utc),
+            task_name=str(r.get("task_name") or ""),
+            agent_name=r.get("agent_name"),
+            patient_id=r.get("patient_id"),
+            admission_id=r.get("admission_id") or (r.get("input_payload") or {}).get("admission_id"),
+            prompt_template=r.get("prompt_template"),
+            model=r.get("model"),
+            llm_enabled=bool(r.get("llm_enabled")),
+            schema_valid=r.get("schema_valid"),
+            safety_valid=r.get("safety_valid"),
+            fallback_used=bool(r.get("fallback_used")),
+            error=r.get("error"),
+            retrieved_card_ids=list(r.get("retrieved_card_ids") or []),
+            input_payload=r.get("input_payload") if isinstance(r.get("input_payload"), dict) else {},
+            raw_output=r.get("raw_output") if isinstance(r.get("raw_output"), str) else None,
+            parsed_output=r.get("parsed_output") if isinstance(r.get("parsed_output"), dict) else None,
+            record=r,
+        )
+        for r in records
+    ]
 
 
 @router.get(

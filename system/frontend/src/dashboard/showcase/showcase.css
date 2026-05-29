@@ -214,6 +214,257 @@
   gap: 10px;
 }
 
+.adMainSplit {
+  display: grid;
+  grid-template-columns: minmax(280px, 340px) 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .adMainSplit {
+    grid-template-columns: 1fr;
+  }
+}
+
+.adBedGridFixed {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bedCard {
+  text-align: left;
+  border-radius: 10px;
+  border: 1px solid #334155;
+  padding: 12px;
+  width: 100%;
+  color: #e5e7eb;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.bedCard.empty {
+  background: #1e293b;
+  border-color: #475569;
+  color: #94a3b8;
+  cursor: default;
+}
+
+.bedCard.empty .bedCardLabel {
+  color: #64748b;
+}
+
+.bedCard.occupied {
+  cursor: pointer;
+}
+
+.bedCard.occupied:hover {
+  border-color: #60a5fa;
+}
+
+.bedCard.selected {
+  outline: 2px solid #60a5fa;
+}
+
+.bedCard.stepHighlight {
+  box-shadow: 0 0 0 2px #a78bfa;
+}
+
+.bedCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.bedCardLabel {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.bedCardEmptyText {
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.adStepFeedPanel {
+  max-height: calc(100vh - 220px);
+  overflow: auto;
+}
+
+.adStepEventList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.adStepEventCard {
+  border-radius: 10px;
+  border: 1px solid #334155;
+  padding: 10px 12px;
+  background: rgba(15, 23, 42, 0.9);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.adStepEventCard.admin {
+  border-left: 3px solid #38bdf8;
+}
+
+.adStepEventCard.clinical {
+  border-left: 3px solid #f59e0b;
+}
+
+.adStepEventCard.agentRequest {
+  border-color: #f59e0b;
+  background: #fffbeb;
+  color: #172033;
+}
+
+.adStepEventCard.agentRequest .adStepEventTitle {
+  color: #92400e;
+}
+
+.adStepEventCard.agentRequest .adStepEventDetails {
+  color: #172033;
+}
+
+.adStepEventDetails li.requestLine,
+.adStepEventDetails li.reasonLine {
+  list-style: none;
+  margin: 4px 0 4px -18px;
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+
+.adStepEventDetails li.requestLine {
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 800;
+}
+
+.adStepEventDetails li.reasonLine {
+  background: #fef3c7;
+  color: #92400e;
+  font-weight: 800;
+}
+
+.adStepEventHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+  margin-bottom: 6px;
+  font-size: 13px;
+  min-width: 0;
+}
+
+.adStepEventIdx {
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.adStepEventTitle {
+  font-weight: 600;
+  color: #f1f5f9;
+  overflow-wrap: anywhere;
+}
+
+.adStepEventMeta code {
+  font-size: 11px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.adStepEventDetails {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #cbd5e1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.adStepEventDetails li {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.adLlmSection {
+  border-top: 1px solid #334155;
+  padding-top: 12px;
+}
+
+.adLlmCard {
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 8px;
+  background: #0f172a;
+}
+
+.adLlmCard.success {
+  border-left: 3px solid #22c55e;
+}
+
+.adLlmCard.fallback {
+  border-left: 3px solid #ef4444;
+}
+
+.adLlmCard.skipped {
+  border-left: 3px solid #64748b;
+}
+
+.adLlmCardHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.adLlmBadge {
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.adLlmBadge.ok {
+  background: rgba(34, 197, 94, 0.25);
+  color: #86efac;
+}
+
+.adLlmBadge.fail {
+  background: rgba(239, 68, 68, 0.25);
+  color: #fecaca;
+}
+
+.adLlmBadge.skip {
+  background: rgba(100, 116, 139, 0.35);
+  color: #cbd5e1;
+}
+
+.adLlmPreview {
+  font-size: 12px;
+  line-height: 1.45;
+  color: #e2e8f0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  max-height: 120px;
+  overflow: auto;
+  background: #020617;
+  border-radius: 6px;
+  padding: 8px;
+}
+
 .patientCard {
   text-align: left;
   border-radius: 10px;
@@ -308,6 +559,70 @@
   color: #fef3c7;
 }
 
+.adStepStatusBar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  margin: 12px 0 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  background: rgba(30, 41, 59, 0.95);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.35);
+}
+
+.adStepStatusBar strong {
+  color: #fde68a;
+  font-size: 15px;
+  display: block;
+}
+
+.adStepEventsHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.adStepEventsTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.adStepNavBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid #475569;
+  background: #1e293b;
+  color: #e2e8f0;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.adStepNavBtn:hover:not(:disabled) {
+  background: #334155;
+  border-color: #64748b;
+}
+
+.adStepNavBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.adStepNavHint {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
 .adStepWaitBanner {
   margin: 12px 0 16px;
   padding: 12px 14px;
@@ -326,6 +641,142 @@
   font-size: 13px;
   line-height: 1.45;
   color: #cbd5e1;
+}
+
+.adLiveProgress .adLiveFeed {
+  margin-top: 10px;
+  max-height: 220px;
+  overflow-y: auto;
+  border-radius: 8px;
+  border: 1px solid #1e293b;
+  background: rgba(15, 23, 42, 0.65);
+  padding: 8px 10px;
+}
+
+.adLiveFeedList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.adLiveLine {
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.35);
+  color: #e2e8f0;
+}
+
+.adLiveLine:last-child {
+  border-bottom: none;
+}
+
+.adLive-info {
+  color: #cbd5e1;
+}
+
+.adLive-agent {
+  color: #93c5fd;
+}
+
+.adLive-knowledge {
+  color: #a7f3d0;
+}
+
+.adLive-llm {
+  color: #fde68a;
+}
+
+.adLive-done {
+  color: #86efac;
+  font-weight: 600;
+}
+
+.adLive-error {
+  color: #fca5a5;
+}
+
+.adProgressToasts {
+  position: sticky;
+  top: 12px;
+  z-index: 20;
+  display: grid;
+  gap: 8px;
+  max-width: 760px;
+  margin: -4px 0 12px auto;
+  pointer-events: none;
+}
+
+.adProgressToast {
+  display: grid;
+  grid-template-columns: 14px auto 1fr;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #b8d7ff;
+  border-left: 4px solid #1167b1;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 14px 40px rgba(16, 24, 40, 0.16);
+  padding: 10px 12px;
+  color: #172033;
+  animation: adToastIn 360ms ease both;
+}
+
+.adProgressToast strong {
+  color: #1167b1;
+}
+
+.adProgressToast span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.adProgressPulse {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #178a68;
+  box-shadow: 0 0 0 0 rgba(23, 138, 104, 0.55);
+  animation: adPulse 1.2s ease-out infinite;
+}
+
+.adToast-llm {
+  border-left-color: #7a5af8;
+}
+
+.adToast-knowledge {
+  border-left-color: #b54708;
+}
+
+.adToast-done {
+  border-left-color: #178a68;
+}
+
+.adToast-error {
+  border-left-color: #b42318;
+}
+
+@keyframes adToastIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes adPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(23, 138, 104, 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 8px rgba(23, 138, 104, 0);
+  }
 }
 
 .adSubEventTiming {
@@ -445,6 +896,32 @@
 
 .adQueueTable {
   font-size: 12px;
+}
+
+.adQueueReasonCell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 180px;
+  max-width: 320px;
+}
+
+.adQueueReasonPill {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  border: 1px solid #f59e0b;
+  border-radius: 999px;
+  background: #fffbeb;
+  color: #92400e;
+  padding: 2px 8px;
+  font-weight: 700;
+  white-space: normal;
+}
+
+.adQueueReasonText {
+  color: #475467;
+  line-height: 1.35;
 }
 
 .adDetails {
@@ -591,4 +1068,495 @@
 
 .adHintFooter {
   margin-top: 12px;
+}
+
+/* --- Presentation dashboard refresh --- */
+.scPage {
+  background: #f4f7fb;
+  color: #172033;
+  padding: 20px;
+}
+
+.scTopBar {
+  background: #ffffff;
+  border: 1px solid #d9e2ef;
+  border-radius: 8px;
+  padding: 18px 20px;
+  box-shadow: 0 10px 28px rgba(23, 32, 51, 0.08);
+}
+
+.scTopBar h1 {
+  color: #172033;
+  font-size: 28px;
+  letter-spacing: 0;
+}
+
+.scTopBar p,
+.adMuted {
+  color: #667085;
+}
+
+.scTopActions button,
+.scBtn,
+.scBtnPrimary {
+  background: #1167b1;
+  border: 1px solid #1167b1;
+  border-radius: 6px;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.scBtn {
+  color: #fff;
+  padding: 8px 12px;
+}
+
+.scBtn:not(.scBtnPrimary) {
+  background: #344054;
+  border-color: #344054;
+}
+
+.scBtn.scBtnDanger {
+  background: #b42318;
+  border-color: #b42318;
+}
+
+.scTopActions button:last-child {
+  background: #178a68;
+  border-color: #178a68;
+}
+
+.scTopActions button:disabled,
+.scBtn:disabled {
+  background: #98a2b3;
+  border-color: #98a2b3;
+  cursor: not-allowed;
+}
+
+.adModeToggle {
+  color: #475467;
+}
+
+.adModeToggle select,
+.scTopActions select {
+  background: #ffffff;
+  color: #172033;
+  border: 1px solid #c9d4e4;
+  border-radius: 6px;
+}
+
+.scMetrics {
+  grid-template-columns: 1.4fr repeat(3, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.scMetricCard,
+.scPanel,
+.adStepStatusBar,
+.adStepWaitBanner {
+  background: #ffffff;
+  border: 1px solid #d9e2ef;
+  border-radius: 8px;
+  box-shadow: 0 8px 22px rgba(23, 32, 51, 0.06);
+}
+
+.scMetricCard {
+  padding: 14px 16px;
+}
+
+.scMetricTitle {
+  color: #475467;
+  font-weight: 700;
+}
+
+.scMetricValue {
+  color: #172033;
+  font-size: 24px;
+}
+
+.scPanel h2,
+.adStepEventsTitle,
+.adWardQueuePanel h3,
+.adPipeline h3,
+.adNarrativeCard h3,
+.adAgentBlock h4 {
+  color: #172033;
+  letter-spacing: 0;
+}
+
+.adMainSplit {
+  grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.adStepFeedPanel {
+  max-height: none;
+  overflow: visible;
+}
+
+.adBedGridFixed {
+  gap: 8px;
+}
+
+.bedCard {
+  border-radius: 8px;
+  border: 1px solid #d9e2ef;
+  color: #172033;
+  padding: 12px;
+}
+
+.bedCard.empty {
+  background: #f8fafc;
+  border-color: #d9e2ef;
+  color: #98a2b3;
+}
+
+.patientCard.critical {
+  background: #fff5f5;
+  border-color: #d92d20;
+}
+
+.patientCard.warning {
+  background: #fff7e6;
+  border-color: #dc8a00;
+}
+
+.patientCard.normal {
+  background: #f0fbf7;
+  border-color: #178a68;
+}
+
+.bedCard.selected {
+  outline: 2px solid #1167b1;
+  outline-offset: 2px;
+}
+
+.bedCard.stepHighlight {
+  box-shadow: inset 0 0 0 2px #6f5bd3;
+}
+
+.bedCardTop {
+  color: #172033;
+}
+
+.patientCardSub,
+.patientCardMeta {
+  color: #667085;
+}
+
+.adStepStatusBar {
+  position: static;
+  margin: 12px 0;
+  border-left: 5px solid #178a68;
+}
+
+.adStepStatusBar strong {
+  color: #124f3d;
+}
+
+.adLiveProgress .adLiveFeed,
+.adLlmPreview,
+.scScrollBox {
+  background: #f8fafc;
+  border-color: #d9e2ef;
+}
+
+.adLiveFeedList,
+.adLiveLine,
+.adSubEventTiming,
+.adSmallPre,
+.adLlmPreview {
+  color: #172033;
+}
+
+.adStepEventList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+}
+
+.adStepEventCard {
+  background: #ffffff;
+  border: 1px solid #d9e2ef;
+  border-radius: 8px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.adStepEventCard.admin {
+  border-left: 5px solid #1167b1;
+}
+
+.adStepEventCard.clinical {
+  border-left: 5px solid #dc8a00;
+}
+
+.adStepEventTitle,
+.adStepEventDetails,
+.adNarrativeList,
+.adList,
+.adReactionSummary {
+  color: #172033;
+}
+
+.adStepEventTitle,
+.adStepEventMeta,
+.adStepEventDetails,
+.adStepEventDetails li {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.adStepEventIdx,
+.adStepEventMeta,
+.adStepNavHint {
+  color: #667085;
+}
+
+.adStepNavBtn {
+  background: #ffffff;
+  color: #172033;
+  border-color: #c9d4e4;
+}
+
+.adStepNavBtn:hover:not(:disabled) {
+  background: #edf4ff;
+  border-color: #1167b1;
+}
+
+.adNarrativeCard {
+  background: #f0fbf7;
+  border: 1px solid #b7e2d4;
+  border-radius: 8px;
+}
+
+.adNarrativeHero {
+  margin-bottom: 14px;
+}
+
+.adPipelineTrack {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  overflow: visible;
+}
+
+.adPipelineNode {
+  min-width: 0;
+  max-width: none;
+  background: #f8fafc;
+  border-color: #d9e2ef;
+  border-radius: 8px;
+}
+
+.adPipelineName {
+  color: #1167b1;
+}
+
+.adPipelineHint {
+  color: #667085;
+}
+
+.adPipe_completed {
+  border-color: #178a68;
+  background: #f0fbf7;
+}
+
+.adPipe_started,
+.adPipe_pending {
+  border-color: #dc8a00;
+  background: #fff7e6;
+}
+
+.adPipe_not_enough_data {
+  border-color: #6f5bd3;
+  background: #f5f3ff;
+}
+
+.scTable {
+  color: #172033;
+  font-size: 12px;
+}
+
+.adPatientOnlyGrid {
+  grid-template-columns: 1fr;
+}
+
+.scTable th {
+  color: #475467;
+  background: #f8fafc;
+  font-weight: 800;
+}
+
+.scTable th,
+.scTable td {
+  border-bottom: 1px solid #e4eaf2;
+  vertical-align: top;
+}
+
+.scTable tbody tr:hover {
+  background: #edf4ff;
+}
+
+.scTable tbody tr.rowActive {
+  background: #e4f3ee;
+}
+
+.adQueueTable code,
+.adStepEventMeta code,
+.adTAdm,
+.adBanner code {
+  color: #334155;
+  background: #edf2f7;
+  border-radius: 4px;
+  padding: 1px 4px;
+}
+
+.scKeyValue {
+  border-bottom: 1px solid #e4eaf2;
+  gap: 14px;
+}
+
+.scKeyValue span {
+  color: #667085;
+}
+
+.scKeyValue strong {
+  color: #172033;
+  text-align: right;
+}
+
+.scDivider {
+  background: #e4eaf2;
+}
+
+.adBanner {
+  border-radius: 8px;
+}
+
+.adBannerInfo {
+  background: #edf4ff;
+  border-color: #b8d7f5;
+  color: #173b5f;
+}
+
+.adBannerWarn {
+  background: #fff7e6;
+  border-color: #f3c26b;
+  color: #694700;
+}
+
+.adBannerOk {
+  background: #e7f7ef;
+  border-color: #98d9bf;
+  color: #124f3d;
+}
+
+.adAgentBlock {
+  border-top: 1px solid #e4eaf2;
+}
+
+.adKeyLine {
+  border-bottom: 1px dotted #d9e2ef;
+}
+
+.adKey,
+.adTTime {
+  color: #667085;
+}
+
+.adVal,
+.adTLine {
+  color: #172033;
+}
+
+.adDetails {
+  background: #f8fafc;
+  border-color: #d9e2ef;
+}
+
+.adDetailsSummary {
+  color: #1167b1;
+}
+
+.adLlmSection {
+  border-top-color: #e4eaf2;
+}
+
+.adLlmCard,
+.reactionItem,
+.adTimelineRow {
+  background: #ffffff;
+  border-color: #d9e2ef;
+  border-radius: 8px;
+}
+
+.adLlmBadge.ok {
+  background: #dff5ea;
+  color: #124f3d;
+}
+
+.adLlmBadge.fail {
+  background: #fde7e7;
+  color: #9c2018;
+}
+
+.adLlmBadge.skip {
+  background: #eef2f6;
+  color: #475467;
+}
+
+.adMdtActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 12px;
+}
+
+.adHintFooter {
+  text-align: center;
+}
+
+@media (max-width: 1180px) {
+  .scMetrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .adMainSplit {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .scPage {
+    padding: 12px;
+  }
+
+  .scTopBar,
+  .scTopActions {
+    align-items: stretch;
+  }
+
+  .scTopBar,
+  .scTopActions {
+    flex-direction: column;
+  }
+
+  .scMetrics,
+  .scGrid2 {
+    grid-template-columns: 1fr;
+  }
+
+  .adStepEventList,
+  .adPipelineTrack {
+    grid-template-columns: 1fr;
+  }
+
+  .scTable {
+    min-width: 720px;
+  }
+
+  .scScrollBox,
+  .adWardQueuePanel {
+    overflow-x: auto;
+  }
 }
