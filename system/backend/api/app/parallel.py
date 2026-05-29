@@ -14,8 +14,8 @@ R = TypeVar("R")
 def effective_parallelism(item_count: int, *, max_workers: int | None = None) -> int:
     if item_count <= 0:
         return 1
-    cap = max_workers if max_workers is not None else get_settings().llm_max_concurrency
-    cap = max(1, min(100, int(cap)))
+    cap = max_workers if max_workers is not None else get_settings().demo_parallel_workers
+    cap = max(1, min(32, int(cap)))
     return min(cap, item_count)
 
 

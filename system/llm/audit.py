@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextvars
 import json
 import os
 from datetime import datetime, timezone
@@ -11,6 +12,13 @@ from psycopg.rows import dict_row
 from psycopg.types.json import Json
 
 from app.services.ids import new_id
+
+_audit_conn: contextvars.ContextVar[Connection | None] = contextvars.ContextVar("icu_audit_conn", default=None)
+
+
+def bind_audit_connection(conn: Connection | None) -> None:
+    """Reuse the worker's DB connection for audit writes (avoids connection storms under parallel demo)."""
+    _audit_conn.set(conn)
 
 
 def _resolve_dsn() -> str:
@@ -112,12 +120,13 @@ def write_llm_audit(record: dict[str, Any], conn: Connection | None = None) -> s
         "record": Json(row["record"]),
     }
 
-    if conn is not None:
-        with conn.cursor() as cur:
+    effective_conn = conn or _audit_conn.get()
+    if effective_conn is not None:
+        with effective_conn.cursor() as cur:
             cur.execute(sql, params)
         return audit_id
 
-    with psycopg.connect(_resolve_dsn()) as own_conn:
+    with psycopg.connect(_resolve_dsn(), connect_timeout=10) as own_conn:
         with own_conn.cursor() as cur:
             cur.execute(sql, params)
         own_conn.commit()

@@ -122,6 +122,7 @@ def ensure_agent_action_requests_table(conn: Connection) -> None:
                 WHERE status = 'pending';
                 """
             )
+        conn.commit()
         _ENSURED = True
 
 

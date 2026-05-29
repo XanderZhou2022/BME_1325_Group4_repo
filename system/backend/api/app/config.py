@@ -54,6 +54,8 @@ class Settings(BaseSettings):
     llm_timeout_seconds: float = 60.0
     llm_max_retries: int = 2
     llm_max_concurrency: int = 100
+    # Demo / clinical thread pool cap (separate from in-flight LLM HTTP slots).
+    demo_parallel_workers: int = 5
 
     hospital_llm_gateway_url: str | None = None
     hospital_llm_api_key: str | None = None

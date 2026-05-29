@@ -21,7 +21,7 @@ from app.services.event_pipeline import write_intervention, write_lab, write_vit
 from app.services.ids import new_encounter_id, new_id
 from app.schemas import InterventionEventCreate, LabEventCreate, VitalSignEventCreate
 
-from llm.audit import list_llm_audit_log_ids
+from llm.audit import bind_audit_connection, list_llm_audit_log_ids
 
 from .progress import emit as progress_emit, get_emit as get_progress_emit, progress_scope
 from .schemas import DemoDbEffects, DemoHospitalState, DemoNextResponse, DemoRiskChange, DemoTimelineItem
@@ -558,6 +558,7 @@ def _write_random_event(
     event_type: str,
     *,
     defer_ward_coordinator: bool = False,
+    dispatch: bool = True,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     admission_id = str(admission["admission_id"])
     if event_type == "vital_sign":
@@ -574,7 +575,14 @@ def _write_random_event(
         }
         body = VitalSignEventCreate(**payload)
         out = write_vital_sign(conn, admission_id, body)
-        out["dispatch_result"] = dispatch_event_chain(conn, admission_id=admission_id, event_type="vital_sign", detail_id=out["detail_id"], defer_ward_coordinator=defer_ward_coordinator)
+        if dispatch:
+            out["dispatch_result"] = dispatch_event_chain(
+                conn,
+                admission_id=admission_id,
+                event_type="vital_sign",
+                detail_id=out["detail_id"],
+                defer_ward_coordinator=defer_ward_coordinator,
+            )
         return payload, out
     if event_type == "lab":
         lab_type = random.choice(["lactate", "creatinine", "abg", "wbc"])
@@ -590,7 +598,14 @@ def _write_random_event(
         }
         body = LabEventCreate(**payload)
         out = write_lab(conn, admission_id, body)
-        out["dispatch_result"] = dispatch_event_chain(conn, admission_id=admission_id, event_type="lab", detail_id=out["detail_id"], defer_ward_coordinator=defer_ward_coordinator)
+        if dispatch:
+            out["dispatch_result"] = dispatch_event_chain(
+                conn,
+                admission_id=admission_id,
+                event_type="lab",
+                detail_id=out["detail_id"],
+                defer_ward_coordinator=defer_ward_coordinator,
+            )
         return payload, out
     payload = {
         "timestamp": sim_time,
@@ -603,7 +618,14 @@ def _write_random_event(
     }
     body = InterventionEventCreate(**payload)
     out = write_intervention(conn, admission_id, body)
-    out["dispatch_result"] = dispatch_event_chain(conn, admission_id=admission_id, event_type="intervention", detail_id=out["detail_id"], defer_ward_coordinator=defer_ward_coordinator)
+    if dispatch:
+        out["dispatch_result"] = dispatch_event_chain(
+            conn,
+            admission_id=admission_id,
+            event_type="intervention",
+            detail_id=out["detail_id"],
+            defer_ward_coordinator=defer_ward_coordinator,
+        )
     return payload, out
 
 
@@ -620,9 +642,14 @@ def _fulfill_pending_agent_requests_isolated(admission: dict[str, Any], sim_time
     )
     settings = get_settings()
     with psycopg.connect(settings.pg_dsn) as conn:
-        results = fulfill_pending_requests_for_admission(
-            conn, admission, sim_time=sim_time, defer_ward_coordinator=True
-        )
+        bind_audit_connection(conn)
+        try:
+            results = fulfill_pending_requests_for_admission(
+                conn, admission, sim_time=sim_time, defer_ward_coordinator=True
+            )
+            conn.commit()
+        finally:
+            bind_audit_connection(None)
     for item in results:
         progress_emit(
             {
@@ -651,9 +678,29 @@ def _run_clinical_event_isolated(admission: dict[str, Any], sim_time: datetime, 
     )
     settings = get_settings()
     started = datetime.now(timezone.utc)
+    admission_id = str(admission["admission_id"])
     with psycopg.connect(settings.pg_dsn) as conn:
         with conn.transaction():
-            req, wr = _write_random_event(conn, admission, sim_time, event_type, defer_ward_coordinator=True)
+            req, wr = _write_random_event(
+                conn,
+                admission,
+                sim_time,
+                event_type,
+                defer_ward_coordinator=True,
+                dispatch=False,
+            )
+    with psycopg.connect(settings.pg_dsn) as conn:
+        bind_audit_connection(conn)
+        try:
+            wr["dispatch_result"] = dispatch_event_chain(
+                conn,
+                admission_id=admission_id,
+                event_type=event_type,
+                detail_id=wr["detail_id"],
+                defer_ward_coordinator=True,
+            )
+        finally:
+            bind_audit_connection(None)
     finished = datetime.now(timezone.utc)
     progress_emit(
         {

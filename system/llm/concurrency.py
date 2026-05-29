@@ -17,7 +17,8 @@ def _semaphore() -> threading.Semaphore:
 @contextmanager
 def llm_request_slot():
     sem = _semaphore()
-    sem.acquire()
+    if not sem.acquire(timeout=120):
+        raise TimeoutError("Timed out waiting for an LLM concurrency slot (120s)")
     try:
         yield
     finally:

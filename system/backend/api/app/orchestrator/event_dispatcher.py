@@ -232,33 +232,32 @@ def dispatch_event_chain(
 
     finished = datetime.now(timezone.utc)
     total_chain_ms = int((finished - started).total_seconds() * 1000)
-    with conn.transaction():
-        write_run_audit(
-            conn,
-            actor="system",
-            actor_id="event_dispatcher",
-            action_type="run_agent",
-            target_type="event",
-            target_id=detail_id,
-            input_obj={"admission_id": admission_id, "event_type": event_type},
-            output_obj={
-                "started_at": started.isoformat(),
-                "finished_at": finished.isoformat(),
-                "total_chain_ms": total_chain_ms,
-                "step_count": len(steps),
-                "steps": steps,
-                "summary_generated": bool(summary_out),
-                "memory_generated": bool(mem_out),
-                "triggered_agents": [s["step_name"] for s in steps],
-                "audit_log_ids": audit_log_ids,
-                "fallback_summary": {
-                    "llm_fallback_count": nonlocal_fallback["count"],
-                    "knowledge_retrieval_failures": 0,
-                },
-                "orchestration_trace": steps,
-                "human_review_required": True,
+    write_run_audit(
+        conn,
+        actor="system",
+        actor_id="event_dispatcher",
+        action_type="run_agent",
+        target_type="event",
+        target_id=detail_id,
+        input_obj={"admission_id": admission_id, "event_type": event_type},
+        output_obj={
+            "started_at": started.isoformat(),
+            "finished_at": finished.isoformat(),
+            "total_chain_ms": total_chain_ms,
+            "step_count": len(steps),
+            "steps": steps,
+            "summary_generated": bool(summary_out),
+            "memory_generated": bool(mem_out),
+            "triggered_agents": [s["step_name"] for s in steps],
+            "audit_log_ids": audit_log_ids,
+            "fallback_summary": {
+                "llm_fallback_count": nonlocal_fallback["count"],
+                "knowledge_retrieval_failures": 0,
             },
-        )
+            "orchestration_trace": steps,
+            "human_review_required": True,
+        },
+    )
     return {
         "status": "ok",
         "event_id": detail_id,
