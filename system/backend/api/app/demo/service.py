@@ -20,6 +20,8 @@ from app.services.event_pipeline import write_intervention, write_lab, write_vit
 from app.services.ids import new_encounter_id, new_id
 from app.schemas import InterventionEventCreate, LabEventCreate, VitalSignEventCreate
 
+from llm.audit import list_llm_audit_log_ids
+
 from .progress import emit as progress_emit, get_emit as get_progress_emit, progress_scope
 from .schemas import DemoDbEffects, DemoHospitalState, DemoNextResponse, DemoRiskChange, DemoTimelineItem
 
@@ -295,24 +297,12 @@ def _fetch_agent_workflow_trace(
 def _fetch_audit_log_ids(conn: Connection, *, admission_id: str | None, since_started_at: datetime) -> list[str]:
     if not admission_id:
         return []
-    conn.row_factory = dict_row
-    with conn.cursor() as cur:
-        cur.execute(
-            """
-            SELECT id
-            FROM audit_logs
-            WHERE timestamp >= %s
-              AND (
-                    target_id = %s
-                    OR output ->> 'llm_audit_log_id' IS NOT NULL
-                    OR actor_id IN ('event_dispatcher', 'bedside_monitor', 'intervention_tracker', 'patient_memory', 'risk_sentinel', 'clinical_summary', 'ward_coordinator', 'compassion_family_communication')
-                  )
-            ORDER BY timestamp ASC
-            LIMIT 100
-            """,
-            (since_started_at, admission_id),
-        )
-        return [str(r["id"]) for r in cur.fetchall()]
+    return list_llm_audit_log_ids(
+        conn,
+        admission_id=admission_id,
+        since=since_started_at,
+        limit=100,
+    )
 
 
 def _fetch_demo_triggered_agent_rows(
@@ -380,24 +370,12 @@ def _fetch_agent_workflow_trace_demo_batch(
 
 
 def _fetch_audit_log_ids_demo_batch(conn: Connection, *, since_started_at: datetime, scenario_tag: str, limit: int = 250) -> list[str]:
-    conn.row_factory = dict_row
-    with conn.cursor() as cur:
-        cur.execute(
-            """
-            SELECT id
-            FROM audit_logs
-            WHERE timestamp >= %s
-              AND (
-                    target_id IN (SELECT admission_id FROM admissions WHERE scenario_tag = %s)
-                    OR output ->> 'llm_audit_log_id' IS NOT NULL
-                    OR actor_id IN ('event_dispatcher', 'bedside_monitor', 'intervention_tracker', 'patient_memory', 'risk_sentinel', 'clinical_summary', 'ward_coordinator', 'compassion_family_communication')
-                  )
-            ORDER BY timestamp ASC
-            LIMIT %s
-            """,
-            (since_started_at, scenario_tag, limit),
-        )
-        return [str(r["id"]) for r in cur.fetchall()]
+    return list_llm_audit_log_ids(
+        conn,
+        since=since_started_at,
+        scenario_tag=scenario_tag,
+        limit=limit,
+    )
 
 
 def _active_admissions(conn: Connection) -> list[dict[str, Any]]:

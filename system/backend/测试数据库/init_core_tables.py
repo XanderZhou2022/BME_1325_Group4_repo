@@ -288,8 +288,6 @@ DDL_STATEMENTS = [
     );
     """,
     """
-
-    """
     CREATE TABLE IF NOT EXISTS agent_action_requests (
         request_id TEXT PRIMARY KEY,
         admission_id TEXT NOT NULL REFERENCES admissions(admission_id),
@@ -306,6 +304,7 @@ DDL_STATEMENTS = [
         fulfillment_detail JSONB
     );
     """,
+    """
     CREATE TABLE IF NOT EXISTS ward_priority_snapshots (
         snapshot_id TEXT PRIMARY KEY,
         generated_at TIMESTAMPTZ NOT NULL,
@@ -333,6 +332,36 @@ DDL_STATEMENTS = [
     );
     """,
     """
+    CREATE TABLE IF NOT EXISTS llm_audit_logs (
+        audit_log_id TEXT PRIMARY KEY,
+        timestamp TIMESTAMPTZ NOT NULL,
+        task_name TEXT NOT NULL,
+        agent_name TEXT,
+        patient_id TEXT,
+        admission_id TEXT,
+        prompt_template TEXT,
+        model TEXT,
+        llm_enabled BOOLEAN NOT NULL DEFAULT FALSE,
+        schema_valid BOOLEAN,
+        safety_valid BOOLEAN,
+        fallback_used BOOLEAN NOT NULL DEFAULT FALSE,
+        error TEXT,
+        retrieved_card_ids JSONB NOT NULL DEFAULT '[]'::jsonb,
+        input_payload JSONB NOT NULL DEFAULT '{}'::jsonb,
+        raw_output TEXT,
+        parsed_output JSONB,
+        record JSONB NOT NULL DEFAULT '{}'::jsonb
+    );
+    """,
+    """
+    CREATE INDEX IF NOT EXISTS idx_llm_audit_logs_timestamp ON llm_audit_logs (timestamp DESC);
+    """,
+    """
+    CREATE INDEX IF NOT EXISTS idx_llm_audit_logs_admission_ts
+        ON llm_audit_logs (admission_id, timestamp DESC)
+        WHERE admission_id IS NOT NULL;
+    """,
+    """
     CREATE TABLE IF NOT EXISTS audit_logs (
         id TEXT PRIMARY KEY,
         timestamp TIMESTAMPTZ NOT NULL,
@@ -358,6 +387,36 @@ DDL_STATEMENTS = [
 
 # Backfill columns when upgrading an older database (safe no-ops if already present).
 ALTER_UPGRADE_STATEMENTS = [
+    """
+    CREATE TABLE IF NOT EXISTS llm_audit_logs (
+        audit_log_id TEXT PRIMARY KEY,
+        timestamp TIMESTAMPTZ NOT NULL,
+        task_name TEXT NOT NULL,
+        agent_name TEXT,
+        patient_id TEXT,
+        admission_id TEXT,
+        prompt_template TEXT,
+        model TEXT,
+        llm_enabled BOOLEAN NOT NULL DEFAULT FALSE,
+        schema_valid BOOLEAN,
+        safety_valid BOOLEAN,
+        fallback_used BOOLEAN NOT NULL DEFAULT FALSE,
+        error TEXT,
+        retrieved_card_ids JSONB NOT NULL DEFAULT '[]'::jsonb,
+        input_payload JSONB NOT NULL DEFAULT '{}'::jsonb,
+        raw_output TEXT,
+        parsed_output JSONB,
+        record JSONB NOT NULL DEFAULT '{}'::jsonb
+    );
+  """,
+    """
+    CREATE INDEX IF NOT EXISTS idx_llm_audit_logs_timestamp ON llm_audit_logs (timestamp DESC);
+    """,
+    """
+    CREATE INDEX IF NOT EXISTS idx_llm_audit_logs_admission_ts
+        ON llm_audit_logs (admission_id, timestamp DESC)
+        WHERE admission_id IS NOT NULL;
+    """,
     """
     ALTER TABLE patients ADD COLUMN IF NOT EXISTS contact TEXT;
     ALTER TABLE patients ADD COLUMN IF NOT EXISTS allergies JSONB NOT NULL DEFAULT '[]'::jsonb;
@@ -397,7 +456,7 @@ def main() -> None:
                       'patient_state_snapshots', 'agent_outputs', 'agent_events', 'clinical_summaries',
                       'ward_priority_snapshots', 'ward_priority_events',
                       'agent_consumption_cursor', 'agent_registry',
-                      'orchestrator_runs', 'risk_assessments', 'alerts', 'audit_logs'
+                      'orchestrator_runs', 'risk_assessments', 'alerts', 'llm_audit_logs', 'audit_logs'
                   )
                 ORDER BY table_name;
                 """

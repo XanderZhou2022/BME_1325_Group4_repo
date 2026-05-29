@@ -242,6 +242,27 @@ class AuditLogOut(BaseModel):
     output: dict[str, Any]
 
 
+class LlmAuditLogOut(BaseModel):
+    audit_log_id: str
+    timestamp: datetime
+    task_name: str
+    agent_name: str | None = None
+    patient_id: str | None = None
+    admission_id: str | None = None
+    prompt_template: str | None = None
+    model: str | None = None
+    llm_enabled: bool = False
+    schema_valid: bool | None = None
+    safety_valid: bool | None = None
+    fallback_used: bool = False
+    error: str | None = None
+    retrieved_card_ids: list[str] = Field(default_factory=list)
+    input_payload: dict[str, Any] = Field(default_factory=dict)
+    raw_output: str | None = None
+    parsed_output: dict[str, Any] | None = None
+    record: dict[str, Any] = Field(default_factory=dict)
+
+
 class AgentOutputOut(BaseModel):
     output_id: str
     admission_id: str
