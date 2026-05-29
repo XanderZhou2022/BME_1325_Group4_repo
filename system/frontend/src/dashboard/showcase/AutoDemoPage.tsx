@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { api } from "../api";
+import { api } from "../../api";
 import type { JsonObj } from "../types";
 import { buildFixedBedSlots } from "./autoDemoBeds";
 import { DEMO_MAX_BEDS, DEMO_MIN_ACTIVE_PATIENTS } from "./autoDemoConstants";
