@@ -105,6 +105,24 @@ function formatMdtFailed(sub: JsonObj): string[] {
   ];
 }
 
+function formatGenericAgentRequest(sub: JsonObj): string[] {
+  const lines: string[] = [];
+  if (sub.request_id) lines.push(`请求 ID：${String(sub.request_id)}`);
+  if (sub.requested_by_agent) lines.push(`触发 Agent：${String(sub.requested_by_agent)}`);
+  if (sub.lab_type) lines.push(`检验项目：${String(sub.lab_type)}`);
+  if (sub.error) lines.push(`错误：${String(sub.error)}`);
+  if (sub.status) lines.push(`状态：${String(sub.status)}`);
+  if (sub.mdt_output_type) lines.push(`输出类型：${String(sub.mdt_output_type)}`);
+  return lines.length ? lines : ["Agent 请求已处理。"];
+}
+
+function titleForAgentRequest(type: string): string {
+  if (type.includes("mdt") && type.includes("failed")) return "MDT 会诊请求失败";
+  if (type.includes("mdt") && type.includes("fulfilled")) return "MDT 会诊请求已完成";
+  if (type.includes("lab") && type.includes("fulfilled")) return "Agent 请求检验已完成";
+  return "Agent 请求已处理";
+}
+
 export function buildStepEventItems(
   lastStep: JsonObj | null | undefined,
   admissions: { admission_id: string; patient_id: string; bed_id: string }[]
@@ -116,7 +134,7 @@ export function buildStepEventItems(
   const byAdmission = new Map(admissions.map((a) => [a.admission_id, { bed_id: a.bed_id, patient_id: a.patient_id }]));
 
   return subs.map((sub, index) => {
-    const type = String(sub.type ?? "unknown");
+    const type = String(sub.type ?? "unknown").trim();
     const admission_id = String(sub.admission_id ?? "");
     const ids = lookupIds(admission_id, byAdmission);
     const wrInner = (sub.write_result ?? {}) as JsonObj;
@@ -225,7 +243,7 @@ export function buildStepEventItems(
       };
     }
 
-    if (type === "agent_request_mdt_fulfilled") {
+    if (type.includes("agent_request_mdt_fulfilled")) {
       return {
         index: index + 1,
         type,
@@ -238,7 +256,7 @@ export function buildStepEventItems(
       };
     }
 
-    if (type === "agent_request_mdt_failed") {
+    if (type.includes("agent_request_mdt_failed")) {
       return {
         index: index + 1,
         type,
@@ -251,7 +269,7 @@ export function buildStepEventItems(
       };
     }
 
-    if (type === "agent_request_lab_fulfilled") {
+    if (type.includes("agent_request_lab_fulfilled")) {
       return {
         index: index + 1,
         type,
@@ -269,6 +287,19 @@ export function buildStepEventItems(
       };
     }
 
+    if (type.startsWith("agent_request_")) {
+      return {
+        index: index + 1,
+        type,
+        admission_id,
+        bed_id: ids.bed_id,
+        patient_id: ids.patient_id,
+        title: titleForAgentRequest(type),
+        details: formatGenericAgentRequest(sub),
+        tone: "clinical",
+      };
+    }
+
     return {
       index: index + 1,
       type,
@@ -276,7 +307,7 @@ export function buildStepEventItems(
       bed_id: ids.bed_id,
       patient_id: ids.patient_id,
       title: type,
-      details: [JSON.stringify(sub).slice(0, 300)],
+      details: [`事件类型：${type}`, "详情请切换 Debug 模式查看。"],
       tone: "neutral",
     };
   });

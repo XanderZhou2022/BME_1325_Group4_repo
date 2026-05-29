@@ -304,6 +304,8 @@
   border: 1px solid #334155;
   padding: 10px 12px;
   background: rgba(15, 23, 42, 0.9);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .adStepEventCard.admin {
@@ -321,6 +323,7 @@
   align-items: baseline;
   margin-bottom: 6px;
   font-size: 13px;
+  min-width: 0;
 }
 
 .adStepEventIdx {
@@ -331,10 +334,14 @@
 .adStepEventTitle {
   font-weight: 600;
   color: #f1f5f9;
+  overflow-wrap: anywhere;
 }
 
 .adStepEventMeta code {
   font-size: 11px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .adStepEventDetails {
@@ -343,6 +350,15 @@
   font-size: 12px;
   line-height: 1.5;
   color: #cbd5e1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.adStepEventDetails li {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .adLlmSection {
@@ -1104,6 +1120,8 @@
   background: #ffffff;
   border: 1px solid #d9e2ef;
   border-radius: 8px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .adStepEventCard.admin {
@@ -1120,6 +1138,14 @@
 .adList,
 .adReactionSummary {
   color: #172033;
+}
+
+.adStepEventTitle,
+.adStepEventMeta,
+.adStepEventDetails,
+.adStepEventDetails li {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .adStepEventIdx,
