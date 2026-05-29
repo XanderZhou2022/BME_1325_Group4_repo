@@ -13,7 +13,7 @@ from psycopg.types.json import Json
 
 from app.config import get_settings
 from app.orchestrator.event_dispatcher import dispatch_event_chain
-from app.services.agent_action_requests import fulfill_pending_requests_for_admission
+from app.services.agent_action_requests import ensure_agent_action_requests_table, fulfill_pending_requests_for_admission
 from agents.ward_coordinator.schemas import WardCoordinatorEvaluateRequest
 from agents.ward_coordinator.service import evaluate_ward
 from app.parallel import parallel_map
@@ -620,10 +620,9 @@ def _fulfill_pending_agent_requests_isolated(admission: dict[str, Any], sim_time
     )
     settings = get_settings()
     with psycopg.connect(settings.pg_dsn) as conn:
-        with conn.transaction():
-            results = fulfill_pending_requests_for_admission(
-                conn, admission, sim_time=sim_time, defer_ward_coordinator=True
-            )
+        results = fulfill_pending_requests_for_admission(
+            conn, admission, sim_time=sim_time, defer_ward_coordinator=True
+        )
     for item in results:
         progress_emit(
             {
@@ -651,9 +650,21 @@ def _run_clinical_event_isolated(admission: dict[str, Any], sim_time: datetime, 
         }
     )
     settings = get_settings()
+    started = datetime.now(timezone.utc)
     with psycopg.connect(settings.pg_dsn) as conn:
         with conn.transaction():
             req, wr = _write_random_event(conn, admission, sim_time, event_type, defer_ward_coordinator=True)
+    finished = datetime.now(timezone.utc)
+    progress_emit(
+        {
+            "type": "patient_clinical_done",
+            "admission_id": str(admission["admission_id"]),
+            "bed_id": str(admission.get("bed_id") or ""),
+            "patient_id": str(admission.get("patient_id") or ""),
+            "event_type": event_type,
+            "duration_ms": int((finished - started).total_seconds() * 1000),
+        }
+    )
     return {
         "type": event_type,
         "admission_id": str(admission["admission_id"]),
@@ -977,6 +988,7 @@ def next_demo_step(conn: Connection) -> DemoNextResponse:
             "message": f"阶段 2/4：并行履约 {len(active_clinical)} 位患者的 Agent 待办（检查/会诊）…",
         }
     )
+    ensure_agent_action_requests_table(conn)
     request_jobs = [(adm, sim_after) for adm in active_clinical]
     captured_emit_req = get_progress_emit()
 

@@ -697,6 +697,88 @@
   color: #fca5a5;
 }
 
+.adProgressToasts {
+  position: sticky;
+  top: 12px;
+  z-index: 20;
+  display: grid;
+  gap: 8px;
+  max-width: 760px;
+  margin: -4px 0 12px auto;
+  pointer-events: none;
+}
+
+.adProgressToast {
+  display: grid;
+  grid-template-columns: 14px auto 1fr;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #b8d7ff;
+  border-left: 4px solid #1167b1;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 14px 40px rgba(16, 24, 40, 0.16);
+  padding: 10px 12px;
+  color: #172033;
+  animation: adToastIn 360ms ease both;
+}
+
+.adProgressToast strong {
+  color: #1167b1;
+}
+
+.adProgressToast span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.adProgressPulse {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #178a68;
+  box-shadow: 0 0 0 0 rgba(23, 138, 104, 0.55);
+  animation: adPulse 1.2s ease-out infinite;
+}
+
+.adToast-llm {
+  border-left-color: #7a5af8;
+}
+
+.adToast-knowledge {
+  border-left-color: #b54708;
+}
+
+.adToast-done {
+  border-left-color: #178a68;
+}
+
+.adToast-error {
+  border-left-color: #b42318;
+}
+
+@keyframes adToastIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes adPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(23, 138, 104, 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 8px rgba(23, 138, 104, 0);
+  }
+}
+
 .adSubEventTiming {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 12px;

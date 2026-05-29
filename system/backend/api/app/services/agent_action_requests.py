@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import random
 import re
+from threading import Lock
 from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Any, Literal
@@ -17,7 +18,9 @@ from app.services.ids import new_id
 from knowledge.retriever import retrieve_cards
 
 RequestType = Literal["lab", "mdt_consultation"]
-RequestStatus = Literal["pending", "completed", "failed"]
+RequestStatus = Literal["pending", "in_progress", "completed", "failed"]
+_ENSURE_LOCK = Lock()
+_ENSURED = False
 
 LAB_KEYWORD_MAP: dict[str, tuple[str, ...]] = {
     "lactate": ("lactate", "乳酸", "lactic acid", "lactic"),
@@ -77,33 +80,49 @@ LAB_REVIEW_LABELS: dict[str, str] = {
 
 
 def ensure_agent_action_requests_table(conn: Connection) -> None:
-    with conn.cursor() as cur:
-        cur.execute(
-            """
-            CREATE TABLE IF NOT EXISTS agent_action_requests (
-                request_id TEXT PRIMARY KEY,
-                admission_id TEXT NOT NULL REFERENCES admissions(admission_id),
-                patient_id TEXT NOT NULL,
-                bed_id TEXT NOT NULL,
-                request_type TEXT NOT NULL CHECK (request_type IN ('lab', 'mdt_consultation')),
-                status TEXT NOT NULL DEFAULT 'pending'
-                    CHECK (status IN ('pending', 'completed', 'failed')),
-                requested_by_agent TEXT NOT NULL,
-                payload JSONB NOT NULL DEFAULT '{}'::jsonb,
-                source_output_id TEXT,
-                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-                fulfilled_at TIMESTAMPTZ,
-                fulfillment_detail JSONB
-            );
-            """
-        )
-        cur.execute(
-            """
-            CREATE INDEX IF NOT EXISTS idx_agent_action_requests_pending
-            ON agent_action_requests (admission_id, status)
-            WHERE status = 'pending';
-            """
-        )
+    global _ENSURED
+    if _ENSURED:
+        return
+    with _ENSURE_LOCK:
+        if _ENSURED:
+            return
+        with conn.cursor() as cur:
+            cur.execute("SELECT pg_advisory_xact_lock(hashtext('agent_action_requests_schema'))")
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS agent_action_requests (
+                    request_id TEXT PRIMARY KEY,
+                    admission_id TEXT NOT NULL REFERENCES admissions(admission_id),
+                    patient_id TEXT NOT NULL,
+                    bed_id TEXT NOT NULL,
+                    request_type TEXT NOT NULL CHECK (request_type IN ('lab', 'mdt_consultation')),
+                    status TEXT NOT NULL DEFAULT 'pending'
+                        CHECK (status IN ('pending', 'in_progress', 'completed', 'failed')),
+                    requested_by_agent TEXT NOT NULL,
+                    payload JSONB NOT NULL DEFAULT '{}'::jsonb,
+                    source_output_id TEXT,
+                    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                    fulfilled_at TIMESTAMPTZ,
+                    fulfillment_detail JSONB
+                );
+                """
+            )
+            cur.execute("ALTER TABLE agent_action_requests DROP CONSTRAINT IF EXISTS agent_action_requests_status_check")
+            cur.execute(
+                """
+                ALTER TABLE agent_action_requests
+                ADD CONSTRAINT agent_action_requests_status_check
+                CHECK (status IN ('pending', 'in_progress', 'completed', 'failed'))
+                """
+            )
+            cur.execute(
+                """
+                CREATE INDEX IF NOT EXISTS idx_agent_action_requests_pending
+                ON agent_action_requests (admission_id, status, created_at)
+                WHERE status = 'pending';
+                """
+            )
+        _ENSURED = True
 
 
 def _infer_lab_types_from_texts(texts: list[str]) -> list[str]:
@@ -580,6 +599,32 @@ def list_pending_requests(conn: Connection, admission_id: str | None = None) -> 
         return [dict(r) for r in cur.fetchall()]
 
 
+def claim_pending_requests_for_admission(conn: Connection, admission_id: str) -> list[dict[str, Any]]:
+    """Claim pending requests for one admission without waiting on rows claimed elsewhere."""
+    ensure_agent_action_requests_table(conn)
+    conn.row_factory = dict_row
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            WITH picked AS (
+                SELECT request_id
+                FROM agent_action_requests
+                WHERE admission_id = %s AND status = 'pending'
+                ORDER BY created_at ASC
+                FOR UPDATE SKIP LOCKED
+            )
+            UPDATE agent_action_requests ar
+            SET status = 'in_progress'
+            FROM picked
+            WHERE ar.request_id = picked.request_id
+            RETURNING ar.request_id, ar.admission_id, ar.patient_id, ar.bed_id, ar.request_type, ar.status,
+                      ar.requested_by_agent, ar.payload, ar.source_output_id, ar.created_at
+            """,
+            (admission_id,),
+        )
+        return [dict(r) for r in cur.fetchall()]
+
+
 def _mark_request(
     conn: Connection,
     request_id: str,
@@ -806,14 +851,34 @@ def fulfill_pending_requests_for_admission(
     defer_ward_coordinator: bool = False,
 ) -> list[dict[str, Any]]:
     admission_id = str(admission["admission_id"])
-    pending = list_pending_requests(conn, admission_id)
+    with conn.transaction():
+        pending = claim_pending_requests_for_admission(conn, admission_id)
     if not pending:
         return []
 
     results: list[dict[str, Any]] = []
     for req in pending:
-        if req["request_type"] == "lab":
-            results.append(_fulfill_lab_request(conn, req, sim_time=sim_time, defer_ward_coordinator=defer_ward_coordinator))
-        elif req["request_type"] == "mdt_consultation":
-            results.append(_fulfill_mdt_request(conn, req))
+        try:
+            with conn.transaction():
+                if req["request_type"] == "lab":
+                    results.append(_fulfill_lab_request(conn, req, sim_time=sim_time, defer_ward_coordinator=defer_ward_coordinator))
+                elif req["request_type"] == "mdt_consultation":
+                    results.append(_fulfill_mdt_request(conn, req))
+        except Exception as exc:
+            detail = {
+                "request": (req.get("payload") or {}).get("request"),
+                "reason": (req.get("payload") or {}).get("reason"),
+                "error": str(exc),
+            }
+            with conn.transaction():
+                _mark_request(conn, str(req["request_id"]), status="failed", fulfillment_detail=detail)
+            results.append(
+                {
+                    "type": f"agent_request_{req['request_type']}_failed",
+                    "request_id": str(req["request_id"]),
+                    "admission_id": admission_id,
+                    "requested_by_agent": req.get("requested_by_agent"),
+                    **detail,
+                }
+            )
     return results

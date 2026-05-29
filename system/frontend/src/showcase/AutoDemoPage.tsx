@@ -203,6 +203,25 @@ export default function AutoDemoPage() {
     return "等待点击 Next Step 开始演示";
   }, [loading, workingSeconds, plannedSimAfter, lastStep, state?.sim_time, state?.step_index]);
 
+  const progressToasts = useMemo(() => {
+    if (!loading) return [];
+    return progressLines
+      .filter((ev) =>
+        [
+          "patient_clinical_start",
+          "patient_clinical_done",
+          "agent_request_fulfilled",
+          "agent_start",
+          "agent_done",
+          "knowledge_done",
+          "llm_end",
+          "ward_batch_done",
+        ].includes(ev.type)
+      )
+      .slice(-4)
+      .reverse();
+  }, [loading, progressLines]);
+
   const subEventChainTimings = useMemo(() => {
     const wr = (displayedStep?.event_write_result ?? {}) as JsonObj;
     const subs = (wr.sub_events as JsonObj[] | undefined) ?? [];
@@ -570,6 +589,18 @@ export default function AutoDemoPage() {
       {error && <div className="scError">{error}</div>}
       {patientActionError && <div className="scError">{patientActionError}</div>}
 
+      {progressToasts.length > 0 && (
+        <div className="adProgressToasts" aria-live="polite">
+          {progressToasts.map((ev, i) => (
+            <div key={`${ev.ts ?? ""}-${ev.type}-${i}`} className={`adProgressToast adToast-${progressKind(ev)}`}>
+              <span className="adProgressPulse" />
+              <strong>{ev.type === "patient_clinical_done" ? "完成" : ev.type === "patient_clinical_start" ? "进行中" : "更新"}</strong>
+              <span>{formatProgressLine(ev).replace(/^\[[^\]]+\]\s*/, "")}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
       {!loading && (state?.active_admissions ?? 0) === 0 && (
         <div className="adStepWaitBanner" role="status">
           <strong>病区暂无在院演示患者</strong>
@@ -930,7 +961,7 @@ export default function AutoDemoPage() {
               <button
                 type="button"
                 className="scBtn scBtnPrimary"
-                disabled={mdtLoading || loading}
+                disabled={mdtLoading || !selectedIsActive}
                 onClick={async () => {
                   setMdtLoading(true);
                   setMdtError("");
@@ -962,7 +993,7 @@ export default function AutoDemoPage() {
               <button
                 type="button"
                 className="scBtn"
-                disabled={!selectedAdmissionId || familyDraftLoading || loading}
+                disabled={!selectedAdmissionId || !selectedIsActive || familyDraftLoading}
                 title={selectedAdmissionId ? "生成中文家属沟通草稿，需医生审核后使用" : "请先选择患者"}
                 onClick={() => void generateFamilyDraft()}
               >

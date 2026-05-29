@@ -21,6 +21,8 @@ export function formatProgressLine(ev: DemoProgressEvent): string {
       return `${prefix}${String(ev.message ?? "处理中…")}`;
     case "patient_clinical_start":
       return `${prefix}患者 ${String(ev.admission_id)} / 床 ${String(ev.bed_id)}：写入临床事件「${String(ev.event_type)}」并启动 Agent 链`;
+    case "patient_clinical_done":
+      return `${prefix}患者 ${String(ev.admission_id)} / 床 ${String(ev.bed_id)}：「${String(ev.event_type)}」分析完成，${ev.duration_ms ?? "?"}ms`;
     case "agent_start":
       return `${prefix}Agent「${String(ev.agent_name)}」开始（入院 ${String(ev.admission_id)}）`;
     case "agent_done": {
@@ -56,6 +58,6 @@ export function progressKind(ev: DemoProgressEvent): "info" | "agent" | "knowled
   if (ev.type === "llm_start" || ev.type === "llm_end") return "llm";
   if (ev.type === "knowledge_start" || ev.type === "knowledge_done") return "knowledge";
   if (ev.type === "ward_batch_start" || ev.type === "ward_batch_done") return "agent";
-  if (ev.type?.startsWith("agent_") || ev.type === "patient_clinical_start") return "agent";
+  if (ev.type?.startsWith("agent_") || ev.type === "patient_clinical_start" || ev.type === "patient_clinical_done") return "agent";
   return "info";
 }
