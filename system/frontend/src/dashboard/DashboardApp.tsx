@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "./api";
-import ShowcasePage from "./showcase/ShowcasePage";
-import ShowcaseDetailPage from "./showcase/ShowcaseDetailPage";
 import AutoDemoPage from "./showcase/AutoDemoPage";
 import type { Admission, JsonObj } from "./types";
 
@@ -27,12 +25,6 @@ function safeStr(v: unknown): string {
 export default function App() {
   if (typeof window !== "undefined" && window.location.pathname.startsWith("/auto")) {
     return <AutoDemoPage />;
-  }
-  if (typeof window !== "undefined" && window.location.pathname.startsWith("/showcase_detail")) {
-    return <ShowcaseDetailPage />;
-  }
-  if (typeof window !== "undefined" && window.location.pathname.startsWith("/showcase")) {
-    return <ShowcasePage />;
   }
   const [loadState, setLoadState] = useState<LoadState>("idle");
   const [error, setError] = useState<string>("");

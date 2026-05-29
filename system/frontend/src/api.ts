@@ -1,4 +1,4 @@
-import type { Admission, JsonObj, TablePreview } from "./types";
+import type { Admission, JsonObj, TablePreview } from "./dashboard/types";
 
 const runtimeHost = typeof window !== "undefined" ? window.location.hostname : "127.0.0.1";
 const API_BASE = import.meta.env.VITE_API_BASE ?? `http://${runtimeHost}:8000/api/v1`;

@@ -1,4 +1,4 @@
-import AutoDemoPage from "./showcase/AutoDemoPage";
+import AutoDemoPage from "./dashboard/showcase/AutoDemoPage";
 
 export default function App() {
   return <AutoDemoPage />;
