@@ -23,6 +23,7 @@ load_api_test_env()
 from app.config import get_settings  # noqa: E402
 
 from app.routers import router  # noqa: E402
+from app.transfer.router import router as transfer_router  # noqa: E402
 from app.orchestrator.scheduler import scheduler_loop  # noqa: E402
 
 settings = get_settings()
@@ -44,6 +45,7 @@ app.add_middleware(
 )
 
 app.include_router(router)
+app.include_router(transfer_router)
 
 
 @app.exception_handler(HTTPException)

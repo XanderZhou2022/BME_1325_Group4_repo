@@ -524,6 +524,40 @@ def _discharge_random(conn: Connection, admission: dict[str, Any], sim_time: dat
     return {"admission_id": admission["admission_id"], "status": "discharged"}
 
 
+def _try_transfer_out_demo(conn: Connection, admission: dict[str, Any], sim_time: datetime) -> dict[str, Any] | None:
+    from app.services.inpatient_transfer import execute_transfer_out
+    from app.services.transfer_evaluator import evaluate_transfer_out
+
+    admission_id = str(admission["admission_id"])
+    evaluation = evaluate_transfer_out(conn, admission_id)
+    if not evaluation.get("eligible"):
+        return None
+
+    result = execute_transfer_out(conn, admission_id)
+    if result.get("status") == "accepted":
+        return {
+            "type": "admission_transfer_out",
+            "admission_id": admission_id,
+            "reason": result.get("message") or evaluation.get("primary_reason"),
+            "transfer_reasons": evaluation.get("reasons") or [],
+            "blockers": evaluation.get("blockers") or [],
+            "evaluation": _json_safe(evaluation),
+            "bridge_response": _json_safe(result.get("bridge_response") or {}),
+            "write_result": _json_safe(result),
+        }
+
+    if result.get("status") == "bridge_error":
+        return {
+            "type": "admission_transfer_blocked",
+            "admission_id": admission_id,
+            "reason": result.get("message") or "住院部桥接不可用",
+            "transfer_reasons": evaluation.get("reasons") or [],
+            "evaluation": _json_safe(evaluation),
+            "write_result": _json_safe(result),
+        }
+    return None
+
+
 def _clinical_discharge_candidates(conn: Connection, admissions: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Conservative demo rule: discharge only stable patients without active risks."""
     if not admissions:
@@ -856,6 +890,26 @@ def discharge_demo_patient(conn: Connection, admission_id: str) -> dict[str, Any
         target = next((a for a in active if str(a["admission_id"]) == admission_id), None)
         if not target:
             raise HTTPException(status_code=404, detail="Active demo admission not found.")
+
+        xfer = _try_transfer_out_demo(conn, target, sim_time)
+        if xfer and xfer.get("type") == "admission_transfer_out":
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    INSERT INTO demo_auto_timeline (id, step_index, sim_time, event_type, admission_id, payload, result, created_at)
+                    VALUES (%s, %s, %s, 'admission_transfer_out', %s, %s::jsonb, %s::jsonb, NOW())
+                    """,
+                    (
+                        new_id("dtl"),
+                        step_index,
+                        sim_time,
+                        admission_id,
+                        Json(_json_safe(xfer)),
+                        Json(_json_safe(xfer.get("write_result") or {})),
+                    ),
+                )
+            return {"transfer": _json_safe(xfer), "state": get_demo_state(conn)}
+
         wr = _discharge_random(conn, target, sim_time)
         with conn.cursor() as cur:
             cur.execute(
@@ -873,6 +927,92 @@ def discharge_demo_patient(conn: Connection, admission_id: str) -> dict[str, Any
                 ),
             )
     return {"discharge": _json_safe(wr), "state": get_demo_state(conn)}
+
+
+def transfer_demo_patient_to_inpatient(conn: Connection, admission_id: str, *, force: bool = True) -> dict[str, Any]:
+    """Manual demo transfer: patient leaves ICU (status=transferred) and calls inpatient bridge."""
+    from app.services.inpatient_transfer import execute_transfer_out
+    from app.services.transfer_evaluator import evaluate_transfer_out
+
+    _ensure_demo_tables(conn)
+    with conn.transaction():
+        sim_time, step_index = _get_or_create_state(conn)
+        _set_state(conn, sim_time, step_index)
+        active = _active_admissions(conn)
+        if len(active) <= DEMO_MIN_ACTIVE_PATIENTS:
+            raise HTTPException(
+                status_code=409,
+                detail=f"Cannot transfer below the demo minimum of {DEMO_MIN_ACTIVE_PATIENTS} ICU patients.",
+            )
+        target = next((a for a in active if str(a["admission_id"]) == admission_id), None)
+        if not target:
+            raise HTTPException(status_code=404, detail="Active demo admission not found.")
+
+        evaluation = evaluate_transfer_out(conn, admission_id)
+        result = execute_transfer_out(conn, admission_id, force=force)
+
+        if result.get("status") == "accepted":
+            xfer: dict[str, Any] = {
+                "type": "admission_transfer_out",
+                "admission_id": admission_id,
+                "patient_name": evaluation.get("patient_name"),
+                "patient_id": evaluation.get("patient_id"),
+                "reason": result.get("message") or evaluation.get("primary_reason"),
+                "transfer_reasons": evaluation.get("reasons") or [],
+                "blockers": evaluation.get("blockers") or [],
+                "evaluation": _json_safe(evaluation),
+                "bridge_response": _json_safe(result.get("bridge_response") or {}),
+                "write_result": _json_safe(result),
+                "manual": True,
+                "forced": bool(force and not evaluation.get("eligible")),
+            }
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    INSERT INTO demo_auto_timeline (id, step_index, sim_time, event_type, admission_id, payload, result, created_at)
+                    VALUES (%s, %s, %s, 'admission_transfer_out', %s, %s::jsonb, %s::jsonb, NOW())
+                    """,
+                    (
+                        new_id("dtl"),
+                        step_index,
+                        sim_time,
+                        admission_id,
+                        Json(_json_safe(xfer)),
+                        Json(_json_safe(result)),
+                    ),
+                )
+            return {"transfer": _json_safe(xfer), "result": _json_safe(result), "state": get_demo_state(conn)}
+
+        if result.get("status") == "bridge_error":
+            blocked: dict[str, Any] = {
+                "type": "admission_transfer_blocked",
+                "admission_id": admission_id,
+                "patient_name": evaluation.get("patient_name"),
+                "patient_id": evaluation.get("patient_id"),
+                "reason": result.get("message") or "住院部桥接不可用",
+                "transfer_reasons": evaluation.get("reasons") or [],
+                "evaluation": _json_safe(evaluation),
+                "write_result": _json_safe(result),
+                "manual": True,
+            }
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    INSERT INTO demo_auto_timeline (id, step_index, sim_time, event_type, admission_id, payload, result, created_at)
+                    VALUES (%s, %s, %s, 'admission_transfer_blocked', %s, %s::jsonb, %s::jsonb, NOW())
+                    """,
+                    (
+                        new_id("dtl"),
+                        step_index,
+                        sim_time,
+                        admission_id,
+                        Json(_json_safe(blocked)),
+                        Json(_json_safe(result)),
+                    ),
+                )
+            return {"transfer": _json_safe(blocked), "result": _json_safe(result), "state": get_demo_state(conn)}
+
+        raise HTTPException(status_code=422, detail=str(result.get("message") or "转出失败"))
 
 
 def get_demo_state(conn: Connection) -> DemoHospitalState:
@@ -973,6 +1113,7 @@ def next_demo_step(conn: Connection) -> DemoNextResponse:
 
         sub_events: list[dict[str, Any]] = []
         discharged_ids: list[str] = []
+        transferred_ids: list[str] = []
 
         discharge_candidates = _clinical_discharge_candidates(conn, active_start)
         safe_discharge_room = max(0, len(active_start) - DEMO_MIN_ACTIVE_PATIENTS)
@@ -984,11 +1125,21 @@ def next_demo_step(conn: Connection) -> DemoNextResponse:
             pool = [
                 a
                 for a in active_now
-                if a["admission_id"] not in discharged_ids and str(a["admission_id"]) in candidate_ids
+                if a["admission_id"] not in discharged_ids
+                and a["admission_id"] not in transferred_ids
+                and str(a["admission_id"]) in candidate_ids
             ]
             if not pool:
                 break
             tgt = random.choice(pool)
+            xfer = _try_transfer_out_demo(conn, tgt, sim_after)
+            if xfer and xfer.get("type") == "admission_transfer_out":
+                transferred_ids.append(cast(str, tgt["admission_id"]))
+                sub_events.append(xfer)
+                continue
+            if xfer and xfer.get("type") == "admission_transfer_blocked":
+                sub_events.append(xfer)
+                continue
             discharged_ids.append(cast(str, tgt["admission_id"]))
             wr = _discharge_random(conn, tgt, sim_after)
             sub_events.append({
@@ -1009,11 +1160,12 @@ def next_demo_step(conn: Connection) -> DemoNextResponse:
             wr = _create_patient_bed_admission(conn, sim_after, step_index, sub_tag=sub_tag, bed_id=bed)
             sub_events.append({"type": "admission_create", "admission_id": wr["admission_id"], "write_result": _json_safe(wr)})
 
-        if sub_events or na or discharged_ids:
+        if sub_events or na or discharged_ids or transferred_ids:
             sub_events.append({
                 "type": "admissions_batch_complete",
                 "admissions_created": na,
                 "discharges": len(discharged_ids),
+                "transfers_out": len(transferred_ids),
                 "active_count": len(_active_admissions(conn)),
             })
 
@@ -1022,7 +1174,7 @@ def next_demo_step(conn: Connection) -> DemoNextResponse:
     progress_emit(
         {
             "type": "phase",
-            "message": f"出入院已提交：出院 {len(discharged_ids)} 人，新收治 {na} 人；仿真时间 → {sim_after.isoformat()}",
+            "message": f"出入院已提交：转出住院部 {len(transferred_ids)} 人，出院 {len(discharged_ids)} 人，新收治 {na} 人；仿真时间 → {sim_after.isoformat()}",
         }
     )
 

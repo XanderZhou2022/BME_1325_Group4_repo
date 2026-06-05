@@ -211,6 +211,43 @@ export function buildStepEventItems(
       };
     }
 
+    if (type === "admission_transfer_out") {
+      const reasons = Array.isArray(sub.transfer_reasons) ? (sub.transfer_reasons as string[]) : [];
+      const bridge = (sub.bridge_response ?? {}) as JsonObj;
+      return {
+        index: index + 1,
+        type,
+        admission_id,
+        bed_id: ids.bed_id,
+        patient_id: ids.patient_id,
+        title: "转出至住院部",
+        details: [
+          `转出原因：${String(sub.reason ?? "—")}`,
+          ...reasons.slice(0, 4).map((r) => `依据：${r}`),
+          bridge.assigned_bed ? `住院部床位：${String(bridge.assigned_bed)}` : "住院部床位：待分配",
+          bridge.assigned_room ? `病房：${String(bridge.assigned_room)}` : "",
+        ].filter(Boolean),
+        tone: "admin",
+      };
+    }
+
+    if (type === "admission_transfer_blocked") {
+      const reasons = Array.isArray(sub.transfer_reasons) ? (sub.transfer_reasons as string[]) : [];
+      return {
+        index: index + 1,
+        type,
+        admission_id,
+        bed_id: ids.bed_id,
+        patient_id: ids.patient_id,
+        title: "转出住院部受阻",
+        details: [
+          String(sub.reason ?? "住院部桥接不可用"),
+          ...reasons.slice(0, 3).map((r) => `临床依据：${r}`),
+        ],
+        tone: "admin",
+      };
+    }
+
     if (type === "vital_sign") {
       return {
         index: index + 1,

@@ -6,7 +6,7 @@ from threading import Thread
 from typing import Any
 
 import psycopg
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Body, Depends
 from fastapi.responses import StreamingResponse
 from psycopg import Connection
 
@@ -15,7 +15,15 @@ from app.db import get_db
 
 from .progress import progress_scope
 from .schemas import DemoHospitalState, DemoNextResponse, DemoTimelineResponse
-from .service import add_random_demo_patient, discharge_demo_patient, get_demo_state, list_timeline, next_demo_step, reset_demo_auto
+from .service import (
+    add_random_demo_patient,
+    discharge_demo_patient,
+    get_demo_state,
+    list_timeline,
+    next_demo_step,
+    reset_demo_auto,
+    transfer_demo_patient_to_inpatient,
+)
 
 router = APIRouter(prefix="/demo/auto", tags=["demo-auto"])
 
@@ -38,6 +46,16 @@ def admit_random(conn: Connection = Depends(get_db)) -> dict[str, Any]:
 @router.post("/admissions/{admission_id}/discharge")
 def discharge_admission(admission_id: str, conn: Connection = Depends(get_db)) -> dict[str, Any]:
     return discharge_demo_patient(conn, admission_id)
+
+
+@router.post("/admissions/{admission_id}/transfer-out")
+def transfer_admission_to_inpatient(
+    admission_id: str,
+    conn: Connection = Depends(get_db),
+    body: dict[str, Any] = Body(default={"force": True}),
+) -> dict[str, Any]:
+    force = bool(body.get("force", True))
+    return transfer_demo_patient_to_inpatient(conn, admission_id, force=force)
 
 
 @router.post("/next/stream")

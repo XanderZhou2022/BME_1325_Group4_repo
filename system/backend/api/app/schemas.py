@@ -421,3 +421,36 @@ class MdtLatestOut(BaseModel):
     output_type: str
     generated_at: datetime
     payload: dict[str, Any] = Field(default_factory=dict)
+
+
+class TransferOutEvaluationOut(BaseModel):
+    admission_id: str
+    encounter_id: str | None = None
+    patient_id: str | None = None
+    patient_name: str | None = None
+    bed_id: str | None = None
+    eligible: bool
+    ctas_level: str
+    care_phase: str
+    primary_reason: str
+    reasons: list[str] = Field(default_factory=list)
+    blockers: list[str] = Field(default_factory=list)
+    active_risk_count: int = 0
+    critical_risk_count: int = 0
+    recommended_action: str
+    target_group: str = "groupD.inpatient"
+    inpatient_bridge_ok: bool = False
+
+
+class TransferOutExecuteIn(BaseModel):
+    force: bool = False
+
+
+class TransferOutResultOut(BaseModel):
+    status: Literal["accepted", "rejected", "bridge_error", "not_found"]
+    transfer_id: str | None = None
+    message: str = ""
+    evaluation: TransferOutEvaluationOut | dict[str, Any] = Field(default_factory=dict)
+    bridge_response: dict[str, Any] = Field(default_factory=dict)
+    output_id: str | None = None
+    error_code: str | None = None

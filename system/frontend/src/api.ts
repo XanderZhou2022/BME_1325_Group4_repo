@@ -1,7 +1,22 @@
 import type { Admission, JsonObj, TablePreview } from "./dashboard/types";
 
-const runtimeHost = typeof window !== "undefined" ? window.location.hostname : "127.0.0.1";
-const API_BASE = import.meta.env.VITE_API_BASE ?? `http://${runtimeHost}:8000/api/v1`;
+/** Resolve backend URL: remote visitors must not use 127.0.0.1 from .env. */
+function resolveApiBase(): string {
+  const envBase = import.meta.env.VITE_API_BASE as string | undefined;
+  if (typeof window === "undefined") {
+    return envBase?.trim() || "http://127.0.0.1:8000/api/v1";
+  }
+  const host = window.location.hostname;
+  const isLocalHost = host === "localhost" || host === "127.0.0.1";
+  const trimmed = envBase?.trim();
+  if (trimmed && isLocalHost) return trimmed;
+  if (trimmed && !trimmed.includes("127.0.0.1") && !trimmed.includes("localhost")) {
+    return trimmed;
+  }
+  return `http://${host}:8000/api/v1`;
+}
+
+const API_BASE = resolveApiBase();
 
 function unwrapContract<T>(raw: unknown): T {
   if (raw !== null && typeof raw === "object" && "ok" in raw && "data" in raw) {
@@ -97,6 +112,17 @@ export const api = {
   getLatestMdtConsultation: (admissionId: string) =>
     request<JsonObj>(`/admissions/${encodeURIComponent(admissionId)}/consultations/mdt/latest`),
 
+  getTransferOutEvaluation: (admissionId: string) =>
+    request<JsonObj>(`/admissions/${encodeURIComponent(admissionId)}/transfer-out/evaluation`),
+
+  executeTransferOut: (admissionId: string, body?: JsonObj) =>
+    request<JsonObj>(`/admissions/${encodeURIComponent(admissionId)}/transfer-out`, {
+      method: "POST",
+      body: JSON.stringify(body ?? { force: false }),
+    }),
+
+  getInpatientBridgeHealth: () => request<JsonObj>("/transfer-out/bridge-health"),
+
   getAgentOutputs: (admissionId: string, agentName?: string, limit = 30) => {
     const q = agentName
       ? `?agent_name=${encodeURIComponent(agentName)}&limit=${limit}`
@@ -128,6 +154,11 @@ export const api = {
   demoAutoAddPatient: () => request<JsonObj>("/demo/auto/admit-random", { method: "POST" }),
   demoAutoDischargePatient: (admissionId: string) =>
     request<JsonObj>(`/demo/auto/admissions/${encodeURIComponent(admissionId)}/discharge`, { method: "POST" }),
+  demoAutoTransferPatient: (admissionId: string, body?: JsonObj) =>
+    request<JsonObj>(`/demo/auto/admissions/${encodeURIComponent(admissionId)}/transfer-out`, {
+      method: "POST",
+      body: JSON.stringify(body ?? { force: true }),
+    }),
   demoAutoState: () => request<JsonObj>("/demo/auto/state"),
   demoAutoTimeline: (limit = 100) => request<JsonObj>(`/demo/auto/timeline?limit=${limit}`),
 

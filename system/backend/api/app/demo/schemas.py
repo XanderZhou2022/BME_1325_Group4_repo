@@ -9,6 +9,8 @@ from pydantic import BaseModel, Field
 DemoEventType = Literal[
     "admission_create",
     "admission_discharge",
+    "admission_transfer_out",
+    "admission_transfer_blocked",
     "vital_sign",
     "lab",
     "intervention",

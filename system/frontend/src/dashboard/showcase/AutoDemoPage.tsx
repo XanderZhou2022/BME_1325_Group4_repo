@@ -53,6 +53,15 @@ function fmtCell(v: unknown): string {
   return String(v);
 }
 
+type TransferModalInfo = {
+  patientName: string;
+  admissionId: string;
+  patientId: string;
+  bridge: JsonObj;
+  forced: boolean;
+  transferReason: string;
+};
+
 function CollapsibleRaw({ title, children, defaultOpen }: { title: string; children: ReactNode; defaultOpen?: boolean }) {
   return (
     <details className="adDetails" open={defaultOpen}>
@@ -150,6 +159,12 @@ export default function AutoDemoPage() {
   const [familyDraft, setFamilyDraft] = useState<JsonObj | null>(null);
   const [patientActionLoading, setPatientActionLoading] = useState(false);
   const [patientActionError, setPatientActionError] = useState("");
+  const [transferEval, setTransferEval] = useState<JsonObj | null>(null);
+  const [transferEvalLoading, setTransferEvalLoading] = useState(false);
+  const [transferError, setTransferError] = useState("");
+  const [transferResult, setTransferResult] = useState<JsonObj | null>(null);
+  const [bridgeHealth, setBridgeHealth] = useState<boolean | null>(null);
+  const [transferModal, setTransferModal] = useState<TransferModalInfo | null>(null);
 
   const presentation = uiMode === "presentation";
 
@@ -250,6 +265,51 @@ export default function AutoDemoPage() {
     () => buildStepEventItems(displayedStep as JsonObj | null, admissions),
     [displayedStep, admissions]
   );
+
+  const transferStepEvents = useMemo(() => {
+    const fromSteps = stepEventItems.filter(
+      (e) => e.type === "admission_transfer_out" || e.type === "admission_transfer_blocked"
+    );
+    const seen = new Set(fromSteps.map((e) => `${e.type}:${e.admission_id}`));
+    const fromTimeline = timeline
+      .filter((row) => {
+        const et = String(row.event_type ?? "");
+        return et === "admission_transfer_out" || et === "admission_transfer_blocked";
+      })
+      .map((row, i) => {
+        const et = String(row.event_type ?? "");
+        const payload = (row.payload ?? {}) as JsonObj;
+        const admission_id = String(row.admission_id ?? "");
+        const bridge = (payload.bridge_response ?? {}) as JsonObj;
+        const reasons = Array.isArray(payload.transfer_reasons) ? (payload.transfer_reasons as string[]) : [];
+        const isOut = et === "admission_transfer_out";
+        return {
+          index: 9000 + i,
+          type: et,
+          admission_id,
+          bed_id: "",
+          patient_id: String(payload.patient_id ?? ""),
+          title: isOut ? "转出至住院部" : "转出住院部受阻",
+          details: isOut
+            ? [
+                `患者：${String(payload.patient_name ?? payload.patient_id ?? admission_id)}`,
+                `转出原因：${String(payload.reason ?? "—")}`,
+                ...reasons.slice(0, 3).map((r) => `依据：${r}`),
+                bridge.assigned_bed ? `住院部床位：${String(bridge.assigned_bed)}` : "",
+                bridge.state ? `住院部状态：${String(bridge.state)}` : "",
+              ].filter(Boolean)
+            : [String(payload.reason ?? "住院部桥接不可用"), ...reasons.slice(0, 2).map((r) => `临床依据：${r}`)],
+          tone: "admin" as const,
+        };
+      })
+      .filter((ev) => {
+        const key = `${ev.type}:${ev.admission_id}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    return [...fromTimeline, ...fromSteps];
+  }, [stepEventItems, timeline]);
 
   const stepHighlightBeds = useMemo(() => bedIdsInStepEvents(stepEventItems), [stepEventItems]);
 
@@ -412,8 +472,12 @@ export default function AutoDemoPage() {
       setSelectedTrackerEvents([]);
       setFamilyDraft(null);
       setFamilyDraftError("");
+      setTransferEval(null);
+      setTransferResult(null);
+      setTransferError("");
       return;
     }
+    setTransferEvalLoading(true);
     const [
       st,
       vitals,
@@ -426,6 +490,8 @@ export default function AutoDemoPage() {
       risks,
       csEvents,
       itEvents,
+      xferEval,
+      xferOutputs,
     ] = await Promise.all([
       api.getCurrentState(admissionId).catch(() => null),
       api.getVitals(admissionId, 50).catch(() => []),
@@ -438,6 +504,8 @@ export default function AutoDemoPage() {
       api.getRisks(admissionId, 30).catch(() => []),
       api.getAgentEvents(admissionId, "clinical_summary", 20).catch(() => []),
       api.getAgentEvents(admissionId, "intervention_tracker", 20).catch(() => []),
+      api.getTransferOutEvaluation(admissionId).catch(() => null),
+      api.getAgentOutputs(admissionId, "inpatient_transfer", 5).catch(() => []),
     ]);
     setSelectedPatientState((st as JsonObj) ?? null);
     setSelectedVitals((vitals as JsonObj[]) ?? []);
@@ -450,8 +518,72 @@ export default function AutoDemoPage() {
     setSelectedRisks((risks as JsonObj[]) ?? []);
     setSelectedClinicalEvents((csEvents as JsonObj[]) ?? []);
     setSelectedTrackerEvents((itEvents as JsonObj[]) ?? []);
+    setTransferEval((xferEval as JsonObj) ?? null);
+    const latestXfer = (xferOutputs as JsonObj[])[0];
+    if (latestXfer?.payload) {
+      setTransferResult((latestXfer.payload as JsonObj) ?? null);
+    }
     setFamilyDraft(null);
     setFamilyDraftError("");
+    setTransferEvalLoading(false);
+  }
+
+  async function loadTransferEvaluation(admissionId: string) {
+    if (!admissionId) return;
+    setTransferEvalLoading(true);
+    setTransferError("");
+    try {
+      const ev = await api.getTransferOutEvaluation(admissionId);
+      setTransferEval(ev);
+    } catch (e) {
+      setTransferEval(null);
+      setTransferError(e instanceof Error ? e.message : "转出评估失败");
+    } finally {
+      setTransferEvalLoading(false);
+    }
+  }
+
+  async function transferSelectedToInpatient() {
+    if (!selectedAdmissionId) return;
+    const patientName = String(
+      transferEval?.patient_name ?? boardRows.find((r) => r.admission_id === selectedAdmissionId)?.patient_id ?? selectedAdmissionId
+    );
+    setPatientActionLoading(true);
+    setPatientActionError("");
+    setTransferError("");
+    try {
+      const res = await api.demoAutoTransferPatient(selectedAdmissionId, { force: true });
+      const xfer = (res.transfer ?? {}) as JsonObj;
+      const result = (res.result ?? xfer.write_result ?? {}) as JsonObj;
+      setTransferResult(result);
+
+      if (result.status === "accepted" || xfer.type === "admission_transfer_out") {
+        const bridge = (xfer.bridge_response ?? result.bridge_response ?? {}) as JsonObj;
+        setTransferModal({
+          patientName,
+          admissionId: selectedAdmissionId,
+          patientId: String(xfer.patient_id ?? transferEval?.patient_id ?? ""),
+          bridge,
+          forced: Boolean(xfer.forced),
+          transferReason: String(xfer.reason ?? result.message ?? "ICU 转出至普通病房"),
+        });
+        setSelectedAdmissionId("");
+        await refreshAll(lastStep);
+      } else if (result.status === "bridge_error" || xfer.type === "admission_transfer_blocked") {
+        setTransferError(
+          String(xfer.reason ?? result.message ?? "住院部桥接不可用") +
+            " — 请确认 wizicu 已启动：python run_intake.py（:8010）"
+        );
+        await loadTransferEvaluation(selectedAdmissionId);
+      } else {
+        setTransferError(String(result.message ?? "转出未成功"));
+        await loadTransferEvaluation(selectedAdmissionId);
+      }
+    } catch (e) {
+      setTransferError(e instanceof Error ? e.message : "转出住院部失败");
+    } finally {
+      setPatientActionLoading(false);
+    }
   }
 
   async function generateFamilyDraft() {
@@ -532,22 +664,14 @@ export default function AutoDemoPage() {
   }
 
   async function removeSelectedPatient() {
-    if (!selectedAdmissionId) return;
-    setPatientActionLoading(true);
-    setPatientActionError("");
-    try {
-      await api.demoAutoDischargePatient(selectedAdmissionId);
-      setSelectedAdmissionId("");
-      await refreshAll(lastStep);
-    } catch (e) {
-      setPatientActionError(e instanceof Error ? e.message : "remove patient failed");
-    } finally {
-      setPatientActionLoading(false);
-    }
+    await transferSelectedToInpatient();
   }
 
   useEffect(() => {
     void refreshAll(undefined);
+    api.getInpatientBridgeHealth()
+      .then((h) => setBridgeHealth(Boolean(h.ok)))
+      .catch(() => setBridgeHealth(false));
   }, [refreshAll]);
 
   useEffect(() => {
@@ -585,6 +709,72 @@ export default function AutoDemoPage() {
           </button>
         </div>
       </header>
+
+      {transferModal && (
+        <div className="adModalOverlay" role="dialog" aria-modal="true" aria-labelledby="transfer-modal-title">
+          <div className="adModalCard adTransferModal">
+            <div className="adModalHead">
+              <h2 id="transfer-modal-title">ICU → 住院部 转出成功</h2>
+              <button type="button" className="adModalClose" onClick={() => setTransferModal(null)} aria-label="关闭">
+                ×
+              </button>
+            </div>
+            <p className="adTransferModalLead">
+              <strong>{transferModal.patientName}</strong>（{transferModal.admissionId}）已从 <strong>ICU</strong> 转至{" "}
+              <strong>住院部</strong>，该患者已离开 ICU 病区。
+              {transferModal.forced ? "（演示模式：已强制转出）" : ""}
+            </p>
+            <div className="adBanner adBannerInfo adTransferModalBanner">
+              {transferModal.patientName} 从 ICU 去住院部啦！当前住院部状态：
+              <strong> {String(transferModal.bridge.state ?? "ADMITTED")}</strong>
+            </div>
+            <div className="adTransferModalApi">
+              <h3>住院部接口响应</h3>
+              <p className="adMuted">
+                <code>POST http://127.0.0.1:8010/api/v1/icu-transfer-intake</code>
+              </p>
+              <div className="scKeyValue">
+                <span>住院部患者 ID</span>
+                <strong>{String(transferModal.bridge.patient_id ?? "—")}</strong>
+              </div>
+              <div className="scKeyValue">
+                <span>ICU 患者 ID</span>
+                <strong>{String(transferModal.bridge.external_patient_id ?? transferModal.patientId ?? "—")}</strong>
+              </div>
+              <div className="scKeyValue">
+                <span>住院部就诊 ID</span>
+                <strong>{String(transferModal.bridge.encounter_id ?? "—")}</strong>
+              </div>
+              <div className="scKeyValue">
+                <span>分配床位</span>
+                <strong>{String(transferModal.bridge.assigned_bed ?? "—")}</strong>
+              </div>
+              <div className="scKeyValue">
+                <span>分配房间</span>
+                <strong>{String(transferModal.bridge.assigned_room ?? "—")}</strong>
+              </div>
+              <div className="scKeyValue">
+                <span>转出原因</span>
+                <strong>{transferModal.transferReason}</strong>
+              </div>
+              <div className="scKeyValue">
+                <span>ICU 侧状态</span>
+                <strong>transferred（已出 ICU）</strong>
+              </div>
+            </div>
+            {!presentation && (
+              <CollapsibleRaw title="住院部原始 JSON">
+                <pre className="adSmallPre">{JSON.stringify(transferModal.bridge, null, 2)}</pre>
+              </CollapsibleRaw>
+            )}
+            <div className="adModalActions">
+              <button type="button" className="scBtn scBtnTransfer" onClick={() => setTransferModal(null)}>
+                知道了
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {error && <div className="scError">{error}</div>}
       {patientActionError && <div className="scError">{patientActionError}</div>}
@@ -739,14 +929,31 @@ export default function AutoDemoPage() {
             </ul>
           </div>
           {!displayedStep && <p className="adMuted">点击 Next Step 后，此处会列出本步全部子事件（收治/出院/体征/检验/干预）。</p>}
+          {transferStepEvents.length > 0 && (
+            <div className="adTransferFeed">
+              <h3>ICU → 住院部转出</h3>
+              {transferStepEvents.map((ev) => (
+                <div key={`xfer-${ev.index}`} className={`adTransferFeedCard ${ev.type === "admission_transfer_out" ? "ok" : "blocked"}`}>
+                  <strong>{ev.title}</strong>
+                  <span className="adMuted">床 {ev.bed_id}</span>
+                  <ul className="adList">
+                    {ev.details.map((line, i) => (
+                      <li key={i}>{line}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
           {displayedStep && stepEventItems.length === 0 && <p className="adMuted">本步无子事件记录。</p>}
           <div className="adStepEventList">
             {stepEventItems.map((ev) => {
               const isAgentRequest = ev.type.startsWith("agent_request_");
+              const isTransfer = ev.type === "admission_transfer_out" || ev.type === "admission_transfer_blocked";
               return (
               <div
                 key={`${ev.index}-${ev.type}-${ev.admission_id}`}
-                className={`adStepEventCard ${ev.tone} ${isAgentRequest ? "agentRequest" : ""}`}
+                className={`adStepEventCard ${ev.tone} ${isAgentRequest ? "agentRequest" : ""} ${isTransfer ? "transferOut" : ""}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => ev.admission_id && setSelectedAdmissionId(ev.admission_id)}
@@ -864,8 +1071,8 @@ export default function AutoDemoPage() {
             {wardNarrative && (
               <div className="adNarrativeCard">
                 <h3>Ward coordinator 总结</h3>
-                {wardNarrative.ward_overview && <p>{String(wardNarrative.ward_overview)}</p>}
-                {wardNarrative.priority_reasoning && <p>{String(wardNarrative.priority_reasoning)}</p>}
+                {wardNarrative.ward_overview ? <p>{String(wardNarrative.ward_overview)}</p> : null}
+                {wardNarrative.priority_reasoning ? <p>{String(wardNarrative.priority_reasoning)}</p> : null}
                 {Array.isArray(wardNarrative.references_used) && wardNarrative.references_used.length > 0 && (
                   <p className="adMuted">参考：{(wardNarrative.references_used as unknown[]).slice(0, 5).map(String).join("；")}</p>
                 )}
@@ -1001,25 +1208,107 @@ export default function AutoDemoPage() {
               </button>
               <button
                 type="button"
-                className="scBtn scBtnDanger"
+                className="scBtn scBtnTransfer"
                 disabled={
                   !selectedAdmissionId ||
                   !selectedIsActive ||
                   loading ||
                   patientActionLoading ||
+                  transferEvalLoading ||
+                  bridgeHealth === false ||
                   (state?.active_admissions ?? 0) <= DEMO_MIN_ACTIVE_PATIENTS
                 }
                 title={
-                  (state?.active_admissions ?? 0) <= DEMO_MIN_ACTIVE_PATIENTS
+                  bridgeHealth === false
+                    ? "住院部桥接离线，请先启动 wizicu :8010"
+                    : (state?.active_admissions ?? 0) <= DEMO_MIN_ACTIVE_PATIENTS
                     ? `至少保留 ${DEMO_MIN_ACTIVE_PATIENTS} 位 ICU 患者`
-                    : "手动将选中患者移出 ICU"
+                    : transferEval?.eligible === false
+                    ? `演示模式可手动转出（将强制离开 ICU）：${String(transferEval?.primary_reason ?? "")}`
+                    : "手动转出至 groupD 住院部，患者将离开 ICU"
                 }
                 onClick={() => void removeSelectedPatient()}
               >
-                {patientActionLoading ? "移出中…" : "Remove Patient"}
+                {patientActionLoading ? "转出中…" : "转至住院部"}
               </button>
             </div>
           )}
+          <div className="adTransferPanel">
+            <div className="adTransferPanelHead">
+              <h4>住院部对接</h4>
+              <span className={`adBridgePill ${bridgeHealth ? "ok" : "down"}`}>
+                {bridgeHealth == null ? "桥接检测中" : bridgeHealth ? "住院部桥接在线" : "住院部桥接离线"}
+              </span>
+            </div>
+            {transferEvalLoading && <p className="adMuted">正在评估转出条件…</p>}
+            {transferEval && (
+              <>
+                <div className={`adTransferVerdict ${transferEval.eligible ? "eligible" : "blocked"}`}>
+                  {transferEval.eligible ? "可转出至普通病房" : "系统评估暂不宜转出（演示可手动强制转出）"}
+                </div>
+                <p className="adTransferPrimary">
+                  <strong>主要原因：</strong>
+                  {String(transferEval.primary_reason ?? "—")}
+                </p>
+                {Array.isArray(transferEval.reasons) && transferEval.reasons.length > 0 && (
+                  <div className="adTransferReasonBlock">
+                    <span className="adKey">转出依据</span>
+                    <ul className="adList">
+                      {(transferEval.reasons as string[]).slice(0, 6).map((r, i) => (
+                        <li key={i}>{r}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {Array.isArray(transferEval.blockers) && (transferEval.blockers as string[]).length > 0 && (
+                  <div className="adTransferReasonBlock blocked">
+                    <span className="adKey">阻碍因素</span>
+                    <ul className="adList">
+                      {(transferEval.blockers as string[]).slice(0, 6).map((r, i) => (
+                        <li key={i}>{r}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                <div className="scKeyValue">
+                  <span>目标科室</span>
+                  <strong>{String(transferEval.target_group ?? "groupD.inpatient")}</strong>
+                </div>
+                <div className="scKeyValue">
+                  <span>CTAS</span>
+                  <strong>{String(transferEval.ctas_level ?? "—")}</strong>
+                </div>
+              </>
+            )}
+            {transferError && <div className="adBanner adBannerWarn">{transferError}</div>}
+            {patientActionError && <div className="adBanner adBannerWarn">{patientActionError}</div>}
+            {transferResult && (
+              <CollapsibleRaw title="最近转出记录" defaultOpen={presentation}>
+                <div className="scKeyValue">
+                  <span>状态</span>
+                  <strong>{String(transferResult.status ?? transferResult.transfer_id ? "accepted" : "—")}</strong>
+                </div>
+                {transferResult.bridge_response ? (
+                  <>
+                    <div className="scKeyValue">
+                      <span>住院部床位</span>
+                      <strong>{String((transferResult.bridge_response as JsonObj).assigned_bed ?? "—")}</strong>
+                    </div>
+                    <div className="scKeyValue">
+                      <span>转出原因</span>
+                      <strong>{String(transferResult.transfer_reason ?? transferResult.message ?? "—")}</strong>
+                    </div>
+                  </>
+                ) : null}
+                {!presentation && <pre className="adSmallPre">{JSON.stringify(transferResult, null, 2)}</pre>}
+              </CollapsibleRaw>
+            )}
+            {!bridgeHealth && (
+              <p className="adMuted">
+                启动住院部 intake：<code>cd wizicu && python intake_server.py</code>（默认 :8010）
+              </p>
+            )}
+          </div>
           {mdtError && <div className="adBanner adBannerWarn">{mdtError}</div>}
           {familyDraftError && <div className="adBanner adBannerWarn">{familyDraftError}</div>}
           {familyDraft && (
@@ -1029,12 +1318,12 @@ export default function AutoDemoPage() {
                 这是一份给医生审核后再向家属沟通的中文草稿，不应直接发送或作为治疗承诺。
               </div>
               <p>{String(familyDraft.family_plain_language_draft ?? "")}</p>
-              {familyDraft.icu_diary_draft && (
+              {familyDraft.icu_diary_draft ? (
                 <>
                   <h4>ICU 日记草稿</h4>
                   <p>{String(familyDraft.icu_diary_draft)}</p>
                 </>
-              )}
+              ) : null}
               {Array.isArray(familyDraft.communication_cautions) && familyDraft.communication_cautions.length > 0 && (
                 <ul className="adList">
                   {(familyDraft.communication_cautions as unknown[]).slice(0, 5).map((x, i) => (

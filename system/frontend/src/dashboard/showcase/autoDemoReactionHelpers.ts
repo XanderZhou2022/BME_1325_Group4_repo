@@ -34,6 +34,8 @@ export function timelineOneLine(row: JsonObj): string {
   }
   if (et === "admission_create") return `New admission ${aid || "—"}`;
   if (et === "admission_discharge") return `Discharge ${aid || "—"}`;
+  if (et === "admission_transfer_out") return `Transfer to inpatient ${aid || "—"}`;
+  if (et === "admission_transfer_blocked") return `Transfer blocked ${aid || "—"}`;
   if (et === "vital_sign") return `Vital sign update ${aid || "—"}`;
   if (et === "lab") return `Lab result ${aid || "—"}`;
   if (et === "intervention") return `Intervention ${aid || "—"}`;

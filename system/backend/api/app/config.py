@@ -68,6 +68,10 @@ class Settings(BaseSettings):
     simi_mdt_timeout_seconds: float = 300.0
     simi_mdt_workflow_path: str = "/api/v1/integration/icu/workflow"
 
+    # wizicu / groupD inpatient intake bridge (default port 8010)
+    inpatient_bridge_base_url: str = "http://127.0.0.1:8010"
+    inpatient_bridge_timeout_seconds: float = 15.0
+
     @property
     def hospital_bus_enabled(self) -> bool:
         return bool(self.hospital_redis_host)
