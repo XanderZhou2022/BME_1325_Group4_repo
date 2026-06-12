@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import "./viewer/viewer.css";
+import "./dashboard/showcase/showcase.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

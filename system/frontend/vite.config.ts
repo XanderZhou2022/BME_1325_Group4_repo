@@ -10,8 +10,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@dashboard': path.resolve(__dirname, 'src/dashboard'),
-      '@viewer': path.resolve(__dirname, 'src/viewer'),
-      '@maps': path.resolve(__dirname, 'src/viewer/assets/maps'),
     },
   },
   server: {

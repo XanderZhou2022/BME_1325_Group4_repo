@@ -22,12 +22,6 @@
     "paths": {
       "@dashboard/*": [
         "src/dashboard/*"
-      ],
-      "@viewer/*": [
-        "src/viewer/*"
-      ],
-      "@maps/*": [
-        "src/viewer/assets/maps/*"
       ]
     }
   },
